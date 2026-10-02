@@ -1,0 +1,592 @@
+# =====================================================================================
+#  YOUR CONTENT FILE  (the only file you need to edit)
+#
+#  Everything on your website AND in your CV PDF comes from this one file.
+#  Edit it in any plain-text editor, save, then double-click  Build.command  to
+#  rebuild and preview, and  Publish.command  to put the changes online.
+#  Full instructions: HOW_TO_UPDATE.md
+#
+#  Quick rules
+#   * Text goes between double quotes:   title = "My new paper"
+#   * *Stars* make italics:               text = "Published in *TESOL Quarterly*."
+#   * A line starting with # is a comment (notes to yourself). It is ignored.
+#   * [[something]] starts a NEW ENTRY in a list. To add an entry, copy a whole block
+#     (from its [[...]] line down to the blank line) and edit the copy.
+#     To remove an entry, delete its whole block.
+#     Newest entries go FIRST in each list.
+#   * Leave a field out (or set it to "") when it does not apply.
+#   * If the build complains, it tells you the line number. Usually a quote is missing.
+# =====================================================================================
+
+
+# ------------------------------------------------------------------ about you
+[person]
+first_name   = "Peyman"
+last_name    = "Jahanbin"
+initials     = "P. J."
+status       = "Ph.D. Student"            # change to "Ph.D. Candidate" after you advance
+institution  = "University of Kansas"
+specialties  = ["TESOL", "Language Assessment", "AI in Education"]
+tagline      = "I study how well automated scoring judges *spoken English*, and whether it judges everyone fairly."
+location     = "Lawrence, Kansas"
+email        = "Peyman@KU.edu"
+linkedin     = "https://www.linkedin.com/in/jpeyman/"
+scholar      = "https://scholar.google.com/citations?user=wlhGmcEAAAAJ&hl=en"
+portrait     = "portrait.jpg"
+site_url     = "https://jhb-peyman.github.io/"
+
+# What search engines and link previews show
+[seo]
+title        = "Peyman Jahanbin | TESOL, Language Assessment & AI in Education"
+description  = "Ph.D. student in Curriculum & Instruction (TESOL) at the University of Kansas. Research on validity and fairness in automated speaking assessment, explainable machine learning for L2 pronunciation, and the Seal of Biliteracy."
+share_text   = "Validity and fairness in automated speaking assessment. Explainable machine learning for L2 pronunciation. Multilingual education policy."
+share_alt  = "Peyman Jahanbin. TESOL, language assessment and AI in education."
+share_image_line = "Language assessment, automated speaking assessment,\nand responsible AI in education."
+job_title    = "Ph.D. student and instructor of record, Curriculum & Instruction (TESOL)"
+knows_about  = ["Language assessment", "Automated speaking assessment", "Validity and fairness", "Responsible AI in education", "Explainable machine learning", "L2 pronunciation", "Seal of Biliteracy", "TESOL"]
+alumni_of    = ["Shahid Beheshti University", "University of Isfahan"]
+
+# The labels in the CV PDF header
+[cv]
+subtitle     = "Curriculum & Instruction (TESOL)  |  Language Assessment  |  AI in Education"
+contact_line = ["Peyman@KU.edu", "Lawrence, Kansas", "LinkedIn/JPeyman", "Google Scholar"]
+research_interests = "Language assessment; automated speaking assessment; validity and fairness; responsible AI in education; explainable machine learning; L2 pronunciation; multilingual education and policy; Seal of Biliteracy; quantitative and mixed-methods educational research."
+teaching_header  = "University of Kansas, Department of Curriculum & Teaching"
+teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 teaching assignments, 2023-2026."
+methodological_training = [
+  { label = "Quantitative",  text = "EPSY 710 Introductory Statistical Analysis; EPSY 905 Fundamentals of Multivariate Modeling; advanced quantitative methods." },
+  { label = "Qualitative",   text = "C&T 808 Qualitative Research: Curriculum Inquiry." },
+  { label = "Research design and teaching", text = "LA&S 720 Introduction to Language Teaching Research; C&T 996 Teaching and Learning in the College Classroom." },
+]
+
+
+# ------------------------------------------------------------------ recent news (about five, newest first)
+[[news]]
+date = "Sep 2026"
+text = "*Beyond Symbolic Recognition*, on access, fidelity and student outcomes in the Seal of Biliteracy, is published in *TESOL Quarterly*."
+link = "https://doi.org/10.1002/tesq.70236"
+
+[[news]]
+date = "Fall 2026"
+text = "Teaching C&T 330, *Instructional Approaches for ESOL Learners in the Elementary/Early Childhood Classroom* (undergraduate), and C&T 820, *Teaching English as a Second Language/Bilingual Education* (graduate), at the University of Kansas."
+
+[[news]]
+date = "Aug 2026"
+text = "Submitted “Acoustic Gap Placement in Fixed-Passage Read Speech” to *PLOS ONE*."
+
+[[news]]
+date = "May 2026"
+text = "Completed the Graduate Certificate in Second Language Studies."
+
+[[news]]
+date = "Apr 2026"
+text = "Presented work on academic AI integrity at the AERA Annual Meeting in Los Angeles."
+link = "https://doi.org/10.3102/2288564"
+
+
+# ------------------------------------------------------------------ research
+[research]
+statement = "I study how automated systems *score speech*: where they agree with human raters, where they do not, and who is affected when they get it wrong."
+themes = ["Language assessment", "Automated speaking assessment", "Validity & fairness", "Responsible AI in education", "Explainable machine learning", "L2 pronunciation", "Multilingual education & policy", "Seal of Biliteracy", "Quantitative & mixed methods"]
+
+# "dates" is shown as written on the website; " to " becomes a hyphen in the CV PDF.
+# cv_title / cv_text: use these only if the CV should word something differently from the website.
+[[projects]]
+dates    = "2026 to Present"
+title    = "Dissertation: Validity & Fairness of *Automated Speaking Assessment*"
+cv_title = "Dissertation: Validity and Fairness of Automated Speaking Assessment"
+org      = "University of Kansas"
+text     = "Compares human audio ratings with transcript-based automated speaking scores in the Cambridge Speak & Improve corpus, looking at where they agree, where they meaningfully disagree, and what predicts the gap."
+cv_text  = "Examines agreement and meaningful disagreement between human audio ratings and transcript-based automated speaking scores in the Cambridge Speak & Improve corpus, with emphasis on decision risk and predictors of discrepancy."
+
+[[projects]]
+dates    = "2025 to Present"
+title    = "Explainable Machine Learning for *L2 Pronunciation*"
+cv_title = "Explainable Machine Learning for L2 Pronunciation"
+text     = "Interpretable MFCC-based models of how a first language shapes L2 pronunciation, plus reproducible workflows for feedback."
+cv_text  = "Develops interpretable MFCC-based models of L1 influence in L2 pronunciation and reproducible workflows for feedback."
+
+[[projects]]
+dates    = "2025 to Present"
+title    = "Seal of Biliteracy: *Policy, Equity & Recognition*"
+cv_title = "Seal of Biliteracy Policy, Equity, and Recognition"
+text     = "How the Seal of Biliteracy is implemented, who can earn it, how students qualify, and whether colleges and employers recognize it."
+cv_text  = "Examines implementation, equitable access, assessment pathways, postsecondary recognition, and real-world value of the Seal of Biliteracy."
+
+[[projects]]
+dates    = "2026 to Present"
+title    = "English Learner Visibility in *Kansas Public Reporting*"
+cv_title = "English Learner Visibility in Kansas Public Reporting"
+text     = "How districts report English learner results, which student groups become invisible, and how small cohort sizes create gaps in public data."
+cv_text  = "Examines district-level English learner result reporting, subgroup visibility, and how cohort size shapes public reporting gaps."
+
+
+# ------------------------------------------------------------------ education
+[[education]]
+dates    = "2023 to Present"
+title    = "Ph.D., Curriculum & Instruction, *TESOL*"
+cv_title = "Ph.D. in Curriculum & Instruction, TESOL Emphasis"
+cv_dates = "September 2023-Present"
+org      = "University of Kansas"
+place    = "Lawrence, KS"
+text     = "Coursework completed; advancement to candidacy expected October 2026."
+cv_text  = "Coursework completed; expected advancement to doctoral candidacy in October 2026. Dissertation focus: validity and fairness in automated speaking assessment."
+
+[[education]]
+dates    = "May 2026"
+title    = "Graduate Certificate, *Second Language Studies*"
+cv_title = "Graduate Certificate in Second Language Studies"
+org      = "University of Kansas"
+
+[[education]]
+dates    = "2020 to 2022"
+title    = "M.A., Teaching English as a Foreign Language"
+cv_title = "M.A. in Teaching English as a Foreign Language"
+cv_dates = "September 2020-December 2022"
+org      = "Shahid Beheshti University"
+place    = "Tehran, Iran"
+text     = "*Thesis: Investigating the Effect of Audio-Assisted Reading on Incidental Learning of a Grammatical Structure Among Iranian EFL Learners.*"
+cv_text  = "*Thesis: Investigating the Effect of Audio-Assisted Reading on Incidental Learning of a Grammatical Structure Among Iranian EFL Learners.*"
+
+[[education]]
+dates    = "2016 to 2019"
+title    = "B.A., English Language & Literature"
+cv_title = "B.A. in English Language & Literature"
+cv_dates = "September 2016-July 2019"
+org      = "University of Isfahan"
+place    = "Isfahan, Iran"
+
+
+# ------------------------------------------------------------------ appointments
+[[appointments]]
+dates    = "2023 to Present"
+title    = "Instructor of Record & Graduate Teaching Assistant"
+org      = "Department of Curriculum & Teaching, University of Kansas"
+place    = "Lawrence, KS"
+site_who = "Department of Curriculum & Teaching, University of Kansas"     # site_who: what the website shows instead of "org · place"
+text     = "Instructor of record for undergraduate and graduate courses in TESOL methods, language assessment, practicum, multilingual learner instruction, and teacher education."
+
+[[appointments]]
+dates    = "May 2025 to Aug 2026"
+title    = "Graduate Research Assistant"
+cv_dates = "May 2025-August 2026"
+org      = "Center for Educational Opportunity Programs, University of Kansas"
+place    = "Lawrence, KS"
+site_who = "Center for Educational Opportunity Programs, University of Kansas"
+text     = "Research synthesis and policy analysis on Seal of Biliteracy implementation, equity, outcomes, and external recognition. Project SELILLA: $2.44 million, federally funded."
+cv_text  = "Conducted research synthesis and policy analysis on Seal of Biliteracy implementation, equity, outcomes, and external recognition. Project SELILLA: $2.44 million federally funded project."
+
+[[appointments]]
+dates    = "2018 to 2022"
+title    = "EFL Instructor"
+cv_title = "English as a Foreign Language (EFL) Instructor"
+org      = "University of Isfahan"
+place    = "Isfahan, Iran"
+text     = "General English for undergraduate and graduate students; approximately 250 instructional hours."
+cv_text  = "Taught general English to undergraduate and graduate students; approximately 250 instructional hours."
+
+[[appointments]]
+dates    = "2014 to 2018"
+title    = "EFL Instructor"
+cv_title = "English as a Foreign Language (EFL) Instructor"
+org      = "Kish English Institute"
+place    = "Sabzevar, Iran"
+
+
+# ------------------------------------------------------------------ publication topics (used by the topic filter)
+#  key = the short word you tag papers with, label = what visitors see.
+[[topics]]
+key = "assessment"
+label = "Assessment"
+
+[[topics]]
+key = "speech"
+label = "Speech & pronunciation"
+
+[[topics]]
+key = "ai"
+label = "AI & machine learning"
+
+[[topics]]
+key = "policy"
+label = "Policy & equity"
+
+[[topics]]
+key = "classroom"
+label = "Classroom & learning"
+
+[[topics]]
+key = "corpus"
+label = "Corpus & discourse"
+
+# ------------------------------------------------------------------ publications (newest first)
+#  status      "published", "review" (under review or submitted) or "preprint"
+#  authors     "Given Family". Your own name is shown in bold automatically.
+#              For a name that is written family-name-first, write "Fan Qihang | Fan, Qihang"
+#              (how it is shown | how it is cited).
+#  title       as it should be shown on the page (title case)
+#  cite_title  the same title in sentence case, used for the APA / BibTeX buttons
+#  venue       journal or server; volume / issue / pages / article for the details
+#  online      true if the paper is online but has no volume or issue yet (cited as
+#              "Advance online publication.")
+#  label       small text before the venue, for example "Revised, in review"
+#  topics      any of the topic keys above
+#  cite        set to false to hide the cite buttons for an entry
+[[publications]]
+id         = "beyond"
+status     = "published"
+year       = 2026
+topics     = ["policy", "assessment"]
+title      = "Beyond Symbolic Recognition: Examining Access, Fidelity, and Student Outcomes in the Seal of Biliteracy"
+cite_title = "Beyond symbolic recognition: Examining access, fidelity, and student outcomes in the Seal of Biliteracy"
+authors    = ["Peyman Jahanbin", "Adam M. Brazil", "Sarah C. Swyers", "Meghan Ecker-Lyster", "Michael Klein-Thibodeau"]
+venue      = "TESOL Quarterly"
+online     = true
+doi        = "10.1002/tesq.70236"
+bibkey     = "jahanbin2026beyond"
+
+[[publications]]
+id         = "lltm"
+status     = "published"
+year       = 2026
+topics     = ["assessment"]
+title      = "A Linear Logistic Test Model (LLTM) Application in Foreign Language Testing"
+cite_title = "A linear logistic test model (LLTM) application in foreign language testing"
+authors    = ["Jose Fabián Elizondo-González", "Peyman Jahanbin"]
+venue      = "Research in Pedagogy"
+volume     = "16"
+issue      = "2"
+pages      = "146-166"
+doi        = "10.5937/IstrPed2602146F"
+bibkey     = "elizondo2026lltm"
+
+[[publications]]
+id         = "dyadic"
+status     = "published"
+year       = 2026
+topics     = ["classroom"]
+title      = "An Analysis of Dyadic Interactional Patterns in Peer Reviewing Tasks in an ESL Language Classroom at a Malaysian Higher Educational Institute"
+cite_title = "An analysis of dyadic interactional patterns in peer reviewing tasks in an ESL language classroom at a Malaysian higher educational institute"
+authors    = ["Paramasivam Muthusamy", "Atieh Farashaiyan", "Rabindra Dev Prasad", "Peyman Jahanbin", "Ananthi Pattanimuthu", "Hamsavathi A/P Ramalingam", "Fan Qihang | Fan, Qihang", "Wang Jing | Wang, Jing", "Zhang Xiaoling | Zhang, Xiaoling"]
+venue      = "International Journal of Special Education"
+volume     = "41"
+issue      = "6s"
+pages      = "1102-1114"
+url        = "https://internationalsped.com/index.php/ijse/article/view/3309"     # no DOI, so the article page is cited
+bibkey     = "muthusamy2026dyadic"
+
+[[publications]]
+id         = "corpus"
+status     = "published"
+year       = 2025
+topics     = ["corpus"]
+title      = "A Comparative Corpus-driven Analysis of Criticism in Book Reviews on Academic Discourse"
+cite_title = "A comparative corpus-driven analysis of criticism in book reviews on academic discourse"
+authors    = ["Atieh Farashaiyan", "Peyman Jahanbin", "Malarvizhi Sinayah", "Thanalachime Perumal", "Selvajothi Ramalingam"]
+venue      = "Corpus Pragmatics"
+volume     = "9"
+issue      = "3"
+pages      = "269-291"
+doi        = "10.1007/s41701-025-00190-9"
+bibkey     = "farashaiyan2025corpus"
+
+[[publications]]
+id         = "personality"
+status     = "published"
+year       = 2025
+topics     = ["classroom"]
+title      = "The Effect of Personality Types on ESL University Lecturers’ Creativity in Using Instructional Techniques for Online Education in Malaysian Higher Education Institutes"
+cite_title = "The effect of personality types on ESL university lecturers' creativity in using instructional techniques for online education in Malaysian higher education institutes"
+authors    = ["Paramasivam Muthusamy", "Peyman Jahanbin", "Atieh Farashaiyan", "Thanalachime Perumal", "Kumutha Raman", "Sun Chen | Sun, Chen", "Du Junying | Du, Junying", "Qiao Mu | Qiao, Mu", "Li Jiao | Li, Jiao"]
+venue      = "Journal of Information Systems Engineering and Management"
+volume     = "10"
+issue      = "48s"
+pages      = "533-544"
+doi        = "10.52783/jisem.v10i48s.9574"
+bibkey     = "muthusamy2025personality"
+
+[[publications]]
+id         = "achievements"
+status     = "published"
+year       = 2025
+topics     = ["assessment", "classroom"]
+title      = "An Investigation of Students’ English Achievements and Its Implications for Curriculum Amelioration in Malaysian Higher Education Institutions"
+cite_title = "An investigation of students' English achievements and its implications for curriculum amelioration in Malaysian higher education institutions"
+authors    = ["Paramasivam Muthusamy", "Peyman Jahanbin", "Du Junying | Du, Junying", "Qiao Mu | Qiao, Mu", "Xiang Xueyan | Xiang, Xueyan", "Hamsavathi A/P Ramalingam", "Wang Xibing | Wang, Xibing", "Atieh Farashaiyan"]
+venue      = "Journal of Information Systems Engineering and Management"
+volume     = "10"
+issue      = "48s"
+pages      = "545-559"
+doi        = "10.52783/jisem.v10i48s.9576"
+bibkey     = "muthusamy2025achievements"
+
+[[publications]]
+id         = "audio"
+status     = "published"
+year       = 2024
+topics     = ["classroom"]
+title      = "The Effect of Audio-Assisted Reading on Incidental Learning of Present Perfect by EFL Learners"
+cite_title = "The effect of audio-assisted reading on incidental learning of present perfect by EFL learners"
+authors    = ["Musa Nushi", "Peyman Jahanbin"]
+venue      = "Open Education Studies"
+volume     = "6"
+issue      = "1"
+article    = "20240043"
+doi        = "10.1515/edu-2024-0043"
+bibkey     = "nushi2024audio"
+
+[[publications]]
+id         = "accent"
+status     = "review"
+year       = 2026
+topics     = ["policy", "ai"]
+label      = "Revised, in review"
+title      = "“The Accent Hides the Knowledge”: Raciolinguistic Gatekeeping and Algorithmic Suspicion of Middle Eastern Graduate Teaching Assistants in U.S. Higher Education"
+cite_title = '"The accent hides the knowledge": Raciolinguistic gatekeeping and algorithmic suspicion of Middle Eastern graduate teaching assistants in U.S. higher education'
+authors    = ["Peyman Jahanbin", "Hyesun Cho"]
+venue      = "Journal of Language, Identity & Education"
+cv_status  = "Revised (minor revisions) after peer review; currently out for review"
+bibkey     = "jahanbin2026accent"
+
+[[publications]]
+id         = "acoustic"
+status     = "review"
+year       = 2026
+topics     = ["speech"]
+label      = "Submitted Aug 2026"
+title      = "Acoustic Gap Placement in Fixed-Passage Read Speech: A Comparison of Mandarin-L1 and American English-L1 Speakers"
+cite_title = "Acoustic gap placement in fixed-passage read speech: A comparison of Mandarin-L1 and American English-L1 speakers"
+authors    = ["Peyman Jahanbin"]
+venue      = "PLOS ONE"
+cv_status  = "Submitted August 30, 2026; Currently in editorial processing"
+bibkey     = "jahanbin2026acoustic"
+
+[[publications]]
+id         = "arxiv"
+status     = "preprint"
+year       = 2025
+topics     = ["speech", "ai"]
+title      = "Modeling L1 Influence on L2 Pronunciation: An MFCC-Based Framework for Explainable Machine Learning and Pedagogical Feedback"
+cite_title = "Modeling L1 influence on L2 pronunciation: An MFCC-based framework for explainable machine learning and pedagogical feedback"
+authors    = ["Peyman Jahanbin"]
+venue      = "arXiv"
+doi        = "10.48550/arXiv.2504.13765"
+eprint     = "2504.13765"
+cv_note    = "Preprint"
+bibkey     = "jahanbin2025mfcc"
+
+[[publications]]
+id         = "rsquare"
+status     = "preprint"
+year       = 2025
+topics     = ["speech", "ai"]
+title      = "MFCC-Based Modeling of L1 Influence in L2 English Pronunciation: A Reproducible Methodological Pipeline"
+cite_title = "MFCC-based modeling of L1 influence in L2 English pronunciation: A reproducible methodological pipeline"
+authors    = ["Peyman Jahanbin"]
+venue      = "Research Square"
+doi        = "10.21203/rs.3.rs-7032497/v1"
+cv_note    = "Methodological preprint"
+bibkey     = "jahanbin2025pipeline"
+
+# An item that is not a paper: shown in the list, no cite buttons. (Send me its DOI or link and it can become a proper entry.)
+[[publications]]
+id         = "pipeline"
+status     = "preprint"
+kind       = "artifact"
+cite       = false
+year       = 2025
+topics     = ["speech", "ai"]
+title      = "A Reproducible MFCC-Based Pipeline for L1 Classification in L2 English Pronunciation Using Python"
+authors    = ["Peyman Jahanbin"]
+label      = "Artifact"
+venue_text = "Reproducible research artifact"
+
+
+# ------------------------------------------------------------------ selected presentations (newest first)
+#  Add  id, doi  and the cite_* fields to give a presentation its own cite buttons (see the first one).
+[[presentations]]
+id          = "aera"
+date        = "Apr 2026"
+cv_date     = "April 2026"
+title       = "Campus Climate Counts: Insights on Institutional Versus Individual Predictors of Academic AI Integrity"
+site_venue  = "AERA · Los Angeles"
+cv_event    = "American Educational Research Association (AERA) Annual Meeting"
+place       = "Los Angeles, CA"
+coauthors   = "Nancy Jo Williams and Atiyeh Choobkar"
+doi         = "10.3102/2288564"
+bibkey      = "jahanbin2026campus"
+cite_title  = "Campus climate counts: Insights on institutional versus individual predictors of academic AI integrity"
+cite_authors = ["Peyman Jahanbin", "Nancy Jo Williams", "Atiyeh Choobkar"]
+cite_date   = "April 10"
+cite_year   = 2026
+cite_format = "Paper presentation"
+cite_event  = "AERA Annual Meeting"
+cite_location = "Los Angeles, CA, United States"
+cite_booktitle = "Proceedings of the 2026 AERA Annual Meeting"
+cite_month  = "apr"
+
+[[presentations]]
+date        = "Oct 2025"
+cv_date     = "October 2025"
+title       = "Machine Learning in the Service of Second Language Learning"
+site_venue  = "SCIPIE · Norman, OK"
+cv_event    = "SCIPIE, University of Oklahoma"
+place       = "Norman, OK"
+
+[[presentations]]
+date        = "Oct 2024"
+cv_date     = "October 2024"
+title       = "EFL Learners Excel: Incidental Grammar Learning through Audio-Assisted Reading"
+site_venue  = "MIDTESOL"
+cv_event    = "MIDTESOL"
+
+
+# ------------------------------------------------------------------ teaching
+#  terms: write a line break as \n  (see C&T 330)
+[[teaching]]
+group = "Graduate"
+courses = [
+  { code = "C&T 820", title = "Teaching English as a Second Language/Bilingual Education", terms = "Fall 2026" },
+  { code = "C&T 821", title = "Assessment in Teaching English to Speakers of Other Languages", cv_title = "Assessment in Teaching English to Speakers of Other Languages (TESOL)", terms = "Fall 2024" },
+  { code = "C&T 825", title = "Advanced Practicum in TESOL", cv_title = "Advanced Practicum in Teaching English to Speakers of Other Languages (TESOL)", terms = "Fall 2025 · Spring 2026", cv_terms = "Fall 2025; Spring 2026" },
+]
+
+[[teaching]]
+group = "Undergraduate"
+courses = [
+  { code = "C&T 330", title = "Instructional Approaches for ESOL Learners in the Elementary/Early Childhood Classroom", terms = "Spring 2024 to Fall 2026\nsix terms", cv_terms = "Spring 2024-Fall 2026 (6 terms)" },
+  { code = "C&T 331", title = "Instructional Approaches for ESOL Learners in the Middle/Secondary Classroom", terms = "Spring 2025" },
+  { code = "C&T 423", title = "Assessing English Language Learners", terms = "Summers 2025 & 2026" },
+]
+
+[[teaching]]
+group = "Teacher Education Foundations"
+courses = [
+  { code = "C&T 235", title = "Cultural Diversity, Equity, and Inclusion in K-12 Schools", terms = "Fall 2023 (two sections)\nSpring 2024", cv_terms = "Fall 2023 (2 sections); Spring 2024" },
+]
+
+
+# ------------------------------------------------------------------ methods
+#  items: write "R | tidyverse, ggplot2, R Markdown/Quarto" to show a small second line.
+[[methods]]
+title = "Quantitative methods"
+items = ["Regression", "Generalized linear models", "Multivariate modeling", "Agreement and error analysis", "Bootstrap confidence intervals", "Multilevel approaches"]
+
+[[methods]]
+title = "Programming & analysis"
+cv_title = "Programming and analysis"
+items = ["R | tidyverse, ggplot2, R Markdown/Quarto", "Python", "IBM SPSS", "Microsoft Excel"]
+
+[[methods]]
+title = "Computational language research"
+items = ["Automated scoring evaluation", "MFCC analysis", "Explainable machine learning", "Reproducible workflows", "Corpus analysis"]
+
+[[methods]]
+title = "Qualitative research"
+items = ["Interview inquiry", "Thematic analysis", "Integrative review", "Policy and document analysis"]
+
+
+# ------------------------------------------------------------------ service
+[peer_review]
+dates   = "2023 to 2026"
+role    = "Ad hoc reviewer"
+cv_role = "Ad Hoc Reviewer"
+summary = "Fifteen manuscript reviews documented in Web of Science"
+cv_summary = "15 manuscript reviews documented in Web of Science Researcher Profiles: SAGE Open (12) and Journal of Research on Technology in Education (3)."
+journals = [
+  { name = "SAGE Open", count = "12 reviews" },
+  { name = "Journal of Research on Technology in Education", count = "3 reviews" },
+]
+
+[[leadership]]
+dates  = "2025 to 2026"
+role   = "Graduate Student Advisory Board Member"
+org    = "School of Education and Human Sciences, University of Kansas"
+place  = "Lawrence, KS"
+site_who = "School of Education and Human Sciences, University of Kansas"
+
+[[leadership]]
+dates  = "2018 to 2020"
+role   = "Head of English Translation Board"
+org    = "Armenian Ethnography Museum at Vank Cathedral"
+site_who = "Armenian Ethnography Museum at Vank Cathedral, Isfahan, Iran"
+place  = "Isfahan, Iran"
+text   = "Supervised content for a biweekly English-language magazine."
+
+[[leadership]]
+dates  = "2017 to 2018"
+role   = "President, Students Scientific Association"
+org    = "University of Isfahan"
+site_who = "Faculty of Foreign Languages, University of Isfahan"
+cv_role = "President, Students Scientific Association, Faculty of Foreign Languages"
+place  = "Isfahan, Iran"
+text   = "Planned and organized conferences, workshops, and classes, including national and international events."
+
+
+# ------------------------------------------------------------------ languages
+[[languages]]
+name  = "Farsi"
+level = "Native"
+cv_level = "native"
+
+[[languages]]
+name  = "Qashqai-Turkish"
+level = "Heritage / native-level"
+cv_level = "heritage/native-level"
+
+[[languages]]
+name  = "English"
+level = "C2 · Full professional proficiency"
+cv_level = "C2 / full professional proficiency"
+
+
+# ------------------------------------------------------------------ honors
+#  note: shown on the right of the website entry; cv_note is how the CV continues the line
+[[honors]]
+name = "School of Education Recognition Scholarship"
+note = "University of Kansas"
+
+[[honors]]
+name = "ERB Karen Simmons Scholarship"
+note = "University of Kansas"
+
+[[honors]]
+name = "Ronald K. and Barbara D. Spry Student Support"
+note = "University of Kansas"
+
+[[honors]]
+name = "Helen Rowles Hansen Scholarship"
+note = "University of Kansas"
+
+[[honors]]
+name = "William S. Lashier Jr. Scholarship in Education"
+note = "University of Kansas"
+
+[[honors]]
+name = "Distinguished Instructor"
+note = "University of Isfahan · 2019"
+cv_note = "University of Isfahan  |  2019"
+
+[[honors]]
+name = "Ranked 99th of 9,881 candidates"
+site_name = "Ranked 99th of 9,881 candidates, B.A. Public Entrance Exam"
+note = "2016"
+cv_note = "B.A. Public Entrance Exam  |  2016"
+
+
+# ------------------------------------------------------------------ contact and dossier
+[contact]
+dossier_note = "I welcome conversations about collaboration, invited talks, and teaching. Documents for committees and collaborators:"
+
+# Add a document: put the PDF in this folder, then add a block like the ones below.
+[[documents]]
+title = "Curriculum vitae"
+file  = "Peyman_Jahanbin_CV.pdf"
+
+# [[documents]]
+# title = "Research statement"
+# file  = "Peyman_Jahanbin_Research_Statement.pdf"
+#
+# [[documents]]
+# title = "Teaching statement"
+# file  = "Peyman_Jahanbin_Teaching_Statement.pdf"

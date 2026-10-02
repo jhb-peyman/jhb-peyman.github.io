@@ -1,1 +1,6 @@
 .DS_Store
+builder/.stamps/
+builder/_cv.html
+builder/_og.html
+_cv_tmp.pdf
+_og_tmp.png
