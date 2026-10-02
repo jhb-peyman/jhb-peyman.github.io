@@ -87,9 +87,9 @@ h1{font:300 clamp(60px,21vw,92px)/.9 var(--serif);letter-spacing:-.025em}
 h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
 .lede{max-width:540px;margin-top:30px;font:300 clamp(19px,2vw,24px)/1.5 var(--serif);color:var(--soft)}
 .lede i{color:var(--ink)}
-.ridge{position:relative;flex:1 1 auto;min-height:230px;margin-top:-30px;pointer-events:none;
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 34%);mask-image:linear-gradient(to bottom,transparent 0,#000 34%)}
-.ridge canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ridge{position:relative;flex:1 1 auto;min-height:230px;margin-top:-30px;pointer-events:none}
+.ridge canvas{position:absolute;left:0;bottom:0;width:100%;display:block;
+  -webkit-mask-image:linear-gradient(to bottom,transparent var(--m1,0px),#000 var(--m2,34%));mask-image:linear-gradient(to bottom,transparent var(--m1,0px),#000 var(--m2,34%))}
 .hero-foot{position:relative;z-index:2;width:100%}
 .hero-bot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:20px 0 28px;border-top:1px solid var(--line)}
 .cue{display:flex;align-items:center;gap:16px;font:500 11px var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--soft);opacity:calc(1 - var(--p,0) * 8);transition:color .3s}
@@ -97,13 +97,18 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
 .cue i{position:relative;display:block;width:1px;height:40px;background:var(--line);overflow:hidden}
 .cue i::after{content:"";position:absolute;left:0;top:-16px;width:1px;height:16px;background:linear-gradient(to bottom,transparent,var(--gold-hi));animation:drip 2.6s cubic-bezier(.65,0,.3,1) 2.2s infinite}
 @keyframes drip{0%{transform:translateY(0)}65%,100%{transform:translateY(60px)}}
-/* parallax while leaving the first screen: the title lifts and fades, the waves drift down */
-.hero-top{transform:translate3d(0,calc(var(--p,0) * -36px),0);opacity:calc(1 - var(--p,0) * 1.2)}
-.ridge canvas{transform:translate3d(0,calc(var(--p,0) * 30px),0)}
+/* pinned opening scene: the hero stays put while --p (0 to 1) drives the title away and the waves up */
+.stage{position:relative}
+@media (min-height:680px) and (prefers-reduced-motion:no-preference){
+  .js .stage{height:185svh}
+  .js .hero{position:sticky;top:0;height:100svh;min-height:0}
+  .js .ridge{min-height:110px;transform:translate3d(0,calc(var(--p,0) * -17svh),0)}
+  .js .hero-top{transform-origin:0 0;transform:translate3d(0,calc(var(--p,0) * -9svh),0) scale(calc(1 - var(--p,0) * .06));opacity:calc(1 - var(--p,0) * 1.7);will-change:transform,opacity}
+}
 .links{display:flex;gap:28px;flex-wrap:wrap}
 .links a{font:500 11px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink);padding-bottom:6px;border-bottom:1px solid var(--gold);transition:color .3s,border-color .3s}
 .links a:hover{color:var(--gold-hi);border-color:var(--gold-hi)}
-@media (min-width:821px){h1{font-size:clamp(88px,10.4vw,156px)}}
+@media (min-width:821px){h1{font-size:clamp(88px,min(10.4vw,16.5svh),156px)}}
 /* staged entrance */
 @keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes rise{from{transform:translateY(108%)}to{transform:none}}
@@ -117,7 +122,10 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
 
 /* sections: ledger */
 section{padding:var(--secpad) 0 0;scroll-margin-top:calc(var(--secpad) * -1 + 96px)}
-.sec{display:grid;grid-template-columns:230px 1fr;gap:clamp(24px,5vw,72px);border-top:1px solid var(--line);padding-top:30px}
+.sec{position:relative;display:grid;grid-template-columns:230px 1fr;gap:clamp(24px,5vw,72px);padding-top:30px}
+.sec::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--line)}
+.js .sec::before{transform:scaleX(0);transform-origin:0 50%;transition:transform 1.6s var(--ease)}
+.js .sec.in::before{transform:none}
 .lab{position:sticky;top:104px;align-self:start}
 .lab .n{font:italic 300 52px/1 var(--serif);color:var(--gold);display:block;margin-bottom:14px}
 .lab h2{font:500 11px/1.5 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--soft)}
@@ -129,8 +137,13 @@ section{padding:var(--secpad) 0 0;scroll-margin-top:calc(var(--secpad) * -1 + 96
 .pframe{position:relative}
 .pframe::before{content:"";position:absolute;inset:14px -14px -14px 14px;border:1px solid var(--gold);opacity:.55;z-index:0;pointer-events:none}
 .pframe .portrait{z-index:1}
+.js .pframe{--k:0}
+.js .pframe .portrait{clip-path:inset(-70px -70px calc((1 - var(--k)) * (100% + 70px) - 70px) -70px)}
+.js .pframe .portrait img{transform:scale(calc(1.18 - var(--k) * .18))}
+.js .pframe::before{opacity:calc(.55 * var(--k));transform:translate(calc((1 - var(--k)) * -26px),calc((1 - var(--k)) * -26px))}
 .statement{font:300 clamp(24px,2.7vw,34px)/1.3 var(--serif);color:var(--ink);max-width:760px}
 .statement em{color:var(--gold-hi)}
+.scrub .w{opacity:clamp(.16,calc((var(--k,0) * (var(--n) + 2) - var(--i)) * .55 + .16),1);transition:opacity .22s linear}
 .themes{margin-top:44px;display:flex;flex-wrap:wrap;gap:8px 0;color:var(--muted);font:400 14px var(--sans);letter-spacing:.02em}
 .themes span:not(:last-child)::after{content:"·";margin:0 14px;color:var(--gold)}
 
@@ -250,7 +263,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   .pub{grid-template-columns:1fr;gap:8px}
   .award{flex-direction:column;gap:2px}.award span{text-align:left}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .caps,.ln>span,.lede,.ridge,.hero-foot,.cue i::after{animation:none}.hero-top,.ridge canvas{transform:none!important;opacity:1!important}.sheet,.sheet a{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .caps,.ln>span,.lede,.ridge,.hero-foot,.cue i::after{animation:none}.hero-top{transform:none!important;opacity:1!important}.js .pframe{--k:1}.js .sec::before{transform:none;transition:none}.sheet,.sheet a{transition:none}}
 @media print{nav,#bar,.ridge,.sheet{display:none}}
 </style>
 </head>
@@ -286,6 +299,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   </ul>
 </div>
 
+<div class="stage" id="stage">
 <header class="hero" id="top">
   <div class="wrap hero-top">
     <div class="caps">Ph.D. Student · University of Kansas</div>
@@ -304,6 +318,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     </div>
   </div>
 </header>
+</div>
 
 <main class="wrap">
 
@@ -312,8 +327,8 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     <div class="lab rv"><span class="n">i</span><h2>Research</h2></div>
     <div class="body">
       <div class="intro">
-        <p class="statement rv">I study how automated systems <em>score speech</em>: where they agree with human raters, where they do not, and who is affected when they get it wrong.</p>
-        <div class="pframe rv"><figure class="portrait"><img src="portrait.jpg" width="1400" height="1379" alt="Portrait of Peyman Jahanbin" loading="lazy"></figure></div>
+        <p class="statement" data-words>I study how automated systems <em>score speech</em>: where they agree with human raters, where they do not, and who is affected when they get it wrong.</p>
+        <div class="pframe" data-reveal><figure class="portrait"><img src="portrait.jpg" width="1400" height="1379" alt="Portrait of Peyman Jahanbin" loading="lazy"></figure></div>
       </div>
       <p class="themes rv"><span>Language assessment</span><span>Automated speaking assessment</span><span>Validity &amp; fairness</span><span>Responsible AI in education</span><span>Explainable machine learning</span><span>L2 pronunciation</span><span>Multilingual education &amp; policy</span><span>Seal of Biliteracy</span><span>Quantitative &amp; mixed methods</span></p>
       <div class="items">
@@ -558,7 +573,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 <section class="contact" id="contact">
   <div class="rv">
     <div class="caps" style="margin-bottom:26px">Contact</div>
-    <p class="big">Get in <em>touch.</em></p>
+    <p class="big" data-words data-scrub="0.97,0.66">Get in <em>touch.</em></p>
     <a class="mail" href="mailto:Peyman@KU.edu">Peyman@KU.edu</a>
     <div class="links">
       <a href="https://www.linkedin.com/in/jpeyman/" target="_blank" rel="noopener">LinkedIn</a>
@@ -578,24 +593,67 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 (function(){
   var d=document,de=d.documentElement,nav=d.getElementById('nav'),bar=d.getElementById('bar'),queued=false;
 
-  // nav background + reading progress
-  var hero=d.getElementById('top'),calm=matchMedia('(prefers-reduced-motion: reduce)').matches,lastP=-1;
+  // nav background + reading progress + scroll-linked scenes
+  var hero=d.getElementById('top'),stage=d.getElementById('stage'),calm=matchMedia('(prefers-reduced-motion: reduce)').matches,lastP=-1;
+  var pinMQ=matchMedia('(min-height: 680px) and (prefers-reduced-motion: no-preference)');
+  window.__p=0;
+  var clamp=function(v){return v<0?0:v>1?1:v};
+  var scrubs=[];                         // elements whose --k (0 to 1) follows their position in the viewport
+  function addScrub(el,from,to){scrubs.push({el:el,from:from,to:to,last:-1})}
+
+  // split the research statement and the closing line into words that light up as they are scrolled through
+  if(!calm){
+    de.classList.add('scrub');
+    d.querySelectorAll('[data-words]').forEach(function(el){
+      var n=0;
+      (function wrap(node){
+        Array.prototype.slice.call(node.childNodes).forEach(function(ch){
+          if(ch.nodeType===3){
+            var frag=d.createDocumentFragment();
+            ch.textContent.split(/(\s+)/).forEach(function(tok){
+              if(!tok)return;
+              if(/^\s+$/.test(tok)){frag.appendChild(d.createTextNode(tok));return}
+              var w=d.createElement('span');w.className='w';w.style.setProperty('--i',n++);w.textContent=tok;frag.appendChild(w);
+            });
+            node.replaceChild(frag,ch);
+          }else if(ch.nodeType===1){wrap(ch)}
+        });
+      })(el);
+      el.style.setProperty('--n',n);
+      var sp=(el.getAttribute('data-scrub')||'').split(',');
+      addScrub(el,sp[0]?parseFloat(sp[0]):.92,sp[1]?parseFloat(sp[1]):.40);
+    });
+    d.querySelectorAll('[data-reveal]').forEach(function(el){addScrub(el,.97,.38)});
+  }
+
   function onScroll(){
     nav.classList.toggle('s',scrollY>40);
-    if(!calm){
-      var p=Math.min(Math.max(scrollY/(innerHeight*.8),0),1);
-      if(p!==lastP){hero.style.setProperty('--p',p.toFixed(3));lastP=p}
+    // opening scene: progress through the pinned hero
+    var p=0;
+    if(pinMQ.matches){var span=stage.offsetHeight-innerHeight;p=span>0?clamp(scrollY/span):0}
+    if(p!==lastP){hero.style.setProperty('--p',p.toFixed(4));window.__p=p;lastP=p}
+    // scrubbed elements
+    var vh=innerHeight;
+    for(var i=0;i<scrubs.length;i++){
+      var sc=scrubs[i],r=sc.el.getBoundingClientRect();
+      if(r.bottom<-200||r.top>vh+200){ if(r.top>vh+200&&sc.last!==0){sc.el.style.setProperty('--k',0);sc.last=0} else if(r.bottom<-200&&sc.last!==1){sc.el.style.setProperty('--k',1);sc.last=1} continue}
+      var k=clamp((sc.from*vh-r.top)/((sc.from-sc.to)*vh));
+      if(Math.abs(k-sc.last)>.002){sc.el.style.setProperty('--k',k.toFixed(3));sc.last=k}
     }
     var m=de.scrollHeight-innerHeight;
     bar.style.transform='scaleX('+(m>0?Math.min(scrollY/m,1):0)+')';
     queued=false;
   }
   addEventListener('scroll',function(){if(!queued){queued=true;requestAnimationFrame(onScroll)}},{passive:true});
+  addEventListener('resize',function(){lastP=-1;scrubs.forEach(function(s){s.last=-1});onScroll()});
   onScroll();
+
+  // "back to top" links: go to the very top, even while the hero is pinned
+  d.querySelectorAll('a[href="#top"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();scrollTo({top:0,behavior:calm?'auto':'smooth'})})});
 
   // reveal on scroll
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
-  d.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+  d.querySelectorAll('.rv,.sec').forEach(function(el){io.observe(el)});
 
   // publication filter, with live counts
   var tabs=d.querySelectorAll('.tab'),pubs=d.querySelectorAll('.pub');
@@ -641,16 +699,21 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 (function(){
   var c=document.getElementById('ridge'),x=c.getContext('2d'),hero=document.getElementById('top');
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var W=0,H=0,D=1,L=30,P=170,t0=3.1,raf=0,last=0,running=false,vis=true;
+  var W=0,H=0,Hb=0,E=0,D=1,L=30,P=170,t0=3.1,raf=0,last=0,running=false,vis=true,lastPe=-1;
+  var pinMQ=matchMedia('(min-height: 680px) and (prefers-reduced-motion: no-preference)');
   var h=new Float32Array(L*P),v=new Float32Array(L*P);   // displacement, velocity
   var ys=new Float32Array(P+1);
   var C2=.07,K=.012,DAMP=.968,acc=0,FIX=1000/60;
   function size(){
-    D=Math.min(devicePixelRatio||1,2);W=c.clientWidth;H=c.clientHeight;
+    D=Math.min(devicePixelRatio||1,2);
+    Hb=c.parentNode.clientHeight;                       // the visible ridge box
+    E=pinMQ.matches?Math.round(Math.min(innerHeight*.42,380)):0;   // headroom above it for peaks that rise during the opening scene
+    c.style.height=(Hb+E)+'px';
+    W=c.clientWidth;H=Hb+E;lastPe=-1;
     c.width=Math.round(W*D);c.height=Math.round(H*D);x.setTransform(D,0,0,D,0,0);
     if(reduce)draw(t0);
   }
-  function geo(){return {top:H*.14,step:(H*.8)/L,m:W*.04}}
+  function geo(){return {top:E+Hb*.14,step:(Hb*.8)/L,m:W*.04}}
   function amp(u,ti){
     var s=0;
     for(var k=0;k<4;k++){
@@ -709,7 +772,10 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   function draw(t){
     if(!W||!H)return;
     x.clearRect(0,0,W,H);
-    var g=geo(),top=g.top,st=g.step,m=g.m,pk=st*5.4,span=W-2*m;
+    var g=geo(),top=g.top,st=g.step,m=g.m,span=W-2*m;
+    // the opening scene: as the title dissolves the signal surges (smoothstep of the hero's scroll progress)
+    var q=window.__p||0,pe=q*q*(3-2*q),pk=st*5.4*(1+2.6*pe),ab=1+.6*pe;
+    if(pe!==lastPe){lastPe=pe;c.style.setProperty('--m1',(E*(1-pe)).toFixed(1)+'px');c.style.setProperty('--m2',(E*(1-pe)+Hb*.34).toFixed(1)+'px')}
     for(var i=0;i<L;i++){
       var y=top+i*st,ti=t+i*.32,f=i/(L-1),j,px;
       x.beginPath();
@@ -722,7 +788,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
       x.fillStyle='#0a0a0a';x.fill();
       x.beginPath();
       for(j=0;j<=P;j++){px=m+(j/P)*span;j?x.lineTo(px,ys[j]):x.moveTo(px,ys[j])}
-      x.strokeStyle='rgba(185,154,91,'+(.16+.5*f).toFixed(3)+')';
+      x.strokeStyle='rgba(185,154,91,'+Math.min(.95,(.16+.5*f)*ab).toFixed(3)+')';
       x.lineWidth=.9;x.stroke();
     }
   }
@@ -737,6 +803,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   function stop(){running=false;cancelAnimationFrame(raf)}
   // keep the canvas sharp whenever its box changes (resize, font load, rotation)
   new ResizeObserver(size).observe(c.parentNode);
+  if(pinMQ.addEventListener)pinMQ.addEventListener('change',size);
   size();
   if(reduce)draw(t0);
   // do no work while the hero is off screen or the tab is hidden
