@@ -4,7 +4,7 @@ You only ever edit **one file**: `content.toml`. Your website, your CV PDF and y
 
 ## The three steps
 
-1. **Edit** `content.toml` in any text editor (TextEdit works: choose Format, then Make Plain Text) and save it.
+1. **Edit** `content.toml` in a plain-text editor and save it. In TextEdit, first choose Format, then Make Plain Text, and turn off smart quotes (Edit, Substitutions, untick Smart Quotes), because curly quotes break the file. Typing a curly apostrophe or quote *inside* your text, such as in “Students’ English”, is fine; only the quotes that wrap the text must be straight. Don't use Word or Pages for this file.
 2. **Double-click `Build.command`.** It rebuilds the site and the CV, then opens both so you can look. If you made a typing mistake, it tells you the line or the entry to fix, and nothing is touched.
 3. **Double-click `Publish.command`.** It shows what changed, waits for you to press Return, and puts it online. The live site updates about a minute later.
 
