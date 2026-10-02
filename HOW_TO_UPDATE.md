@@ -74,6 +74,12 @@ Change `status` under `[person]` to `"Ph.D. Candidate"`. That updates the hero l
 ### Different wording on the CV than on the website
 Many fields have a CV-only twin that starts with `cv_`: `cv_title`, `cv_text`, `cv_dates`, `cv_terms`, `cv_note`, and so on. When it is present, the CV uses it and the website uses the normal field. Details that appear only in the CV (Research Interests sentence, Methodological Training, header line) live under `[cv]`.
 
+### Add a whole new section (Grants, Workshops, Media, Invited Talks...)
+Near the bottom of `content.toml` there is a commented example called `[[extra_sections]]`. Remove the `#` signs, rename it, and fill in its items. It appears on the website after Honors, in the CV before Languages, and in the menu automatically. Add `site = false` or `cv = false` to show it in only one place.
+
+### Remove a section
+Delete all of its blocks (or the whole section). It disappears from the website, the menu and the CV, and the section numbers close up by themselves. You can bring it back later by pasting the blocks again. The order of the sections is fixed.
+
 ### Change the photo
 Replace `portrait.jpg` with a new file of the same name.
 

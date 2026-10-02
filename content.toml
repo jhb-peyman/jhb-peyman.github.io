@@ -574,6 +574,24 @@ note = "2016"
 cv_note = "B.A. Public Entrance Exam  |  2016"
 
 
+# ------------------------------------------------------------------ your own extra sections (optional)
+#  Need a section that does not exist yet, such as Grants, Workshops Led, Media, Invited Talks?
+#  Remove the # signs from the block below and edit it. It appears on the website after Honors and in the CV
+#  before Languages, and the menu picks it up by itself. Add more items by copying an [[extra_sections.items]] block.
+#  Use  site = false  or  cv = false  to show a section in only one of the two.
+#
+# [[extra_sections]]
+# title = "Grants & Funding"
+# intro = ""
+#
+#   [[extra_sections.items]]
+#   dates = "2027"
+#   title = "Name of the grant"
+#   org   = "Funder"
+#   place = ""
+#   text  = "One sentence about it."
+
+
 # ------------------------------------------------------------------ contact and dossier
 [contact]
 dossier_note = "I welcome conversations about collaboration, invited talks, and teaching. Documents for committees and collaborators:"

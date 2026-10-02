@@ -29,7 +29,7 @@ BUILDER = ROOT / "builder"
 CONTENT = ROOT / "content.toml"
 CV_FILE = "Peyman_Jahanbin_CV.pdf"
 
-ROMAN = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii"]
+ROMAN = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii", "xiii", "xiv", "xv", "xvi", "xvii", "xviii", "xix", "xx", "xxi", "xxii", "xxiii", "xxiv"]
 STATUS_ORDER = {"published": 0, "review": 1, "preprint": 2}
 STATUS_KEY = {"published": "pub", "review": "rev", "preprint": "pre"}
 CITE_KIND = {"published": "article", "review": "submitted", "preprint": "preprint"}
@@ -97,51 +97,141 @@ def load():
         )
 
 
+def normalize(c):
+    """Forgive harmless slips: numbers instead of text, one string instead of a list, odd capitalisation."""
+    for p in c.get("publications", []) if isinstance(c.get("publications"), list) else []:
+        if not isinstance(p, dict):
+            continue
+        for k in ("year", "volume", "issue", "pages", "article"):
+            if isinstance(p.get(k), (int, float)) and not isinstance(p.get(k), bool):
+                p[k] = str(p[k])
+        if isinstance(p.get("status"), str):
+            p["status"] = p["status"].strip().lower()
+        for k in ("topics", "authors"):
+            if isinstance(p.get(k), str):
+                p[k] = [p[k]]
+    for x in c.get("presentations", []) if isinstance(c.get("presentations"), list) else []:
+        if isinstance(x, dict):
+            if isinstance(x.get("cite_authors"), str):
+                x["cite_authors"] = [x["cite_authors"]]
+            if isinstance(x.get("cite_year"), str) and x["cite_year"].isdigit():
+                x["cite_year"] = int(x["cite_year"])
+    return c
+
+
 def check(c):
     problems, warnings = [], []
+    LISTS = ["news", "projects", "education", "appointments", "topics", "publications", "presentations", "teaching", "methods",
+             "leadership", "languages", "honors", "documents", "extra_sections"]
+    TABLES = ["person", "seo", "cv", "research", "peer_review", "contact"]
+    for k in LISTS:
+        if k in c and not (isinstance(c[k], list) and all(isinstance(x, dict) for x in c[k])):
+            problems.append(f"[{k}] must be written as blocks that start with [[{k}]]")
+            c[k] = []
+    for k in TABLES:
+        if k in c and not isinstance(c[k], dict):
+            problems.append(f"[{k}] must be a section that starts with [{k}]")
+            c[k] = {}
 
-    def need(d, keys, where):
+    def need(d, keys, where, kind=str):
         for k in keys:
-            if not get(d, k):
+            v = d.get(k)
+            if v in (None, "", []):
                 problems.append(f"{where}: '{k}' is empty or missing")
+            elif kind is str and not isinstance(v, str):
+                problems.append(f"{where}: '{k}' must be text in quotes")
+
+    def lst(d, k, where):
+        v = d.get(k)
+        if v in (None, "", []):
+            problems.append(f"{where}: '{k}' is empty or missing")
+            return []
+        if not isinstance(v, list) or not all(isinstance(x, str) for x in v):
+            problems.append(f"{where}: '{k}' must be a list of quoted text, like [\"one\", \"two\"]")
+            return []
+        return v
 
     need(c.get("person", {}), ["first_name", "last_name", "status", "institution", "email", "site_url", "portrait"], "[person]")
     need(c.get("seo", {}), ["title", "description"], "[seo]")
-    topics = {t["key"] for t in c.get("topics", [])}
+    if c.get("person") and not isinstance(c["person"].get("specialties", []), list):
+        problems.append("[person]: 'specialties' must be a list of quoted text")
+        c["person"]["specialties"] = []
+    for i, t in enumerate(c.get("topics", []), 1):
+        need(t, ["key", "label"], f"topic #{i}")
+    topics = {t.get("key") for t in c.get("topics", [])}
     seen = set()
     for i, p in enumerate(c.get("publications", []), 1):
-        w = f"publication #{i} ({get(p, 'id', get(p, 'title', '?'))[:40]})"
-        need(p, ["id", "status", "year", "title", "authors"], w)
+        w = f"publication #{i} ({str(p.get('id') or p.get('title') or '?')[:40]})"
+        need(p, ["id", "status", "year", "title"], w)
+        auth = lst(p, "authors", w)
         if p.get("status") not in STATUS_ORDER:
             problems.append(f"{w}: status must be published, review or preprint")
+        if p.get("year") and not re.fullmatch(r"\d{4}", str(p["year"])):
+            problems.append(f"{w}: year must be four digits, like 2027")
         if p.get("id") in seen:
             problems.append(f"{w}: the id '{p.get('id')}' is used twice")
         seen.add(p.get("id"))
-        for t in p.get("topics", []):
+        for t in p.get("topics", []) if isinstance(p.get("topics", []), list) else []:
             if t not in topics:
-                problems.append(f"{w}: unknown topic '{t}' (defined: {', '.join(sorted(topics))})")
+                problems.append(f"{w}: unknown topic '{t}' (defined: {', '.join(sorted(x for x in topics if x))})")
         if p.get("cite", True) is not False:
-            if not get(p, "cite_title"):
+            if not p.get("cite_title"):
                 warnings.append(f"{w}: no cite_title, so the cite buttons will use the title as written")
             if p.get("status") == "published" and not (p.get("doi") or p.get("url")):
                 warnings.append(f"{w}: published but no doi or url")
-        if p.get("status") == "published" and not (p.get("venue") or p.get("venue_text")):
-            problems.append(f"{w}: no venue")
+        if not (p.get("venue") or p.get("venue_text")):
+            problems.append(f"{w}: 'venue' is empty or missing (the journal or server name)")
+        for a in auth:
+            if "|" in a and "," not in a.split("|", 1)[1]:
+                problems.append(f"{w}: author '{a}' should look like \"Fan Qihang | Fan, Qihang\"")
     for i, x in enumerate(c.get("presentations", []), 1):
         need(x, ["date", "title"], f"presentation #{i}")
-    for g in c.get("teaching", []):
+        if x.get("id") and x.get("cite_title"):
+            lst(x, "cite_authors", f"presentation #{i}")
+            if not x.get("cite_year"):
+                problems.append(f"presentation #{i}: cite_year is missing (needed for the cite buttons)")
+    for i, g in enumerate(c.get("teaching", []), 1):
+        need(g, ["group"], f"teaching group #{i}")
+        if not isinstance(g.get("courses", []), list) or not all(isinstance(k, dict) for k in g.get("courses", [])):
+            problems.append(f"teaching group #{i}: 'courses' must be a list of {{ code = ..., title = ... }} items")
+            g["courses"] = []
         for j, k in enumerate(g.get("courses", []), 1):
             need(k, ["code", "title"], f"teaching '{g.get('group', '?')}' course #{j}")
-    for sec in ("education", "appointments", "projects", "news"):
+    for i, m in enumerate(c.get("methods", []), 1):
+        need(m, ["title"], f"methods block #{i}")
+        lst(m, "items", f"methods block #{i}")
+    for sec, keys in (("news", ["date", "text"]), ("projects", ["dates", "title"]), ("education", ["dates", "title"]),
+                      ("appointments", ["dates", "title"]), ("leadership", ["dates", "role"]), ("languages", ["name", "level"]),
+                      ("honors", ["name"]), ("documents", ["title", "file"])):
         for i, x in enumerate(c.get(sec, []), 1):
-            need(x, ["dates" if sec != "news" else "date", "title" if sec != "news" else "text"], f"{sec} #{i}")
+            need(x, keys, f"{sec} #{i}")
+    if c.get("peer_review"):
+        need(c["peer_review"], ["dates", "role"], "[peer_review]")
+        js = c["peer_review"].get("journals", [])
+        if not isinstance(js, list) or not all(isinstance(j, dict) and j.get("name") and j.get("count") for j in js):
+            problems.append("[peer_review]: each journal needs a name and a count")
+            c["peer_review"]["journals"] = []
     for i, d in enumerate(c.get("documents", []), 1):
-        need(d, ["title", "file"], f"document #{i}")
-        f = get(d, "file")
+        f = d.get("file")
         if f and f != CV_FILE and not (ROOT / f).exists():
             problems.append(f"document #{i}: the file '{f}' is not in this folder")
-    if not (ROOT / get(c.get("person", {}), "portrait", "portrait.jpg")).exists():
-        problems.append("the portrait file named in [person] is not in this folder")
+    for i, e in enumerate(c.get("extra_sections", []), 1):
+        need(e, ["title"], f"extra section #{i}")
+        if not isinstance(e.get("items", []), list) or not all(isinstance(x, dict) for x in e.get("items", [])):
+            problems.append(f"extra section #{i}: items must be blocks that start with [[extra_sections.items]]")
+            e["items"] = []
+        for j, it in enumerate(e["items"], 1):
+            need(it, ["title"], f"extra section #{i} item #{j}")
+    mt = c.get("cv", {}).get("methodological_training", [])
+    if mt and not (isinstance(mt, list) and all(isinstance(m, dict) and m.get("label") and m.get("text") for m in mt)):
+        problems.append("[cv]: each methodological_training item needs a label and a text")
+        c["cv"]["methodological_training"] = []
+    if c.get("cv") and not isinstance(c["cv"].get("contact_line", []), list):
+        problems.append("[cv]: contact_line must be a list of quoted text")
+        c["cv"]["contact_line"] = []
+    pt = c.get("person", {}).get("portrait")
+    if pt and not (ROOT / pt).exists():
+        problems.append(f"the portrait file '{pt}' is not in this folder")
     return problems, warnings
 
 
@@ -380,6 +470,25 @@ def s_honors(c):
     return "honors", "Honors", "Honors", "\n".join(parts), True
 
 
+def slug(t):
+    return "x-" + (re.sub(r"[^a-z0-9]+", "-", t.lower()).strip("-") or "section")
+
+
+def s_extra(e):
+    parts = []
+    if e.get("intro"):
+        parts.append(f'      <p class="statement rv" style="margin-bottom:34px">{inline(e["intro"], "em")}</p>')
+    for x in e.get("items", []):
+        who = " · ".join(v for v in (x.get("org"), x.get("place")) if v)
+        link = ""
+        if x.get("link"):
+            link = f'\n        <p><a class="doi" href="{attr(x["link"])}" target="_blank" rel="noopener">{esc(x.get("link_label") or "Read")}</a></p>'
+        parts.append(f'      <div class="item rv"><div class="when">{esc(get(x, "dates"))}</div><div>\n        <h3>{inline(x["title"], "em")}</h3>'
+                     + (f'<div class="who">{esc(who)}</div>' if who else "")
+                     + (f'\n        <p>{inline(x["text"])}</p>' if x.get("text") else "") + link + "</div></div>")
+    return slug(e["title"]), esc(e["title"]), esc(e["title"]), "\n".join(parts), False
+
+
 def contact_html(c):
     p, ct = c["person"], c.get("contact", {})
     docs = ""
@@ -488,9 +597,19 @@ def build_site(c, today):
         secs.append(s_languages(c))
     if c.get("honors"):
         secs.append(s_honors(c))
+    for e in c.get("extra_sections", []):
+        if e.get("site", True) is not False:
+            secs.append(s_extra(e))
 
+    used = set()
+    for n, sc in enumerate(secs):
+        sid = sc[0]
+        while sid in used:
+            sid += "-2"
+        used.add(sid)
+        secs[n] = (sid,) + tuple(sc[1:])
     main = []
-    for n, (sid, label_html, _short, body, tight) in enumerate(secs):
+    for n, (sid, label_html, _short, body, tight) in enumerate(secs[:24]):
         main.append(sec_wrap(sid, ROMAN[n], label_html, body, tight))
     main.append(contact_html(c))
 
@@ -576,7 +695,7 @@ def build_site(c, today):
               f'<span>Updated {month_year(today)}</span><a href="#top">Back to top &uarr;</a></div>\n</footer>')
     cites = json.dumps(cite_records(c), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     cites_block = f'<script type="application/json" id="cites">{cites}</script>'
-    topics_js = json.dumps([["all", "All topics"]] + [[t["key"], t["label"]] for t in c.get("topics", [])], ensure_ascii=False, separators=(",", ":"))
+    topics_js = json.dumps([["all", "All topics"]] + [[t["key"], t["label"]] for t in c.get("topics", [])], ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
     tpl = (BUILDER / "site.html").read_text(encoding="utf-8")
     out = (tpl.replace("@@HEAD@@", head).replace("@@SKIP@@", f'<a class="skip" href="#{first_id}">Skip to content</a>')
@@ -710,6 +829,13 @@ def cv_body(c, today):
         out.append("<h2>Awards, Scholarships &amp; Honors</h2>" + "".join(
             f'<div class="hon"><b>{esc(h["name"])}</b>{", " + esc(h.get("cv_note") or h["note"]) if (h.get("cv_note") or h.get("note")) else ""}</div>'
             for h in c["honors"]))
+    for e in c.get("extra_sections", []):
+        if e.get("cv", True) is False or not e.get("items"):
+            continue
+        out.append(f"<h2>{esc(e.get('cv_title') or e['title'])}</h2>" + "".join(
+            cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(x.get("cv_dates") or cv_dates(get(x, "dates"))), esc(get(x, "org")), esc(get(x, "place")),
+                     inline(x.get("cv_text") or get(x, "text")))
+            for x in e["items"]))
     if c.get("languages"):
         out.append('<h2>Languages</h2><p class="langs">' + '<span class="sep">|</span>'.join(
             f'<b>{esc(l["name"])}</b> ({esc(l.get("cv_level") or l["level"])})' for l in c["languages"]) + "</p>")
@@ -834,7 +960,7 @@ def main(argv):
     no_pdf = "--no-pdf" in argv
     say = print
     try:
-        c = load()
+        c = normalize(load())
         problems, warnings = check(c)
         for w in warnings:
             say("  note: " + w)
@@ -865,6 +991,10 @@ def main(argv):
         return 1
     except KeyError as e:
         say(f"\nA required field is missing in content.toml: {e}. Check the entry you edited last.")
+        return 1
+    except Exception as e:  # never show a wall of code to a non-programmer
+        say(f"\nSomething in content.toml could not be understood ({type(e).__name__}: {e}).\n"
+            "Undo your last edit (or compare with the previous version) and build again. Nothing was published.")
         return 1
 
 
