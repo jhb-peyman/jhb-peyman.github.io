@@ -30,7 +30,8 @@ automatically from the record's `kind`.
 **Add a document to the Dossier** (research statement, teaching statement, and so on). Upload the PDF next to
 `index.html`, then search for `ADD A DOCUMENT` and copy a row.
 
-**Add a presentation or a course.** Search for `ADD A PRESENTATION` or `ADD A COURSE`.
+**Add a presentation or a course.** Search for `ADD A PRESENTATION` or `ADD A COURSE`. A presentation with a DOI can also get cite buttons: give its row a `data-id` and add a record
+with `"kind":"talk"` to the `CITATIONS` block (see the AERA row for an example).
 
 **Edit directly on GitHub.** Open `index.html` in the repository, click the pencil icon, make the change,
 then choose "Commit changes".
