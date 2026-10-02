@@ -19,6 +19,12 @@ Each place you add to has a comment in `index.html` that starts with `ADD`, with
 list, then add a matching record to the `CITATIONS` block at the bottom of the file. The record powers the
 "Copy APA" and "BibTeX" buttons. The publication counts and the topic filter update by themselves.
 
+**When a paper gets its volume and issue.** An article that is online but has no issue yet is cited as
+"Advance online publication." (the TESOL Quarterly paper right now). When the issue is assigned, edit its
+record in the `CITATIONS` block: add `vol`, `iss` and `pp`, and delete `"online":true`. Preprints, papers
+without a DOI (give a `url`) and manuscripts under review (`"kind":"submitted"`) each follow APA 7 rules
+automatically from the record's `kind`.
+
 **Add news.** Search for `ADD NEWS`. Paste a new row at the top and keep the list to about five.
 
 **Add a document to the Dossier** (research statement, teaching statement, and so on). Upload the PDF next to
