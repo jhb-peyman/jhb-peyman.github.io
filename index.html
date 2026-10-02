@@ -78,16 +78,22 @@ nav.open{background:transparent;backdrop-filter:none;border-color:transparent}
 
 /* hero */
 .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;overflow:hidden;padding-top:72px}
-.hero-top{position:relative;z-index:2;width:100%;padding-top:clamp(36px,8vh,100px)}
-.hero .caps{margin-bottom:26px;display:flex;align-items:center;gap:18px;line-height:1.7;text-wrap:balance}
+.hero-top{position:relative;z-index:2;width:100%;padding-top:clamp(28px,6vh,90px)}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(58% 52% at 20% 30%,rgba(185,154,91,.085),transparent 72%),
+  radial-gradient(38% 36% at 90% 6%,rgba(236,231,220,.04),transparent 72%)}
+.mast{display:flex;align-items:center;gap:22px;margin-bottom:clamp(16px,3vh,34px)}
+.mrule{flex:1 1 auto;height:1px;background:linear-gradient(to right,rgba(236,231,220,.18),rgba(236,231,220,.03))}
+.mmeta{font:500 11px/1.7 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.hero .caps{margin:0;display:flex;align-items:center;gap:18px;line-height:1.7;text-wrap:balance}
 .hero .caps::before{content:"";flex:none;width:44px;height:1px;background:var(--gold)}
 h1{font:300 clamp(60px,21vw,92px)/.9 var(--serif);letter-spacing:-.025em}
 .ln{display:block;overflow:hidden;padding:.1em .12em .18em;margin:-.1em -.12em -.18em}
 .ln>span{display:block}
-h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
+h1 em{font-style:italic;font-weight:300;color:var(--gold-hi);text-shadow:0 0 .42em rgba(214,184,122,.2)}
 .lede{max-width:540px;margin-top:30px;font:300 clamp(19px,2vw,24px)/1.5 var(--serif);color:var(--soft)}
 .lede i{color:var(--ink)}
-.viz{position:relative;flex:1 1 auto;min-height:260px;margin-top:-6px}
+.viz{position:relative;flex:1 1 auto;min-height:clamp(190px,27svh,290px);margin-top:clamp(8px,2vh,26px)}
 .viz canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .viz .ov{z-index:2}
 .viz::after{content:"";position:absolute;left:0;right:0;top:0;height:34%;pointer-events:none;background:linear-gradient(to bottom,var(--bg),rgba(10,10,10,0))}
@@ -107,11 +113,18 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
 .links a{font:500 11px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink);padding-bottom:6px;border-bottom:1px solid var(--gold);transition:color .3s,border-color .3s}
 .links a:hover{color:var(--gold-hi);border-color:var(--gold-hi)}
 @media (min-width:821px){h1{font-size:clamp(88px,10.4vw,156px)}}
+@media (max-width:999px){.mrule,.mmeta{display:none}}
+/* wide screens: a larger name, with the tagline set to its right and sitting on its baseline */
+@media (min-width:1000px){
+  h1{font-size:clamp(100px,min(10.6vw,22svh),216px);line-height:.88}
+  .title{display:grid;grid-template-columns:auto minmax(240px,1fr);column-gap:clamp(32px,5vw,80px);align-items:end}
+  .title .lede{margin:0 0 .35em;justify-self:end;max-width:350px;font-size:clamp(19px,1.5vw,25px)}
+}
 /* staged entrance */
 @keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes rise{from{transform:translateY(108%)}to{transform:none}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.hero .caps{animation:up 1s var(--ease) .1s both}
+.hero .mast{animation:up 1s var(--ease) .1s both}
 .ln>span{animation:rise 1.25s var(--ease) both}
 .ln:nth-child(1)>span{animation-delay:.22s}.ln:nth-child(2)>span{animation-delay:.36s}
 .lede{animation:up 1.1s var(--ease) .62s both}
@@ -260,7 +273,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   .pub{grid-template-columns:1fr;gap:8px}
   .award{flex-direction:column;gap:2px}.award span{text-align:left}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .caps,.ln>span,.lede,.hero .viz,.hero-foot,.cue i::after{animation:none}.js .sec::before{transform:none;transition:none}.sheet,.sheet a{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .mast,.ln>span,.lede,.hero .viz,.hero-foot,.cue i::after{animation:none}.js .sec::before{transform:none;transition:none}.sheet,.sheet a{transition:none}}
 @media print{nav,#bar,.viz,.scope,.sheet{display:none}}
 </style>
 </head>
@@ -298,9 +311,15 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <header class="hero" id="top">
   <div class="wrap hero-top">
-    <div class="caps">Ph.D. Student · University of Kansas</div>
-    <h1><span class="ln"><span>Peyman</span></span><span class="ln"><span><em>Jahanbin</em></span></span></h1>
-    <p class="lede">I study how well automated scoring judges <i>spoken English</i>, and whether it judges everyone fairly.</p>
+    <div class="mast">
+      <div class="caps">Ph.D. Student · University of Kansas</div>
+      <i class="mrule" aria-hidden="true"></i>
+      <span class="mmeta">TESOL · Language Assessment · AI in Education</span>
+    </div>
+    <div class="title">
+      <h1><span class="ln"><span>Peyman</span></span><span class="ln"><span><em>Jahanbin</em></span></span></h1>
+      <p class="lede">I study how well automated scoring judges <i>spoken English</i>, and whether it judges everyone fairly.</p>
+    </div>
   </div>
   <div class="viz" id="vizA" role="img" aria-label="Animated spectrogram of synthesized speech, with the formants and pauses labelled"><canvas id="spec"></canvas><canvas id="ovA" class="ov"></canvas><div class="tip" id="tipA"></div></div>
   <div class="wrap hero-foot">
@@ -772,23 +791,23 @@ function placeTip(tip,box,x,y){
   function yOf(f){return H*(1-mel(f)/MM)}
   function xOfCol(c){return W-(col-1-c)*SC}
   function fmtHz(f){return f>=1000?(f/1000).toFixed(f>=10000?0:2).replace(/\.?0+$/,'')+' kHz':Math.round(f)+' Hz'}
-  var AX=[100,250,500,1000,2000,4000,8000];
+  var AX=[250,500,1000,2000,4000,8000];   // 100 Hz is left out: it would sit on top of the time axis
   function drawOverlay(){
     if(!W)return;
     ox.clearRect(0,0,W,H);
     ox.font='500 10px "Instrument Sans",sans-serif';ox.textBaseline='middle';
-    var padL=Math.max(16,(W-1180)/2+Math.min(64,W*.05));
+    var padL=Math.max(16,(W-1180)/2+Math.min(64,W*.05)),axX=W>700?22:12;   // legend lines up with the page column; the frequency axis sits at the left edge
     for(var k=0;k<AX.length;k++){                                     // frequency axis
       var y=yOf(AX[k]);if(y<14||y>H-10)continue;
       ox.strokeStyle='rgba(236,231,220,.10)';ox.beginPath();ox.moveTo(0,y);ox.lineTo(W,y);ox.stroke();
       ox.textAlign='left';var lab=fmtHz(AX[k]).toUpperCase(),tw=ox.measureText(lab).width;
-      ox.fillStyle='rgba(10,10,10,.62)';ox.fillRect(padL-5,y-8,tw+10,16);
-      ox.fillStyle='rgba(236,231,220,.55)';ox.fillText(lab,padL,y);
+      ox.fillStyle='rgba(10,10,10,.62)';ox.fillRect(axX-5,y-8,tw+10,16);
+      ox.fillStyle='rgba(236,231,220,.55)';ox.fillText(lab,axX,y);
     }
     ox.textAlign='center';                                            // time axis: a tick every second
     var c0=col-1-Math.floor(W/SC);c0=c0-(c0%CPS);
     for(var c=c0;c<col;c+=CPS){
-      if(c<0)continue;var x=xOfCol(c);if(x<30||x>W-40)continue;
+      if(c<0)continue;var x=xOfCol(c);if(x<92||x>W-40)continue;
       ox.strokeStyle='rgba(236,231,220,.18)';ox.beginPath();ox.moveTo(x,H-14);ox.lineTo(x,H-6);ox.stroke();
       ox.fillStyle='rgba(236,231,220,.4)';ox.fillText('-'+Math.round((col-1-c)/CPS)+' s',x,H-20);
     }
@@ -798,7 +817,7 @@ function placeTip(tip,box,x,y){
       if(isP&&run<0)run=c;
       if((!isP||c===col)&&run>=0){
         var dur=(c-run)/CPS,x1=xOfCol(run),x2=xOfCol(c-1);
-        if(dur>=.24&&x2-x1>30&&x1>padL+90&&x2<W-30){
+        if(dur>=.24&&x2-x1>30&&x1>110&&x2<W-30){
           var yb=H-34;ox.strokeStyle='rgba(214,184,122,.55)';ox.beginPath();ox.moveTo(x1,yb-4);ox.lineTo(x1,yb);ox.lineTo(x2,yb);ox.lineTo(x2,yb-4);ox.stroke();
           ox.fillStyle='rgba(214,184,122,.85)';ox.fillText('PAUSE '+Math.round(dur*1000)+' MS',(x1+x2)/2,yb-12);
         }
@@ -816,8 +835,8 @@ function placeTip(tip,box,x,y){
         ox.fillStyle='rgba(236,231,220,'+(a*.9).toFixed(2)+')';ox.fillText(lab,W-20,y);
       }
     }
-    ox.textAlign='left';ox.fillStyle='rgba(185,154,91,.9)';ox.fillText('MEL SPECTROGRAM',padL,26);
-    ox.fillStyle='rgba(236,231,220,.42)';ox.fillText(W>640?'LIVE · 0 TO 8 KHZ · SIMULATED SPEECH':'LIVE · SIMULATED',padL+112,26);
+    ox.textAlign='left';ox.fillStyle='rgba(185,154,91,.9)';ox.fillText('MEL SPECTROGRAM',padL,32);
+    ox.fillStyle='rgba(236,231,220,.42)';ox.fillText(W>640?'LIVE · 0 TO 8 KHZ · SIMULATED SPEECH':'LIVE · SIMULATED',padL+112,32);
     if(px>=0&&px<=W&&py>=0&&py<=H){                                   // the listener
       ox.strokeStyle='rgba(214,184,122,.7)';ox.beginPath();ox.moveTo(px,0);ox.lineTo(px,H);ox.moveTo(0,py);ox.lineTo(W,py);ox.stroke();
       readout();
