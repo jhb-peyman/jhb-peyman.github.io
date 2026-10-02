@@ -69,9 +69,9 @@ nav ul a[aria-current="true"]{color:var(--ink)}
 .menu{display:none;background:none;border:0;cursor:pointer;color:var(--soft);font:500 11px var(--sans);letter-spacing:.22em;text-transform:uppercase;padding:12px 0}
 .sheet{position:fixed;inset:0;z-index:35;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:72px var(--pad) 40px;opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s}
 .sheet.open{opacity:1;visibility:visible}
-.sheet a{display:block;font:300 clamp(38px,11vw,60px)/1.18 var(--serif);padding:4px 0;color:var(--ink);transform:translateY(14px);opacity:0;transition:transform .7s var(--ease),opacity .7s var(--ease),color .3s}
+.sheet a{display:block;font:300 clamp(32px,9vw,52px)/1.16 var(--serif);padding:4px 0;color:var(--ink);transform:translateY(14px);opacity:0;transition:transform .7s var(--ease),opacity .7s var(--ease),color .3s}
 .sheet.open a{transform:none;opacity:1}
-.sheet.open li:nth-child(2) a{transition-delay:.05s}.sheet.open li:nth-child(3) a{transition-delay:.1s}.sheet.open li:nth-child(4) a{transition-delay:.15s}.sheet.open li:nth-child(5) a{transition-delay:.2s}.sheet.open li:nth-child(6) a{transition-delay:.25s}.sheet.open li:nth-child(7) a{transition-delay:.3s}
+.sheet.open li:nth-child(2) a{transition-delay:.05s}.sheet.open li:nth-child(3) a{transition-delay:.1s}.sheet.open li:nth-child(4) a{transition-delay:.15s}.sheet.open li:nth-child(5) a{transition-delay:.2s}.sheet.open li:nth-child(6) a{transition-delay:.25s}.sheet.open li:nth-child(7) a{transition-delay:.3s}.sheet.open li:nth-child(8) a{transition-delay:.35s}.sheet.open li:nth-child(9) a{transition-delay:.4s}
 .sheet a[aria-current="true"]{color:var(--gold-hi);font-style:italic}
 .sheet ul{list-style:none}
 nav.open{background:transparent;backdrop-filter:none;border-color:transparent}
@@ -91,7 +91,15 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 34%);mask-image:linear-gradient(to bottom,transparent 0,#000 34%)}
 .ridge canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero-foot{position:relative;z-index:2;width:100%}
-.hero-bot{display:flex;gap:24px;flex-wrap:wrap;padding:22px 0 34px;border-top:1px solid var(--line)}
+.hero-bot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:20px 0 28px;border-top:1px solid var(--line)}
+.cue{display:flex;align-items:center;gap:16px;font:500 11px var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--soft);opacity:calc(1 - var(--p,0) * 8);transition:color .3s}
+.cue:hover{color:var(--gold-hi)}
+.cue i{position:relative;display:block;width:1px;height:40px;background:var(--line);overflow:hidden}
+.cue i::after{content:"";position:absolute;left:0;top:-16px;width:1px;height:16px;background:linear-gradient(to bottom,transparent,var(--gold-hi));animation:drip 2.6s cubic-bezier(.65,0,.3,1) 2.2s infinite}
+@keyframes drip{0%{transform:translateY(0)}65%,100%{transform:translateY(60px)}}
+/* parallax while leaving the first screen: the title lifts and fades, the waves drift down */
+.hero-top{transform:translate3d(0,calc(var(--p,0) * -36px),0);opacity:calc(1 - var(--p,0) * 1.2)}
+.ridge canvas{transform:translate3d(0,calc(var(--p,0) * 30px),0)}
 .links{display:flex;gap:28px;flex-wrap:wrap}
 .links a{font:500 11px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink);padding-bottom:6px;border-bottom:1px solid var(--gold);transition:color .3s,border-color .3s}
 .links a:hover{color:var(--gold-hi);border-color:var(--gold-hi)}
@@ -176,6 +184,32 @@ section{padding:var(--secpad) 0 0;scroll-margin-top:calc(var(--secpad) * -1 + 96
 .award:last-child{border-bottom:1px solid var(--line2)}
 .award span{font:400 13px var(--sans);color:var(--muted);text-align:right;white-space:nowrap}
 
+/* methods, service, languages */
+.tight{--secpad:clamp(56px,8vw,96px)}
+.meth{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(28px,5vw,64px)}
+.mcol{padding:26px 0 30px;border-top:1px solid var(--line2)}
+.mcol h3{font:italic 300 clamp(24px,2.4vw,30px)/1.2 var(--serif);color:var(--gold-hi);margin-bottom:16px}
+.mcol ul{list-style:none}
+.mcol li{position:relative;padding:5px 0 5px 22px;color:var(--soft);font-size:15.5px;line-height:1.55}
+.mcol li::before{content:"";position:absolute;left:3px;top:.95em;width:5px;height:5px;background:var(--gold);transform:rotate(45deg)}
+.mcol li small{display:block;color:var(--muted);font-size:13.5px}
+.svc{display:grid;grid-template-columns:130px 1fr;gap:28px;padding:24px 0;border-top:1px solid var(--line2)}
+.svc:last-child{border-bottom:1px solid var(--line2)}
+.svc .yrs{font:italic 300 24px/1.2 var(--serif);color:var(--gold)}
+.svc h3{font:400 clamp(21px,2.2vw,26px)/1.25 var(--serif)}
+.svc .who{font:400 14px var(--sans);color:var(--soft);margin-top:4px}
+.svc p{margin-top:8px;color:var(--muted);font-size:15px;max-width:620px}
+.tally{list-style:none;margin-top:14px;max-width:520px}
+.tally li{display:flex;justify-content:space-between;gap:20px;padding:8px 0;border-top:1px dashed var(--line);font-size:14.5px;color:var(--soft)}
+.tally i{font:italic 400 17px/1.3 var(--serif);color:var(--ink)}
+.tally span{color:var(--gold);white-space:nowrap}
+.langs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+.lang{padding:34px 20px 34px 0}
+.lang+.lang{border-left:1px solid var(--line2);padding-left:clamp(18px,2.6vw,34px)}
+.lang .nm{font:300 clamp(30px,3.4vw,46px)/1.05 var(--serif);letter-spacing:-.01em}
+.lang:nth-child(2) .nm{color:var(--gold-hi);font-style:italic}
+.lang .lv{margin-top:14px;font:500 11px/1.7 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
 /* contact */
 .contact{--secpad:clamp(90px,14vw,180px);padding:var(--secpad) 0 0;text-align:left}
 .big{font:300 clamp(44px,8vw,112px)/.98 var(--serif);letter-spacing:-.02em}
@@ -193,6 +227,11 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 @media (max-width:1000px){.intro{grid-template-columns:1fr 240px}.statement{font-size:clamp(22px,3vw,28px)}}
 @media (max-width:820px){
+  .meth{grid-template-columns:1fr}
+  .svc{grid-template-columns:1fr;gap:6px}
+  .langs{grid-template-columns:1fr}
+  .lang{padding:24px 0}
+  .lang+.lang{border-left:0;border-top:1px solid var(--line2);padding-left:0}
   .intro{grid-template-columns:1fr}
   .pframe{order:-1;max-width:260px;margin-right:14px}
   nav ul{display:none}
@@ -200,6 +239,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   .hero .caps{letter-spacing:.18em}
   .links{gap:22px}.links a{letter-spacing:.16em}
   .ridge{min-height:200px}
+  .cue{display:none}
   .sec{grid-template-columns:1fr;gap:26px}
   .lab{position:static;display:flex;align-items:baseline;gap:18px}
   .lab .n{font-size:38px;margin:0}
@@ -210,7 +250,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   .pub{grid-template-columns:1fr;gap:8px}
   .award{flex-direction:column;gap:2px}.award span{text-align:left}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .caps,.ln>span,.lede,.ridge,.hero-foot{animation:none}.sheet,.sheet a{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .caps,.ln>span,.lede,.ridge,.hero-foot,.cue i::after{animation:none}.hero-top,.ridge canvas{transform:none!important;opacity:1!important}.sheet,.sheet a{transition:none}}
 @media print{nav,#bar,.ridge,.sheet{display:none}}
 </style>
 </head>
@@ -239,6 +279,8 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     <li><a href="#publications">Publications</a></li>
     <li><a href="#teaching">Teaching</a></li>
     <li><a href="#craft">Methods</a></li>
+    <li><a href="#service">Service</a></li>
+    <li><a href="#languages">Languages</a></li>
     <li><a href="#honors">Honors</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -258,6 +300,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
         <a href="https://scholar.google.com/citations?user=wlhGmcEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Scholar</a>
         <a href="https://www.linkedin.com/in/jpeyman/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
+      <a class="cue" href="#research" aria-label="Scroll to the content"><span>Scroll</span><i aria-hidden="true"></i></a>
     </div>
   </div>
 </header>
@@ -423,8 +466,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   <div class="sec">
     <div class="lab rv"><span class="n">iv</span><h2>Teaching</h2></div>
     <div class="body">
-      <p class="statement rv">I have been the instructor of record for <em>seven</em> different courses across sixteen teaching assignments at the University of Kansas since 2023.</p>
-      <div style="margin-top:56px">
+      <div>
         <!-- ADD A COURSE: copy one "row" line, paste it inside the right group (Graduate / Undergraduate / Foundations), edit the text. -->
         <div class="grp">Graduate</div>
         <div class="row rv"><div class="code">C&amp;T 820</div><div class="t">Methods of Teaching English to Speakers of Other Languages</div><div class="r">Fall 2026</div></div>
@@ -441,25 +483,66 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   </div>
 </section>
 
-<section id="craft">
+<section id="craft" class="tight">
   <div class="sec">
-    <div class="lab rv"><span class="n">v</span><h2>Methods<br>&amp; Service</h2></div>
+    <div class="lab rv"><span class="n">v</span><h2>Methods</h2></div>
     <div class="body">
-      <dl>
-        <div class="dl rv"><dt>Quantitative</dt><dd>Regression, generalized linear models, multivariate modeling, agreement and error analysis, bootstrap confidence intervals, multilevel approaches.</dd></div>
-        <div class="dl rv"><dt>Computation</dt><dd>R (tidyverse, ggplot2, R Markdown/Quarto), Python, IBM SPSS, Excel. Automated scoring evaluation, MFCC analysis, explainable machine learning, reproducible workflows, corpus analysis.</dd></div>
-        <div class="dl rv"><dt>Qualitative</dt><dd>Interview inquiry, thematic analysis, integrative review, policy and document analysis.</dd></div>
-        <div class="dl rv"><dt>Peer review</dt><dd>Ad hoc reviewer, 2023 to 2026, with fifteen reviews recorded in Web of Science: <i>SAGE Open</i> (12) and <i>Journal of Research on Technology in Education</i> (3).</dd></div>
-        <div class="dl rv"><dt>Service</dt><dd>Graduate Student Advisory Board, KU School of Education and Human Sciences (2025 to 2026). Head of English Translation Board, Armenian Ethnography Museum at Vank Cathedral (2018 to 2020). President, Students Scientific Association, University of Isfahan (2017 to 2018).</dd></div>
-        <div class="dl rv"><dt>Languages</dt><dd>Farsi (native) · Qashqai-Turkish (heritage / native-level) · English (C2, full professional proficiency)</dd></div>
-      </dl>
+      <div class="meth">
+        <div class="mcol rv"><h3>Quantitative methods</h3><ul>
+          <li>Regression</li><li>Generalized linear models</li><li>Multivariate modeling</li><li>Agreement and error analysis</li><li>Bootstrap confidence intervals</li><li>Multilevel approaches</li></ul></div>
+        <div class="mcol rv"><h3>Programming &amp; analysis</h3><ul>
+          <li>R <small>tidyverse, ggplot2, R Markdown/Quarto</small></li><li>Python</li><li>IBM SPSS</li><li>Microsoft Excel</li></ul></div>
+        <div class="mcol rv"><h3>Computational language research</h3><ul>
+          <li>Automated scoring evaluation</li><li>MFCC analysis</li><li>Explainable machine learning</li><li>Reproducible workflows</li><li>Corpus analysis</li></ul></div>
+        <div class="mcol rv"><h3>Qualitative research</h3><ul>
+          <li>Interview inquiry</li><li>Thematic analysis</li><li>Integrative review</li><li>Policy and document analysis</li></ul></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="honors">
+<section id="service" class="tight">
   <div class="sec">
-    <div class="lab rv"><span class="n">vi</span><h2>Honors</h2></div>
+    <div class="lab rv"><span class="n">vi</span><h2>Service</h2></div>
+    <div class="body">
+      <div class="grp">Peer review</div>
+      <div class="svc rv"><div class="yrs">2023 to 2026</div><div>
+        <h3>Ad hoc reviewer</h3>
+        <div class="who">Fifteen manuscript reviews documented in Web of Science</div>
+        <ul class="tally"><li><i>SAGE Open</i><span>12 reviews</span></li><li><i>Journal of Research on Technology in Education</i><span>3 reviews</span></li></ul></div></div>
+
+      <div class="grp">Leadership</div>
+      <div class="svc rv"><div class="yrs">2025 to 2026</div><div>
+        <h3>Graduate Student Advisory Board Member</h3>
+        <div class="who">School of Education and Human Sciences, University of Kansas</div></div></div>
+      <div class="svc rv"><div class="yrs">2018 to 2020</div><div>
+        <h3>Head of English Translation Board</h3>
+        <div class="who">Armenian Ethnography Museum at Vank Cathedral, Isfahan, Iran</div>
+        <p>Supervised content for a biweekly English-language magazine.</p></div></div>
+      <div class="svc rv"><div class="yrs">2017 to 2018</div><div>
+        <h3>President, Students Scientific Association</h3>
+        <div class="who">Faculty of Foreign Languages, University of Isfahan</div>
+        <p>Planned and organized conferences, workshops, and classes, including national and international events.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="languages" class="tight">
+  <div class="sec">
+    <div class="lab rv"><span class="n">vii</span><h2>Languages</h2></div>
+    <div class="body">
+      <div class="langs">
+        <div class="lang rv"><div class="nm">Farsi</div><div class="lv">Native</div></div>
+        <div class="lang rv"><div class="nm">Qashqai-Turkish</div><div class="lv">Heritage / native-level</div></div>
+        <div class="lang rv"><div class="nm">English</div><div class="lv">C2 &middot; Full professional proficiency</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="honors" class="tight">
+  <div class="sec">
+    <div class="lab rv"><span class="n">viii</span><h2>Honors</h2></div>
     <div class="body">
       <div class="award rv">School of Education Recognition Scholarship<span>University of Kansas</span></div>
       <div class="award rv">ERB Karen Simmons Scholarship<span>University of Kansas</span></div>
@@ -496,8 +579,13 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   var d=document,de=d.documentElement,nav=d.getElementById('nav'),bar=d.getElementById('bar'),queued=false;
 
   // nav background + reading progress
+  var hero=d.getElementById('top'),calm=matchMedia('(prefers-reduced-motion: reduce)').matches,lastP=-1;
   function onScroll(){
     nav.classList.toggle('s',scrollY>40);
+    if(!calm){
+      var p=Math.min(Math.max(scrollY/(innerHeight*.8),0),1);
+      if(p!==lastP){hero.style.setProperty('--p',p.toFixed(3));lastP=p}
+    }
     var m=de.scrollHeight-innerHeight;
     bar.style.transform='scaleX('+(m>0?Math.min(scrollY/m,1):0)+')';
     queued=false;
