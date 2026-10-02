@@ -71,7 +71,7 @@ nav ul a[aria-current="true"]{color:var(--ink)}
 .sheet.open{opacity:1;visibility:visible}
 .sheet a{display:block;font:300 clamp(32px,9vw,52px)/1.16 var(--serif);padding:4px 0;color:var(--ink);transform:translateY(14px);opacity:0;transition:transform .7s var(--ease),opacity .7s var(--ease),color .3s}
 .sheet.open a{transform:none;opacity:1}
-.sheet.open li:nth-child(2) a{transition-delay:.05s}.sheet.open li:nth-child(3) a{transition-delay:.1s}.sheet.open li:nth-child(4) a{transition-delay:.15s}.sheet.open li:nth-child(5) a{transition-delay:.2s}.sheet.open li:nth-child(6) a{transition-delay:.25s}.sheet.open li:nth-child(7) a{transition-delay:.3s}.sheet.open li:nth-child(8) a{transition-delay:.35s}.sheet.open li:nth-child(9) a{transition-delay:.4s}
+.sheet.open li:nth-child(2) a{transition-delay:.05s}.sheet.open li:nth-child(3) a{transition-delay:.1s}.sheet.open li:nth-child(4) a{transition-delay:.15s}.sheet.open li:nth-child(5) a{transition-delay:.2s}.sheet.open li:nth-child(6) a{transition-delay:.25s}.sheet.open li:nth-child(7) a{transition-delay:.3s}.sheet.open li:nth-child(8) a{transition-delay:.35s}.sheet.open li:nth-child(9) a{transition-delay:.4s}.sheet.open li:nth-child(10) a{transition-delay:.45s}
 .sheet a[aria-current="true"]{color:var(--gold-hi);font-style:italic}
 .sheet ul{list-style:none}
 nav.open{background:transparent;backdrop-filter:none;border-color:transparent}
@@ -153,6 +153,22 @@ section{padding:var(--secpad) 0 0;scroll-margin-top:calc(var(--secpad) * -1 + 96
 .themes{margin-top:44px;display:flex;flex-wrap:wrap;gap:8px 0;color:var(--muted);font:400 14px var(--sans);letter-spacing:.02em}
 .themes span:not(:last-child)::after{content:"·";margin:0 14px;color:var(--gold)}
 
+/* publications: topic filter, citation buttons */
+.topics{display:none;flex-wrap:wrap;align-items:baseline;gap:4px 24px;margin:2px 0 16px}
+.js .topics{display:flex}
+.toplab{font:500 10px var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-right:-6px}
+.topic{background:none;border:0;cursor:pointer;font:400 13.5px var(--sans);color:var(--muted);padding:3px 0;transition:color .3s}
+.topic:hover{color:var(--ink)}
+.topic[aria-pressed="true"]{color:var(--gold-hi)}
+.topic .ct{margin-left:7px;color:var(--gold);font-size:11px}
+.none{padding:34px 0;color:var(--muted);font:italic 300 22px var(--serif);border-top:1px solid var(--line2)}
+.cite{margin-top:12px;display:flex;gap:20px;flex-wrap:wrap}
+.cbtn{background:none;border:0;border-bottom:1px solid var(--line);padding:2px 0;cursor:pointer;font:500 10px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);transition:color .3s,border-color .3s}
+.cbtn:hover,.cbtn.ok{color:var(--gold-hi);border-color:var(--gold)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* dossier */
+.dossier{margin-top:64px;max-width:760px}
+.dnote{margin:16px 0 18px;font:300 clamp(19px,1.9vw,23px)/1.45 var(--serif);color:var(--soft)}
 .fig{margin:64px 0 0}
 .figt{font:500 11px/1.5 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
 .scope{position:relative;height:clamp(270px,34vw,340px);margin-top:18px;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
@@ -279,7 +295,8 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 </head>
 <body>
 <script>document.documentElement.classList.add('js')</script>
-<a class="skip" href="#research">Skip to content</a>
+<a class="skip" href="#recent">Skip to content</a>
+<div class="sr" id="live" aria-live="polite"></div>
 <div id="bar" aria-hidden="true"></div>
 
 <nav id="nav">
@@ -297,6 +314,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 </nav>
 <div class="sheet" id="sheet">
   <ul>
+    <li><a href="#recent">Recent</a></li>
     <li><a href="#research">Research</a></li>
     <li><a href="#path">Background</a></li>
     <li><a href="#publications">Publications</a></li>
@@ -336,9 +354,23 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <main class="wrap">
 
+<section id="recent" class="tight">
+  <div class="sec">
+    <div class="lab rv"><span class="n">i</span><h2>Recent</h2></div>
+    <div class="body">
+      <!-- ADD NEWS: copy one "row" below, paste it at the TOP (newest first), edit the date and text. Keep the list to about five. -->
+      <div class="row rv"><div class="code">Fall 2026</div><div class="t"><i>Beyond Symbolic Recognition</i>, on access, fidelity and student outcomes in the Seal of Biliteracy, is published in <i>TESOL Quarterly</i>.</div><div class="r"><a class="doi" href="https://doi.org/10.1002/tesq.70236" target="_blank" rel="noopener">Read</a></div></div>
+      <div class="row rv"><div class="code">Fall 2026</div><div class="t">Teaching <i>Methods of Teaching English to Speakers of Other Languages</i> at the University of Kansas.</div><div class="r"></div></div>
+      <div class="row rv"><div class="code">Aug 2026</div><div class="t">Submitted a study of pause and gap placement in read speech to <i>PLOS ONE</i>.</div><div class="r"></div></div>
+      <div class="row rv"><div class="code">May 2026</div><div class="t">Completed the Graduate Certificate in Second Language Studies.</div><div class="r"></div></div>
+      <div class="row rv"><div class="code">Apr 2026</div><div class="t">Presented work on academic AI integrity at the AERA Annual Meeting in Los Angeles.</div><div class="r"></div></div>
+    </div>
+  </div>
+</section>
+
 <section id="research">
   <div class="sec">
-    <div class="lab rv"><span class="n">i</span><h2>Research</h2></div>
+    <div class="lab rv"><span class="n">ii</span><h2>Research</h2></div>
     <div class="body">
       <div class="intro">
         <p class="statement rv">I study how automated systems <em>score speech</em>: where they agree with human raters, where they do not, and who is affected when they get it wrong.</p>
@@ -370,7 +402,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <section id="path">
   <div class="sec">
-    <div class="lab rv"><span class="n">ii</span><h2>Education<br>&amp; Appointments</h2></div>
+    <div class="lab rv"><span class="n">iii</span><h2>Education<br>&amp; Appointments</h2></div>
     <div class="body">
       <div class="grp">Education</div>
       <div class="item rv"><div class="when">2023 to Present</div><div>
@@ -402,85 +434,94 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <section id="publications">
   <div class="sec">
-    <div class="lab rv"><span class="n">iii</span><h2>Publications</h2></div>
+    <div class="lab rv"><span class="n">iv</span><h2>Publications</h2></div>
     <div class="body">
-      <div class="tabs" role="group" aria-label="Filter publications">
+      <div class="tabs" role="group" aria-label="Filter publications by status">
         <button class="tab" data-f="all" aria-pressed="true">All</button>
         <button class="tab" data-f="pub" aria-pressed="false">Peer-reviewed</button>
         <button class="tab" data-f="rev" aria-pressed="false">In review</button>
         <button class="tab" data-f="pre" aria-pressed="false">Preprints</button>
       </div>
+      <div class="topics" id="topics" role="group" aria-label="Filter publications by topic"><span class="toplab">Topic</span></div>
+      <p class="none" id="pubnone" hidden>No papers match that combination.</p>
 
       <!--
-        ADD A NEW PAPER: copy the template below, paste it right here at the TOP of the list (newest first),
-        then edit the text. The filter counts at the top update by themselves.
-          data-k="pub" = peer-reviewed   data-k="rev" = in review   data-k="pre" = preprint
-        For a paper that is not yet published, add a label inside the "ven" line, for example:
-          <span class="st">In press</span>
-        and remove the label once it is published. Leave out the DOI link if there is none.
+        ADD A NEW PAPER, in two steps (newest first):
+        1. Copy the template below, paste it right here at the TOP of the list, and edit the text.
+           data-k:      "pub" = peer-reviewed   "rev" = in review   "pre" = preprint
+           data-topics: any of  assessment  speech  ai  policy  classroom  corpus   (separated by spaces)
+           data-id:     a short unique word, used by the cite buttons
+           For a paper that is not yet published, add a label inside the "ven" line, for example:
+             <span class="st">In press</span>
+           and remove it once it is published. Leave out the DOI link if there is none.
+        2. Add a matching record to the CITATIONS block at the very bottom of this file (a script with
+           id="cites"), using the same id. Copy any existing record and edit it. Without a record the
+           paper still shows normally; it just has no cite buttons.
+        The filter counts update by themselves.
 
-      <article class="pub rv" data-k="pub"><div class="yr">2027</div><div>
+      <article class="pub rv" data-k="pub" data-id="newpaper" data-topics="assessment">
+        <div class="yr">2027</div><div>
         <h3>Title of the paper</h3>
         <div class="au"><b>Peyman Jahanbin</b>, Co-author One &amp; Co-author Two</div>
         <div class="ven"><i>Journal Name</i>, 12(3), <span class="nb">45-67</span><a class="doi" href="https://doi.org/YOUR-DOI" target="_blank" rel="noopener">DOI</a></div></div></article>
       -->
 
-      <article class="pub rv" data-k="pub"><div class="yr">2026</div><div>
+      <article class="pub rv" data-k="pub" data-id="beyond" data-topics="policy assessment"><div class="yr">2026</div><div>
         <h3>Beyond Symbolic Recognition: Examining Access, Fidelity, and Student Outcomes in the Seal of Biliteracy</h3>
         <div class="au"><b>Peyman Jahanbin</b>, Adam M. Brazil, Sarah C. Swyers, Meghan Ecker-Lyster &amp; Michael Klein-Thibodeau</div>
         <div class="ven"><i>TESOL Quarterly</i><a class="doi" href="https://doi.org/10.1002/tesq.70236" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="pub"><div class="yr">2026</div><div>
+      <article class="pub rv" data-k="pub" data-id="lltm" data-topics="assessment"><div class="yr">2026</div><div>
         <h3>A Linear Logistic Test Model (LLTM) Application in Foreign Language Testing</h3>
         <div class="au">Jose Fabián Elizondo-González &amp; <b>Peyman Jahanbin</b></div>
         <div class="ven"><i>Research in Pedagogy</i>, 16(2), <span class="nb">146-166</span><a class="doi" href="https://doi.org/10.5937/IstrPed2602146F" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="pub"><div class="yr">2026</div><div>
+      <article class="pub rv" data-k="pub" data-id="dyadic" data-topics="classroom"><div class="yr">2026</div><div>
         <h3>An Analysis of Dyadic Interactional Patterns in Peer Reviewing Tasks in an ESL Language Classroom at a Malaysian Higher Educational Institute</h3>
         <div class="au">Paramasivam Muthusamy, Atieh Farashaiyan, Rabindra Dev Prasad, <b>Peyman Jahanbin</b> et al.</div>
         <div class="ven"><i>International Journal of Special Education</i>, 41(6s), <span class="nb">1102-1114</span></div></div></article>
 
-      <article class="pub rv" data-k="pub"><div class="yr">2025</div><div>
+      <article class="pub rv" data-k="pub" data-id="corpus" data-topics="corpus"><div class="yr">2025</div><div>
         <h3>A Comparative Corpus-driven Analysis of Criticism in Book Reviews on Academic Discourse</h3>
         <div class="au">Atieh Farashaiyan, <b>Peyman Jahanbin</b>, Malarvizhi Sinayah, Thanalachime Perumal &amp; Selvajothi Ramalingam</div>
         <div class="ven"><i>Corpus Pragmatics</i>, 9(3), <span class="nb">269-291</span><a class="doi" href="https://doi.org/10.1007/s41701-025-00190-9" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="pub"><div class="yr">2025</div><div>
+      <article class="pub rv" data-k="pub" data-id="personality" data-topics="classroom"><div class="yr">2025</div><div>
         <h3>The Effect of Personality Types on ESL University Lecturers’ Creativity in Using Instructional Techniques for Online Education in Malaysian Higher Education Institutes</h3>
         <div class="au">Paramasivam Muthusamy, <b>Peyman Jahanbin</b>, Atieh Farashaiyan et al.</div>
         <div class="ven"><i>Journal of Information Systems Engineering and Management</i>, 10(48s), <span class="nb">533-544</span><a class="doi" href="https://doi.org/10.52783/jisem.v10i48s.9574" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="pub"><div class="yr">2025</div><div>
+      <article class="pub rv" data-k="pub" data-id="achievements" data-topics="assessment classroom"><div class="yr">2025</div><div>
         <h3>An Investigation of Students’ English Achievements and Its Implications for Curriculum Amelioration in Malaysian Higher Education Institutions</h3>
         <div class="au">Paramasivam Muthusamy, <b>Peyman Jahanbin</b>, Du Junying et al.</div>
         <div class="ven"><i>Journal of Information Systems Engineering and Management</i>, 10(48s), <span class="nb">545-559</span><a class="doi" href="https://doi.org/10.52783/jisem.v10i48s.9576" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="pub"><div class="yr">2024</div><div>
+      <article class="pub rv" data-k="pub" data-id="audio" data-topics="classroom"><div class="yr">2024</div><div>
         <h3>The Effect of Audio-Assisted Reading on Incidental Learning of Present Perfect by EFL Learners</h3>
         <div class="au">Musa Nushi &amp; <b>Peyman Jahanbin</b></div>
         <div class="ven"><i>Open Education Studies</i>, 6(1), 20240043<a class="doi" href="https://doi.org/10.1515/edu-2024-0043" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="rev"><div class="yr">2026</div><div>
+      <article class="pub rv" data-k="rev" data-id="accent" data-topics="policy ai"><div class="yr">2026</div><div>
         <h3>“The Accent Hides the Knowledge”: Raciolinguistic Gatekeeping and Algorithmic Suspicion of Middle Eastern Graduate Teaching Assistants in U.S. Higher Education</h3>
         <div class="au"><b>Peyman Jahanbin</b> &amp; Hyesun Cho</div>
         <div class="ven"><span class="st">Revised, in review</span><i>Journal of Language, Identity &amp; Education</i></div></div></article>
 
-      <article class="pub rv" data-k="rev"><div class="yr">2026</div><div>
+      <article class="pub rv" data-k="rev" data-id="acoustic" data-topics="speech"><div class="yr">2026</div><div>
         <h3>Acoustic Gap Placement in Fixed-Passage Read Speech: A Comparison of Mandarin-L1 and American English-L1 Speakers</h3>
         <div class="au"><b>Peyman Jahanbin</b></div>
         <div class="ven"><span class="st">Submitted Aug 2026</span><i>PLOS ONE</i></div></div></article>
 
-      <article class="pub rv" data-k="pre"><div class="yr">2025</div><div>
+      <article class="pub rv" data-k="pre" data-id="arxiv" data-topics="speech ai"><div class="yr">2025</div><div>
         <h3>Modeling L1 Influence on L2 Pronunciation: An MFCC-Based Framework for Explainable Machine Learning and Pedagogical Feedback</h3>
         <div class="au"><b>Peyman Jahanbin</b></div>
         <div class="ven"><span class="st">Preprint</span><i>arXiv</i><a class="doi" href="https://doi.org/10.48550/arXiv.2504.13765" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="pre"><div class="yr">2025</div><div>
+      <article class="pub rv" data-k="pre" data-id="rsquare" data-topics="speech ai"><div class="yr">2025</div><div>
         <h3>MFCC-Based Modeling of L1 Influence in L2 English Pronunciation: A Reproducible Methodological Pipeline</h3>
         <div class="au"><b>Peyman Jahanbin</b></div>
         <div class="ven"><span class="st">Preprint</span><i>Research Square</i><a class="doi" href="https://doi.org/10.21203/rs.3.rs-7032497/v1" target="_blank" rel="noopener">DOI</a></div></div></article>
 
-      <article class="pub rv" data-k="pre"><div class="yr">2025</div><div>
+      <article class="pub rv" data-k="pre" data-id="pipeline" data-topics="speech ai"><div class="yr">2025</div><div>
         <h3>A Reproducible MFCC-Based Pipeline for L1 Classification in L2 English Pronunciation Using Python</h3>
         <div class="au"><b>Peyman Jahanbin</b></div>
         <div class="ven"><span class="st">Artifact</span>Reproducible research artifact</div></div></article>
@@ -498,7 +539,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <section id="teaching">
   <div class="sec">
-    <div class="lab rv"><span class="n">iv</span><h2>Teaching</h2></div>
+    <div class="lab rv"><span class="n">v</span><h2>Teaching</h2></div>
     <div class="body">
       <div>
         <!-- ADD A COURSE: copy one "row" line, paste it inside the right group (Graduate / Undergraduate / Foundations), edit the text. -->
@@ -519,7 +560,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <section id="craft" class="tight">
   <div class="sec">
-    <div class="lab rv"><span class="n">v</span><h2>Methods</h2></div>
+    <div class="lab rv"><span class="n">vi</span><h2>Methods</h2></div>
     <div class="body">
       <div class="meth">
         <div class="mcol rv"><h3>Quantitative methods</h3><ul>
@@ -537,7 +578,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <section id="service" class="tight">
   <div class="sec">
-    <div class="lab rv"><span class="n">vi</span><h2>Service</h2></div>
+    <div class="lab rv"><span class="n">vii</span><h2>Service</h2></div>
     <div class="body">
       <div class="grp">Peer review</div>
       <div class="svc rv"><div class="yrs">2023 to 2026</div><div>
@@ -563,7 +604,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <section id="languages" class="tight">
   <div class="sec">
-    <div class="lab rv"><span class="n">vii</span><h2>Languages</h2></div>
+    <div class="lab rv"><span class="n">viii</span><h2>Languages</h2></div>
     <div class="body">
       <div class="langs">
         <div class="lang rv"><div class="nm">Farsi</div><div class="lv">Native</div></div>
@@ -576,7 +617,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 
 <section id="honors" class="tight">
   <div class="sec">
-    <div class="lab rv"><span class="n">viii</span><h2>Honors</h2></div>
+    <div class="lab rv"><span class="n">ix</span><h2>Honors</h2></div>
     <div class="body">
       <div class="award rv">School of Education Recognition Scholarship<span>University of Kansas</span></div>
       <div class="award rv">ERB Karen Simmons Scholarship<span>University of Kansas</span></div>
@@ -594,10 +635,20 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     <div class="caps" style="margin-bottom:26px">Contact</div>
     <p class="big">Get in <em>touch.</em></p>
     <a class="mail" href="mailto:Peyman@KU.edu">Peyman@KU.edu</a>
+    <div class="dossier">
+      <div class="caps">Dossier</div>
+      <p class="dnote">I welcome conversations about collaboration, invited talks, and teaching. Documents for committees and collaborators:</p>
+      <div class="drows">
+        <div class="row"><div class="code">PDF</div><div class="t">Curriculum vitae</div><div class="r"><a class="doi" href="Peyman_Jahanbin_CV.pdf" download>Download</a></div></div>
+        <!-- ADD A DOCUMENT: put the PDF in the same folder as this page, then copy the row above, change the file name and the title, and paste it here. For example:
+        <div class="row"><div class="code">PDF</div><div class="t">Research statement</div><div class="r"><a class="doi" href="Peyman_Jahanbin_Research_Statement.pdf" download>Download</a></div></div>
+        <div class="row"><div class="code">PDF</div><div class="t">Teaching statement</div><div class="r"><a class="doi" href="Peyman_Jahanbin_Teaching_Statement.pdf" download>Download</a></div></div>
+        -->
+      </div>
+    </div>
     <div class="links">
       <a href="https://www.linkedin.com/in/jpeyman/" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://scholar.google.com/citations?user=wlhGmcEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
-      <a href="Peyman_Jahanbin_CV.pdf" download>Curriculum Vitae</a>
     </div>
   </div>
 </section>
@@ -608,6 +659,13 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   <div class="wrap"><span>Peyman Jahanbin</span><span>Lawrence, Kansas</span><span>Updated October 2026</span><a href="#top">Back to top &uarr;</a></div>
 </footer>
 
+<!--
+  CITATIONS: one record per paper, used by the "Copy APA" and "BibTeX" buttons. The id must match the paper's
+  data-id above. Fields: a = authors as [family, given] pairs, y = year, t = title in sentence case, v = journal,
+  vol / iss / pp = volume, issue, pages, art = article number, doi, key = BibTeX key,
+  kind = article | review | submitted | preprint | artifact (and eprint for arXiv).
+-->
+<script type="application/json" id="cites">{"beyond":{"key":"jahanbin2026beyond","kind":"article","y":2026,"v":"TESOL Quarterly","doi":"10.1002/tesq.70236","t":"Beyond symbolic recognition: Examining access, fidelity, and student outcomes in the Seal of Biliteracy","a":[["Jahanbin","Peyman"],["Brazil","Adam M."],["Swyers","Sarah C."],["Ecker-Lyster","Meghan"],["Klein-Thibodeau","Michael"]]},"lltm":{"key":"elizondo2026lltm","kind":"article","y":2026,"v":"Research in Pedagogy","vol":"16","iss":"2","pp":"146-166","doi":"10.5937/IstrPed2602146F","t":"A linear logistic test model (LLTM) application in foreign language testing","a":[["Elizondo-González","Jose Fabián"],["Jahanbin","Peyman"]]},"dyadic":{"key":"muthusamy2026dyadic","kind":"article","y":2026,"v":"International Journal of Special Education","vol":"41","iss":"6s","pp":"1102-1114","t":"An analysis of dyadic interactional patterns in peer reviewing tasks in an ESL language classroom at a Malaysian higher educational institute","a":[["Muthusamy","Paramasivam"],["Farashaiyan","Atieh"],["Prasad","Rabindra Dev"],["Jahanbin","Peyman"],["Pattanimuthu","Ananthi"],["Ramalingam","Hamsavathi A/P"],["Fan","Qihang"],["Wang","Jing"],["Zhang","Xiaoling"]]},"corpus":{"key":"farashaiyan2025corpus","kind":"article","y":2025,"v":"Corpus Pragmatics","vol":"9","iss":"3","pp":"269-291","doi":"10.1007/s41701-025-00190-9","t":"A comparative corpus-driven analysis of criticism in book reviews on academic discourse","a":[["Farashaiyan","Atieh"],["Jahanbin","Peyman"],["Sinayah","Malarvizhi"],["Perumal","Thanalachime"],["Ramalingam","Selvajothi"]]},"personality":{"key":"muthusamy2025personality","kind":"article","y":2025,"v":"Journal of Information Systems Engineering and Management","vol":"10","iss":"48s","pp":"533-544","doi":"10.52783/jisem.v10i48s.9574","t":"The effect of personality types on ESL university lecturers' creativity in using instructional techniques for online education in Malaysian higher education institutes","a":[["Muthusamy","Paramasivam"],["Jahanbin","Peyman"],["Farashaiyan","Atieh"],["Perumal","Thanalachime"],["Raman","Kumutha"],["Sun","Chen"],["Du","Junying"],["Qiao","Mu"],["Li","Jiao"]]},"achievements":{"key":"muthusamy2025achievements","kind":"article","y":2025,"v":"Journal of Information Systems Engineering and Management","vol":"10","iss":"48s","pp":"545-559","doi":"10.52783/jisem.v10i48s.9576","t":"An investigation of students' English achievements and its implications for curriculum amelioration in Malaysian higher education institutions","a":[["Muthusamy","Paramasivam"],["Jahanbin","Peyman"],["Du","Junying"],["Qiao","Mu"],["Xiang","Xueyan"],["Ramalingam","Hamsavathi A/P"],["Wang","Xibing"],["Farashaiyan","Atieh"]]},"audio":{"key":"nushi2024audio","kind":"article","y":2024,"v":"Open Education Studies","vol":"6","iss":"1","art":"20240043","doi":"10.1515/edu-2024-0043","t":"The effect of audio-assisted reading on incidental learning of present perfect by EFL learners","a":[["Nushi","Musa"],["Jahanbin","Peyman"]]},"accent":{"key":"jahanbin2026accent","kind":"review","y":2026,"v":"Journal of Language, Identity & Education","t":"\"The accent hides the knowledge\": Raciolinguistic gatekeeping and algorithmic suspicion of Middle Eastern graduate teaching assistants in U.S. higher education","a":[["Jahanbin","Peyman"],["Cho","Hyesun"]]},"acoustic":{"key":"jahanbin2026acoustic","kind":"submitted","y":2026,"v":"PLOS ONE","t":"Acoustic gap placement in fixed-passage read speech: A comparison of Mandarin-L1 and American English-L1 speakers","a":[["Jahanbin","Peyman"]]},"arxiv":{"key":"jahanbin2025mfcc","kind":"preprint","y":2025,"v":"arXiv","doi":"10.48550/arXiv.2504.13765","eprint":"2504.13765","t":"Modeling L1 influence on L2 pronunciation: An MFCC-based framework for explainable machine learning and pedagogical feedback","a":[["Jahanbin","Peyman"]]},"rsquare":{"key":"jahanbin2025pipeline","kind":"preprint","y":2025,"v":"Research Square","doi":"10.21203/rs.3.rs-7032497/v1","t":"MFCC-based modeling of L1 influence in L2 English pronunciation: A reproducible methodological pipeline","a":[["Jahanbin","Peyman"]]},"pipeline":{"key":"jahanbin2025python","kind":"artifact","y":2025,"t":"A reproducible MFCC-based pipeline for L1 classification in L2 English pronunciation using Python","a":[["Jahanbin","Peyman"]]}}</script>
 <script>
 (function(){
   var d=document,de=d.documentElement,nav=d.getElementById('nav'),bar=d.getElementById('bar');
@@ -638,16 +696,118 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
   d.querySelectorAll('.rv,.sec').forEach(function(el){io.observe(el)});
 
-  // publication filter, with live counts
-  var tabs=d.querySelectorAll('.tab'),pubs=d.querySelectorAll('.pub');
+  // publications: a status filter and a topic filter (they combine), live counts, and citation buttons
+  var pubs=d.querySelectorAll('.pub'),tabs=d.querySelectorAll('.tab'),none=d.getElementById('pubnone'),fStatus='all',fTopic='all';
+  var TOPICS=[['all','All topics'],['assessment','Assessment'],['speech','Speech & pronunciation'],['ai','AI & machine learning'],['policy','Policy & equity'],['classroom','Classroom & learning'],['corpus','Corpus & discourse']];
+  var hasTopic=function(p,t){return (' '+(p.dataset.topics||'')+' ').indexOf(' '+t+' ')>-1};
+  function applyFilters(){
+    var shown=0;
+    pubs.forEach(function(p){
+      var ok=(fStatus==='all'||p.dataset.k===fStatus)&&(fTopic==='all'||hasTopic(p,fTopic));
+      p.hidden=!ok;if(ok)shown++;
+    });
+    if(none)none.hidden=shown>0;
+    remeasure();
+  }
   tabs.forEach(function(b){
     var k=b.dataset.f,n=k==='all'?pubs.length:d.querySelectorAll('.pub[data-k="'+k+'"]').length;
     b.insertAdjacentHTML('beforeend','<span class="ct">'+n+'</span>');
     b.addEventListener('click',function(){
-      tabs.forEach(function(x){x.setAttribute('aria-pressed',x===b)});
-      pubs.forEach(function(p){p.hidden=!(k==='all'||p.dataset.k===k)});
-      remeasure();
+      fStatus=k;tabs.forEach(function(x){x.setAttribute('aria-pressed',x===b)});applyFilters();
     });
+  });
+  var topicRow=d.getElementById('topics');
+  if(topicRow){
+    TOPICS.forEach(function(t){
+      var n=t[0]==='all'?pubs.length:Array.prototype.filter.call(pubs,function(p){return hasTopic(p,t[0])}).length;
+      var b=d.createElement('button');b.type='button';b.className='topic';b.setAttribute('aria-pressed',t[0]==='all');
+      b.appendChild(d.createTextNode(t[1]));
+      var c=d.createElement('span');c.className='ct';c.textContent=n;b.appendChild(c);
+      b.addEventListener('click',function(){
+        fTopic=t[0];topicRow.querySelectorAll('.topic').forEach(function(x){x.setAttribute('aria-pressed',x===b)});applyFilters();
+      });
+      topicRow.appendChild(b);
+    });
+  }
+
+  // citation buttons: APA (copied with italics, so it pastes cleanly into Word or Docs) and BibTeX
+  var CITES={};try{CITES=JSON.parse(d.getElementById('cites').textContent)}catch(e){}
+  var live=d.getElementById('live');
+  function initials(first){
+    return first.split(/\s+/).filter(function(t){return t&&t.indexOf('/')<0}).map(function(t){
+      return t.split('-').map(function(x){return x.charAt(0).toUpperCase()+'.'}).join('-');
+    }).join(' ');
+  }
+  function apaAuthors(a){
+    var l=a.map(function(p){return p[0]+', '+initials(p[1])});
+    return l.length<2?l[0]:l.length===2?l[0]+', & '+l[1]:l.slice(0,-1).join(', ')+', & '+l[l.length-1];
+  }
+  function apa(r){
+    var tag={review:' [Manuscript under review]',submitted:' [Manuscript submitted for publication]',preprint:' [Preprint]',artifact:' [Reproducible research artifact]'}[r.kind]||'';
+    var s=apaAuthors(r.a)+' ('+r.y+'). '+r.t+tag+'. ';
+    if(r.kind!=='artifact'){
+      s+='<i>'+r.v+'</i>';
+      if(r.kind==='article'){
+        if(r.vol)s+=', <i>'+r.vol+'</i>'+(r.iss?'('+r.iss+')':'');
+        if(r.pp)s+=', '+r.pp;
+        if(r.art)s+=', Article '+r.art;
+      }
+      s+='.';
+    }
+    if(r.doi)s+=' https://doi.org/'+r.doi;
+    s=s.trim();
+    // the only tags in s are the <i> pairs added above, so escaping every ampersand is safe
+    return {html:s.replace(/&/g,'&amp;'),text:s.replace(/<[^>]+>/g,'')};
+  }
+  var ACC={'á':"{\\'a}",'é':"{\\'e}",'í':"{\\'i}",'ó':"{\\'o}",'ú':"{\\'u}",'ñ':'{\\~n}'};
+  function tex(s){return s.replace(/&/g,'\\&').replace(/"([^"]*)"/g,"``$1''").replace(/[áéíóúñ]/g,function(c){return ACC[c]})}
+  function bibtex(r){
+    var au=r.a.map(function(p){return tex(p[0])+', '+tex(p[1])}).join(' and '),f=['author = {'+au+'}','title = {{'+tex(r.t)+'}}'],type='article';
+    if(r.kind==='article'){
+      f.push('journal = {'+tex(r.v)+'}','year = {'+r.y+'}');
+      if(r.vol)f.push('volume = {'+r.vol+'}');
+      if(r.iss)f.push('number = {'+r.iss+'}');
+      if(r.pp)f.push('pages = {'+r.pp.replace('-','--')+'}');
+      if(r.art)f.push('eid = {'+r.art+'}');
+    }else if(r.kind==='review'||r.kind==='submitted'){
+      type='unpublished';f.push('note = {Manuscript '+(r.kind==='review'?'under review':'submitted for publication')+' at '+tex(r.v)+'}','year = {'+r.y+'}');
+    }else{
+      type='misc';f.push('year = {'+r.y+'}');
+      if(r.kind==='preprint')f.push('howpublished = {'+tex(r.v)+'}');else f.push('note = {Reproducible research artifact}');
+      if(r.eprint)f.push('eprint = {'+r.eprint+'}','archivePrefix = {arXiv}');
+    }
+    if(r.doi)f.push('doi = {'+r.doi+'}');
+    return '@'+type+'{'+r.key+',\n  '+f.join(',\n  ')+'\n}';
+  }
+  function copyText(t){
+    if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(t);
+    return new Promise(function(res,rej){
+      var ta=d.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';d.body.appendChild(ta);ta.select();
+      try{d.execCommand('copy')?res():rej()}catch(e){rej(e)}ta.remove();
+    });
+  }
+  function copyRich(html,text){
+    if(navigator.clipboard&&window.ClipboardItem){
+      return navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([text],{type:'text/plain'})})]).catch(function(){return copyText(text)});
+    }
+    return copyText(text);
+  }
+  pubs.forEach(function(p){
+    var r=CITES[p.dataset.id];if(!r)return;
+    var bar=d.createElement('div');bar.className='cite';
+    [['Copy APA','apa'],['BibTeX','bib']].forEach(function(spec){
+      var b=d.createElement('button');b.type='button';b.className='cbtn';b.textContent=spec[0];
+      b.setAttribute('aria-label',spec[1]==='apa'?'Copy APA citation':'Copy BibTeX entry');
+      b.addEventListener('click',function(){
+        var job=spec[1]==='apa'?(function(){var c=apa(r);return copyRich(c.html,c.text)})():copyText(bibtex(r));
+        job.then(function(){
+          b.classList.add('ok');b.textContent='Copied';if(live)live.textContent=(spec[1]==='apa'?'APA citation':'BibTeX entry')+' copied';
+          setTimeout(function(){b.classList.remove('ok');b.textContent=spec[0]},1800);
+        },function(){b.textContent='Press Ctrl+C';setTimeout(function(){b.textContent=spec[0]},1800)});
+      });
+      bar.appendChild(b);
+    });
+    p.lastElementChild.appendChild(bar);
   });
 
   // full-screen menu on small screens
