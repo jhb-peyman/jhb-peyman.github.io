@@ -88,7 +88,7 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
 .lede{max-width:540px;margin-top:30px;font:300 clamp(19px,2vw,24px)/1.5 var(--serif);color:var(--soft)}
 .lede i{color:var(--ink)}
 .ridge{position:relative;flex:1 1 auto;min-height:230px;margin-top:-30px;pointer-events:none}
-.ridge canvas{position:absolute;left:0;bottom:0;width:100%;display:block}
+.ridge canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero-foot{position:relative;z-index:2;width:100%}
 .hero-bot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:20px 0 28px;border-top:1px solid var(--line)}
 .cue{display:flex;align-items:center;gap:16px;font:500 11px var(--sans);letter-spacing:.26em;text-transform:uppercase;color:var(--soft);transition:color .3s}
@@ -96,18 +96,10 @@ h1 em{font-style:italic;font-weight:300;color:var(--gold-hi)}
 .cue i{position:relative;display:block;width:1px;height:40px;background:var(--line);overflow:hidden}
 .cue i::after{content:"";position:absolute;left:0;top:-16px;width:1px;height:16px;background:linear-gradient(to bottom,transparent,var(--gold-hi));animation:drip 2.6s cubic-bezier(.65,0,.3,1) 2.2s infinite}
 @keyframes drip{0%{transform:translateY(0)}65%,100%{transform:translateY(60px)}}
-/* pinned opening scene: the hero stays put while the script (scroll progress 0 to 1) moves the title away and the waves up */
-.stage{position:relative}
-@media (min-height:680px) and (prefers-reduced-motion:no-preference){
-  .js .stage{height:185svh}
-  .js .hero{position:sticky;top:0;height:100svh;min-height:0}
-  .js .ridge{min-height:110px;will-change:transform}
-  .js .hero-top{transform-origin:0 0;will-change:transform,opacity}
-}
 .links{display:flex;gap:28px;flex-wrap:wrap}
 .links a{font:500 11px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink);padding-bottom:6px;border-bottom:1px solid var(--gold);transition:color .3s,border-color .3s}
 .links a:hover{color:var(--gold-hi);border-color:var(--gold-hi)}
-@media (min-width:821px){h1{font-size:clamp(88px,min(10.4vw,16.5svh),156px)}}
+@media (min-width:821px){h1{font-size:clamp(88px,10.4vw,156px)}}
 /* staged entrance */
 @keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 @keyframes rise{from{transform:translateY(108%)}to{transform:none}}
@@ -136,10 +128,6 @@ section{padding:var(--secpad) 0 0;scroll-margin-top:calc(var(--secpad) * -1 + 96
 .pframe{position:relative}
 .pframe::before{content:"";position:absolute;inset:14px -14px -14px 14px;border:1px solid var(--gold);opacity:.55;z-index:0;pointer-events:none}
 .pframe .portrait{z-index:1}
-.js .pframe{--k:0}
-.js .pframe .portrait{clip-path:inset(-70px -70px calc((1 - var(--k)) * (100% + 70px) - 70px) -70px)}
-.js .pframe .portrait img{transform:scale(calc(1.18 - var(--k) * .18))}
-.js .pframe::before{opacity:calc(.55 * var(--k));transform:translate(calc((1 - var(--k)) * -26px),calc((1 - var(--k)) * -26px))}
 .statement{font:300 clamp(24px,2.7vw,34px)/1.3 var(--serif);color:var(--ink);max-width:760px}
 .statement em{color:var(--gold-hi)}
 .themes{margin-top:44px;display:flex;flex-wrap:wrap;gap:8px 0;color:var(--muted);font:400 14px var(--sans);letter-spacing:.02em}
@@ -260,7 +248,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   .pub{grid-template-columns:1fr;gap:8px}
   .award{flex-direction:column;gap:2px}.award span{text-align:left}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .caps,.ln>span,.lede,.ridge,.hero-foot,.cue i::after{animation:none}.hero-top{transform:none!important;opacity:1!important}.js .pframe{--k:1}.js .sec::before{transform:none;transition:none}.sheet,.sheet a{transition:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .rv{opacity:1;transform:none;transition:none}.hero .caps,.ln>span,.lede,.ridge,.hero-foot,.cue i::after{animation:none}.js .sec::before{transform:none;transition:none}.sheet,.sheet a{transition:none}}
 @media print{nav,#bar,.ridge,.sheet{display:none}}
 </style>
 </head>
@@ -296,7 +284,6 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   </ul>
 </div>
 
-<div class="stage" id="stage">
 <header class="hero" id="top">
   <div class="wrap hero-top">
     <div class="caps">Ph.D. Student · University of Kansas</div>
@@ -315,7 +302,6 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     </div>
   </div>
 </header>
-</div>
 
 <main class="wrap">
 
@@ -324,8 +310,8 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     <div class="lab rv"><span class="n">i</span><h2>Research</h2></div>
     <div class="body">
       <div class="intro">
-        <p class="statement" data-words>I study how automated systems <em>score speech</em>: where they agree with human raters, where they do not, and who is affected when they get it wrong.</p>
-        <div class="pframe" data-reveal><figure class="portrait"><img src="portrait.jpg" width="1400" height="1379" alt="Portrait of Peyman Jahanbin" loading="lazy"></figure></div>
+        <p class="statement rv">I study how automated systems <em>score speech</em>: where they agree with human raters, where they do not, and who is affected when they get it wrong.</p>
+        <div class="pframe rv"><figure class="portrait"><img src="portrait.jpg" width="1400" height="1379" alt="Portrait of Peyman Jahanbin" loading="lazy"></figure></div>
       </div>
       <p class="themes rv"><span>Language assessment</span><span>Automated speaking assessment</span><span>Validity &amp; fairness</span><span>Responsible AI in education</span><span>Explainable machine learning</span><span>L2 pronunciation</span><span>Multilingual education &amp; policy</span><span>Seal of Biliteracy</span><span>Quantitative &amp; mixed methods</span></p>
       <div class="items">
@@ -570,7 +556,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 <section class="contact" id="contact">
   <div class="rv">
     <div class="caps" style="margin-bottom:26px">Contact</div>
-    <p class="big" data-words data-scrub="0.97,0.66">Get in <em>touch.</em></p>
+    <p class="big">Get in <em>touch.</em></p>
     <a class="mail" href="mailto:Peyman@KU.edu">Peyman@KU.edu</a>
     <div class="links">
       <a href="https://www.linkedin.com/in/jpeyman/" target="_blank" rel="noopener">LinkedIn</a>
@@ -589,86 +575,15 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 <script>
 (function(){
   var d=document,de=d.documentElement,nav=d.getElementById('nav'),bar=d.getElementById('bar');
-  var stage=d.getElementById('stage'),heroTop=d.querySelector('.hero-top'),ridgeBox=d.querySelector('.ridge'),cue=d.querySelector('.cue');
   var calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var pinMQ=matchMedia('(min-height: 680px) and (prefers-reduced-motion: no-preference)');
-  var clamp=function(v){return v<0?0:v>1?1:v};
-  window.__p=0;
+  var navOn=false,docH=0,queued=false;
 
-  // ---- scrubbed items (statement words, closing line, portrait) -------------------------
-  // Each item's page position is measured once (and on resize), so a scroll frame never
-  // forces layout. A frame only writes styles for items that are actually on screen.
-  var items=[];
-  function addWords(el,from,to){
-    var spans=[];
-    (function wrap(node){
-      Array.prototype.slice.call(node.childNodes).forEach(function(ch){
-        if(ch.nodeType===3){
-          var frag=d.createDocumentFragment();
-          ch.textContent.split(/(\s+)/).forEach(function(tok){
-            if(!tok)return;
-            if(/^\s+$/.test(tok)){frag.appendChild(d.createTextNode(tok));return}
-            var w=d.createElement('span');w.textContent=tok;w.style.opacity='.16';spans.push(w);frag.appendChild(w);
-          });
-          node.replaceChild(frag,ch);
-        }else if(ch.nodeType===1){wrap(ch)}
-      });
-    })(el);
-    var n=spans.length,shown=spans.map(function(){return .16});
-    items.push({el:el,from:from,to:to,k:-1,top:0,h:0,apply:function(k){
-      for(var i=0;i<n;i++){
-        var o=.16+(k*(n+2)-i)*.55;o=o<.16?.16:o>1?1:o;
-        if(Math.abs(o-shown[i])>.012){spans[i].style.opacity=o.toFixed(2);shown[i]=o}
-      }
-    }});
-  }
-  function addReveal(el,from,to){
-    items.push({el:el,from:from,to:to,k:-1,top:0,h:0,apply:function(k){el.style.setProperty('--k',k.toFixed(3))}});
-  }
-  if(!calm){
-    d.querySelectorAll('[data-words]').forEach(function(el){
-      var sp=(el.getAttribute('data-scrub')||'').split(',');
-      addWords(el,sp[0]?parseFloat(sp[0]):.92,sp[1]?parseFloat(sp[1]):.40);
-    });
-    d.querySelectorAll('[data-reveal]').forEach(function(el){addReveal(el,.97,.38)});
-  }
-
-  var span=0,docH=0,navOn=false,lastP=-1,queued=false;
-  function measure(){
-    var y=scrollY;
-    items.forEach(function(it){var r=it.el.getBoundingClientRect();it.top=r.top+y;it.h=r.height;it.k=-1});
-    span=stage.offsetHeight-innerHeight;
-    docH=de.scrollHeight-innerHeight;
-    lastP=-1;
-  }
-
+  // header background once you leave the top, and the thin reading-progress line
+  function measure(){docH=de.scrollHeight-innerHeight}
   function frame(){
     queued=false;
-    var y=scrollY,vh=innerHeight;
-    var on=y>40;if(on!==navOn){navOn=on;nav.classList.toggle('s',on)}
-
-    // opening scene: progress through the pinned hero
-    var p=pinMQ.matches&&span>0?clamp(y/span):0;
-    if(p!==lastP){
-      lastP=p;window.__p=p;
-      if(p===0){heroTop.style.transform='';heroTop.style.opacity='';ridgeBox.style.transform='';cue.style.opacity=''}
-      else{
-        heroTop.style.transform='translate3d(0,'+(-p*.09*vh).toFixed(1)+'px,0) scale('+(1-p*.06).toFixed(4)+')';
-        heroTop.style.opacity=Math.max(0,1-p*1.7).toFixed(3);
-        ridgeBox.style.transform='translate3d(0,'+(-p*.17*vh).toFixed(1)+'px,0)';
-        cue.style.opacity=Math.max(0,1-p*8).toFixed(3);
-      }
-    }
-
-    // scrubbed items
-    for(var i=0;i<items.length;i++){
-      var it=items[i],t=it.top-y,k;
-      if(t>vh*1.05)k=0;                         // not reached yet
-      else if(t+it.h<-vh*.05)k=1;               // already passed
-      else k=clamp((it.from*vh-t)/((it.from-it.to)*vh));
-      if(Math.abs(k-it.k)>.002||((k===0||k===1)&&k!==it.k)){it.k=k;it.apply(k)}
-    }
-
+    var y=scrollY,on=y>40;
+    if(on!==navOn){navOn=on;nav.classList.toggle('s',on)}
     bar.style.transform='scaleX('+(docH>0?Math.min(y/docH,1):0)+')';
   }
   function request(){if(!queued){queued=true;requestAnimationFrame(frame)}}
@@ -680,10 +595,10 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   if(window.ResizeObserver)new ResizeObserver(remeasure).observe(d.body);
   measure();frame();
 
-  // "back to top" links: go to the very top, even while the hero is pinned
+  // "back to top" links
   d.querySelectorAll('a[href="#top"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();scrollTo({top:0,behavior:calm?'auto':'smooth'})})});
 
-  // reveal on scroll
+  // each block fades in once as it arrives
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
   d.querySelectorAll('.rv,.sec').forEach(function(el){io.observe(el)});
 
@@ -730,32 +645,27 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 // the ripples travel, reflect off the edges and fade:
 //   u_tt = c^2 * laplacian(u) - k * u - gamma * u_t
 //
-// Built to stay cheap: the slow drift is recomputed about 30 times a second and cached,
-// physics only runs while there is something to simulate, the canvas is only redrawn
-// when something changed, its pixel count is capped, and the fade at the top is drawn
-// into the canvas instead of using a CSS mask.
+// Kept cheap: the slow drift is recomputed about 30 times a second and cached, physics only
+// runs while there is something to simulate, the canvas is redrawn only when something
+// changed, its pixel count is capped, and it stops completely while off screen.
 (function(){
   var c=document.getElementById('ridge'),x=c.getContext('2d'),hero=document.getElementById('top'),box=c.parentNode;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var pinMQ=matchMedia('(min-height: 680px) and (prefers-reduced-motion: no-preference)');
-  var W=0,H=0,Hb=0,E=0,D=1,L=30,P=170,Q=P+1,t0=3.1,raf=0,last=0,running=false,vis=true;
+  var W=0,H=0,D=1,L=30,P=170,Q=P+1,t0=3.1,raf=0,last=0,running=false,vis=true;
   var h=new Float32Array(L*P),v=new Float32Array(L*P);   // displacement, velocity
   var A=new Float32Array(L*Q),ys=new Float32Array(Q);    // cached drift amplitude, scratch row
   var env=new Float32Array(Q);for(var j0=0;j0<=P;j0++)env[j0]=Math.pow(Math.sin(Math.PI*j0/P),1.4);
   var C2=.07,K=.012,DAMP=.968,acc=0,FIX=1000/60;
-  var tBucket=-1,drawnP=-1,active=false,dirty=true;
+  var tBucket=-1,active=false,dirty=true,pointerNear=false;
 
   function size(){
-    Hb=box.clientHeight;                                           // the visible ridge box
-    E=pinMQ.matches?Math.round(Math.min(innerHeight*.34,300)):0;   // headroom for peaks that rise during the opening scene
-    c.style.height=(Hb+E)+'px';
-    W=c.clientWidth;H=Hb+E;
+    W=box.clientWidth;H=box.clientHeight;
     D=Math.max(1,Math.min(devicePixelRatio||1,Math.sqrt(2.4e6/Math.max(1,W*H))));   // cap the pixel count
     c.width=Math.round(W*D);c.height=Math.round(H*D);x.setTransform(D,0,0,D,0,0);
     tBucket=-1;dirty=true;
     if(reduce){fillAmp(t0);draw()}
   }
-  function geo(){return {top:E+Hb*.14,step:(Hb*.8)/L,m:W*.04}}
+  function geo(){return {top:H*.14,step:(H*.8)/L,m:W*.04}}
 
   // drift amplitude for every line and point, at time t
   function fillAmp(t){
@@ -786,7 +696,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
       }
     }
     for(var k=0;k<L*P;k++)h[k]+=v[k];
-    if(en<1e-7&&!pointerNear){active=false;h.fill(0);v.fill(0)}   // settled: stop simulating
+    if(en<1e-3&&!pointerNear){active=false;h.fill(0);v.fill(0)}   // settled to well under a hundredth of a pixel: stop simulating
   }
   // soft, wide push at a canvas position
   function poke(px,py,force){
@@ -802,7 +712,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   }
   // The pointer is low-pass filtered, so the surface follows it like a hand
   // moving through something viscous, never in sudden jumps.
-  var tx=null,ty=null,sx=0,sy=0,have=false,pointerNear=false;
+  var tx=null,ty=null,sx=0,sy=0,have=false;
   function move(e){
     var r=c.getBoundingClientRect();tx=e.clientX-r.left;ty=e.clientY-r.top;
     if(!have){sx=tx;sy=ty;have=true}
@@ -828,9 +738,7 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     if(!W||!H)return;
     x.globalCompositeOperation='source-over';
     x.clearRect(0,0,W,H);
-    var g=geo(),top=g.top,st=g.step,m=g.m,span=W-2*m;
-    // the opening scene: as the title dissolves the signal surges (smoothstep of the hero's scroll progress)
-    var qq=window.__p||0,pe=qq*qq*(3-2*qq),pk=st*5.4*(1+2.6*pe),ab=1+.6*pe;
+    var g=geo(),top=g.top,st=g.step,m=g.m,span=W-2*m,pk=st*5.4;
     for(var i=0;i<L;i++){
       var y=top+i*st,f=i/(L-1),o=i*Q,j,px;
       x.beginPath();
@@ -843,15 +751,12 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
       x.fillStyle='#0a0a0a';x.fill();
       x.beginPath();
       for(j=0;j<=P;j++){px=m+j/P*span;j?x.lineTo(px,ys[j]):x.moveTo(px,ys[j])}
-      x.strokeStyle='rgba(185,154,91,'+Math.min(.95,(.16+.5*f)*ab).toFixed(3)+')';
+      x.strokeStyle='rgba(185,154,91,'+(.16+.5*f).toFixed(3)+')';
       x.lineWidth=.9;x.stroke();
     }
-    // fade the top of the ridge out (this replaces a CSS mask, which was costly on a canvas this size)
-    var m1=E*(1-pe),m2=m1+Hb*.34,gr=x.createLinearGradient(0,0,0,H);
-    gr.addColorStop(0,'rgba(0,0,0,0)');
-    gr.addColorStop(Math.min(1,m1/H),'rgba(0,0,0,0)');
-    gr.addColorStop(Math.min(1,m2/H),'rgba(0,0,0,1)');
-    gr.addColorStop(1,'rgba(0,0,0,1)');
+    // fade the top of the ridge out
+    var gr=x.createLinearGradient(0,0,0,H);
+    gr.addColorStop(0,'rgba(0,0,0,0)');gr.addColorStop(.34,'rgba(0,0,0,1)');gr.addColorStop(1,'rgba(0,0,0,1)');
     x.globalCompositeOperation='destination-in';x.fillStyle=gr;x.fillRect(0,0,W,H);
     x.globalCompositeOperation='source-over';
   }
@@ -863,7 +768,6 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
     while(acc>=FIX){drive();if(active){step();moved=true}acc-=FIX}   // fixed 60 Hz physics, independent of display refresh
     var tb=Math.floor(ts/33.3);                                        // slow drift: refreshed ~30 times a second
     if(tb!==tBucket){tBucket=tb;fillAmp(ts/1000*.35+t0);dirty=true}
-    var qq=window.__p||0;if(qq!==drawnP){drawnP=qq;dirty=true}        // the opening scene moved
     if(moved)dirty=true;
     if(dirty){draw();dirty=false}
     raf=requestAnimationFrame(loop);
@@ -872,7 +776,6 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
   function stop(){running=false;cancelAnimationFrame(raf)}
   // keep the canvas sharp whenever its box changes (resize, font load, rotation)
   new ResizeObserver(size).observe(box);
-  if(pinMQ.addEventListener)pinMQ.addEventListener('change',size);
   fillAmp(t0);size();
   // do no work while the hero is off screen or the tab is hidden
   new IntersectionObserver(function(es){vis=es[0].isIntersecting;vis?start():stop()}).observe(hero);
