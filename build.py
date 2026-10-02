@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the website (index.html), the CV (Peyman_Jahanbin_CV.pdf), the share card (og.jpg)
+Builds the website (index.html), the CV (Peyman_Jahanbin_CV.pdf and .docx), the share card (og.jpg)
 and sitemap.xml from content.toml.
 
     python3 build.py            build everything
@@ -18,16 +18,21 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from xml.dom import minidom
 try:
     import tomllib
 except ImportError:  # Python older than 3.11
     sys.exit("This needs Python 3.11 or newer. Install the free current version from https://www.python.org/downloads/ and try again.")
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / "builder"))
+from docxwriter import Doc  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent
 BUILDER = ROOT / "builder"
 CONTENT = ROOT / "content.toml"
 CV_FILE = "Peyman_Jahanbin_CV.pdf"
+CV_DOCX = "Peyman_Jahanbin_CV.docx"
 
 ROMAN = ["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x", "xi", "xii", "xiii", "xiv", "xv", "xvi", "xvii", "xviii", "xix", "xx", "xxi", "xxii", "xxiii", "xxiv"]
 STATUS_ORDER = {"published": 0, "review": 1, "preprint": 2}
@@ -733,6 +738,24 @@ def human_join(items):
     return ", ".join(items[:-1]) + ", and " + items[-1]
 
 
+def cv_pub_parts(x):
+    """The venue line of a CV publication as plain text: (italic part, text after it, doi or None)."""
+    if x["status"] == "published":
+        v = x["venue"] if x.get("venue") else x["venue_text"]
+        if x.get("volume"):
+            v += ", " + x["volume"] + (f'({x["issue"]})' if x.get("issue") else "")
+        if x.get("pages"):
+            v += ", " + x["pages"]
+        elif x.get("article"):
+            v += ", " + x["article"]
+        return v, f". {x['year']}", x.get("doi")
+    if x["status"] == "review":
+        return (x.get("venue") or x.get("venue_text")), f'. {x.get("cv_status") or x.get("label") or "Under review"}', None
+    if x.get("venue_text"):
+        return x["venue_text"], f". {x['year']}", None
+    return x["venue"], f'. {x["year"]}; {x.get("cv_note") or "Preprint"}', x.get("doi")
+
+
 def cv_body(c, today):
     p, cv = c["person"], c.get("cv", {})
     own = own_name(c)
@@ -769,20 +792,10 @@ def cv_body(c, today):
             continue
         out.append(f"<h2>{head}</h2>")
         for x in items:
-            if x["status"] == "published":
-                v = esc(x["venue"]) + (", " + esc(x["volume"]) + (f'({esc(x["issue"])})' if x.get("issue") else "") if x.get("volume") else "")
-                v += (", " + esc(x["pages"])) if x.get("pages") else (", " + esc(x["article"])) if x.get("article") else ""
-                line = f"<i>{v}</i>. {esc(x['year'])}"
-                if x.get("doi"):
-                    line += f'. DOI: <a href="https://doi.org/{attr(x["doi"])}">{esc(x["doi"])}</a>'
-            elif x["status"] == "review":
-                line = f'<i>{esc(x["venue"])}</i>. {esc(x.get("cv_status") or x.get("label") or "Under review")}'
-            elif x.get("venue_text"):
-                line = f'<i>{esc(x["venue_text"])}</i>. {esc(x["year"])}'
-            else:
-                line = f'<i>{esc(x["venue"])}</i>. {esc(x["year"])}; {esc(x.get("cv_note") or "Preprint")}'
-                if x.get("doi"):
-                    line += f'. DOI: <a href="https://doi.org/{attr(x["doi"])}">{esc(x["doi"])}</a>'
+            it, tail, doi = cv_pub_parts(x)
+            line = f"<i>{esc(it)}</i>{esc(tail)}"
+            if doi:
+                line += f'. DOI: <a href="https://doi.org/{attr(doi)}">{esc(doi)}</a>'
             out.append(f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>')
     if c.get("projects"):
         out.append("<h2>Research Projects</h2>" + "".join(
@@ -840,6 +853,162 @@ def cv_body(c, today):
         out.append('<h2>Languages</h2><p class="langs">' + '<span class="sep">|</span>'.join(
             f'<b>{esc(l["name"])}</b> ({esc(l.get("cv_level") or l["level"])})' for l in c["languages"]) + "</p>")
     return "\n".join(out)
+
+
+NAVY, GRAY = "1F4E79", "5C6975"
+
+
+def rich(d, s, **kw):
+    """Runs for text with *italic* markers."""
+    out = []
+    for k, part in enumerate(re.split(r"\*(.+?)\*", str(s))):
+        if part:
+            out.append(d.run(part, **{**kw, "i": True if k % 2 else kw.get("i", False)}))
+    return out
+
+
+def docx_author_runs(d, authors, own):
+    names = [split_author(a)[0] for a in authors]
+    runs = []
+    for k, n in enumerate(names):
+        if k:
+            runs.append(d.run(" & " if (len(names) == 2) else (", & " if k == len(names) - 1 else ", ")))
+        runs.append(d.run(n, b=(n == own)))
+    return runs
+
+
+def build_docx(c, today, path):
+    d = Doc(10166)
+    p, cv = c["person"], c.get("cv", {})
+    own = own_name(c)
+
+    def h2(text):
+        d.para([d.run(text, b=True, caps=True, color=NAVY, sz=11.5)], before=200, after=100, border=True, keep_next=True)
+
+    def entry(title, dates="", sub_l="", sub_r="", text=""):
+        has_sub, has_text = bool(sub_l or sub_r), bool(text)
+        rows = [([([d.run(title, b=True, sz=10.5)], None), ([d.run(dates, b=True)], "right")], 0 if (has_sub or has_text) else 100)]
+        if has_sub:
+            rows.append(([([d.run(sub_l, i=True, color=GRAY, sz=9.5)], None), ([d.run(sub_r, i=True, color=GRAY, sz=9.5)], "right")], 0 if has_text else 100))
+        d.table(rows, [6600, 3566], keep_next=has_text)
+        if has_text:
+            d.para(rich(d, text), after=100, keep_lines=True, before=20)
+
+    # header
+    d.para([d.run(own, b=True, color=NAVY, sz=27)], jc="center", after=40)
+    if cv.get("subtitle"):
+        d.para([d.run(cv["subtitle"], sz=11)], jc="center", before=40)
+    contact = []
+    for it in cv.get("contact_line", []):
+        if "@" in it:
+            contact.append(d.run(it, color=GRAY, link="mailto:" + it))
+        elif it.lower().startswith("linkedin") and p.get("linkedin"):
+            contact.append(d.run(it, color=GRAY, link=p["linkedin"]))
+        elif "scholar" in it.lower() and p.get("scholar"):
+            contact.append(d.run(it, color=GRAY, link=p["scholar"]))
+        else:
+            contact.append(d.run(it, color=GRAY))
+    runs = []
+    for k, r in enumerate(contact):
+        if k:
+            runs.append(d.run("   |   ", color=GRAY))
+        runs.append(r)
+    d.para(runs, jc="center", before=20, after=200)
+
+    if cv.get("research_interests"):
+        h2("Research Interests")
+        d.para(rich(d, cv["research_interests"]), after=100)
+    for key, head in (("education", "Education"), ("appointments", "Academic Appointments")):
+        if c.get(key):
+            h2(head)
+            for x in c[key]:
+                entry(plain(x.get("cv_title") or x["title"]), x.get("cv_dates") or cv_dates(x["dates"]), get(x, "org"), get(x, "place"),
+                      x.get("cv_text") or get(x, "text"))
+    groups = [("published", "Peer-Reviewed Publications & Accepted Manuscripts"), ("review", "Manuscripts in Review / Editorial Processing"),
+              ("preprint", "Preprints & Reproducible Research")]
+    pubs = sorted_pubs(c)
+    for st, head in groups:
+        items = [x for x in pubs if x["status"] == st]
+        if not items:
+            continue
+        h2(head)
+        for x in items:
+            d.para([d.run(plain(x["title"]), b=True, sz=10.5)], keep_next=True)
+            d.para(docx_author_runs(d, x["authors"], own), keep_next=True, before=20)
+            it, tail, doi = cv_pub_parts(x)
+            runs = [d.run(it, i=True, color=GRAY, sz=9.5), d.run(tail, color=GRAY, sz=9.5)]
+            if doi:
+                runs += [d.run(". DOI: ", color=GRAY, sz=9.5), d.run(doi, color=NAVY, sz=9.5, link=f"https://doi.org/{doi}")]
+            d.para(runs, before=20, after=100, keep_lines=True)
+    if c.get("projects"):
+        h2("Research Projects")
+        for x in c["projects"]:
+            entry(plain(x.get("cv_title") or x["title"]), cv_dates(x["dates"]), get(x, "org"), "", x.get("cv_text") or get(x, "text"))
+    if c.get("teaching"):
+        h2("Teaching Experience")
+        if cv.get("teaching_header"):
+            d.para([d.run(cv["teaching_header"], b=True, sz=10.5)], keep_next=True)
+        if cv.get("teaching_summary"):
+            d.para([d.run(cv["teaching_summary"], i=True, color=GRAY, sz=9.5)], after=60, keep_next=True)
+        for g in c["teaching"]:
+            label = f'{g["group"]} Courses' if g["group"] in ("Graduate", "Undergraduate") else g["group"]
+            d.para([d.run(label, b=True, caps=True, color=NAVY, sz=10.5)], before=160, after=60, keep_next=True)
+            rows = []
+            for k in g.get("courses", []):
+                terms = k.get("cv_terms") or cv_dates(k.get("terms", "")).replace(" · ", "; ").replace("\n", " ")
+                rows.append(([([d.run(f'{k["code"]} {k.get("cv_title") or k["title"]}', b=True)], None),
+                              ([d.run(terms, color=GRAY)], "right")], 60))
+            if rows:
+                d.table(rows, [7000, 3166])
+    if c.get("presentations"):
+        h2("Selected Conference Presentations")
+        for x in c["presentations"]:
+            entry(x["title"], x.get("cv_date") or x["date"], x.get("cv_event") or x.get("site_venue", ""), get(x, "place"))
+    pr = c.get("peer_review")
+    if pr:
+        h2("Peer Review Service")
+        entry(pr.get("cv_role") or pr["role"], cv_dates(pr["dates"]), "", "", pr.get("cv_summary") or get(pr, "summary"))
+
+    def bullets(items):
+        for label, text in items:
+            d.para([d.run("\u2022"), d.tab(), d.run(label + ":", b=True), d.run(" " + text)], left=360, hanging=240, after=40, keep_lines=True)
+
+    if c.get("methods"):
+        h2("Research Methods & Technical Skills")
+        lis = []
+        for m in c["methods"]:
+            items = [f"{a.strip()} ({b.strip()})" if "|" in it else lowfirst(it) for it in m.get("items", []) for a, b in [it.split("|", 1) if "|" in it else (it, "")]]
+            lis.append((m.get("cv_title") or m["title"], human_join(items) + "."))
+        bullets(lis)
+    if cv.get("methodological_training"):
+        h2("Methodological Training")
+        bullets([(m["label"], m["text"]) for m in cv["methodological_training"]])
+    if c.get("leadership"):
+        h2("Academic & Professional Service")
+        for x in c["leadership"]:
+            entry(x.get("cv_role") or x["role"], cv_dates(x["dates"]), x.get("cv_org") or x.get("org", ""), get(x, "place"), get(x, "text"))
+    if c.get("honors"):
+        h2("Awards, Scholarships & Honors")
+        for h in c["honors"]:
+            note = h.get("cv_note") or h.get("note")
+            d.para([d.run(h["name"], b=True)] + ([d.run(", " + note)] if note else []), after=20, keep_lines=True)
+    for e in c.get("extra_sections", []):
+        if e.get("cv", True) is False or not e.get("items"):
+            continue
+        h2(e.get("cv_title") or e["title"])
+        for x in e["items"]:
+            entry(plain(x.get("cv_title") or x["title"]), x.get("cv_dates") or cv_dates(get(x, "dates")), get(x, "org"), get(x, "place"),
+                  x.get("cv_text") or get(x, "text"))
+    if c.get("languages"):
+        h2("Languages")
+        runs = []
+        for k, l in enumerate(c["languages"]):
+            if k:
+                runs.append(d.run("   |   "))
+            runs += [d.run(l["name"], b=True), d.run(f' ({l.get("cv_level") or l["level"]})')]
+        d.para(runs)
+    foot = f"{own} | Academic Curriculum Vitae | Updated {month_year(today)} | Page "
+    return d.save(path, f"{own}, Curriculum Vitae", own, d.run(foot, color=GRAY, sz=9))
 
 
 def build_cv_html(c, today):
@@ -933,6 +1102,22 @@ def make_pdf(c, today, say):
         tmp.unlink(missing_ok=True)
 
 
+def make_docx(c, today, say):
+    tmp = ROOT / "_cv_tmp.docx"
+    try:
+        doc_xml = build_docx(c, today, tmp)
+        digest = hashlib.sha256(doc_xml.encode()).hexdigest()
+        if stamp_ok("docx", digest, [CV_DOCX]):
+            say("  CV Word file: nothing changed, kept the existing file")
+            return
+        minidom.parseString(doc_xml)  # raises if the document is malformed
+        shutil.move(str(tmp), ROOT / CV_DOCX)
+        stamp_write("docx", digest)
+        say("  CV Word file: made")
+    finally:
+        tmp.unlink(missing_ok=True)
+
+
 def make_og(c, say):
     body = build_og_html(c)
     digest = hashlib.sha256((body + (BUILDER / "fonts" / "fonts.css").read_text()).encode()).hexdigest()
@@ -983,6 +1168,7 @@ def main(argv):
             f'    <loc>{esc(site)}</loc>\n    <lastmod>{datetime.date.today().isoformat()}</lastmod>\n  </url>\n</urlset>\n', encoding="utf-8")
         if not no_pdf:
             make_pdf(c, today, say)
+            make_docx(c, today, say)
             make_og(c, say)
         say("\nDone.")
         return 0

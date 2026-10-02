@@ -2,7 +2,7 @@
 
 Personal academic website: <https://jhb-peyman.github.io>
 
-The website, the CV PDF, the link-preview card and the sitemap are all **built from one file, `content.toml`**.
+The website, the CV (PDF and Word), the link-preview card and the sitemap are all **built from one file, `content.toml`**.
 To change anything, read [HOW_TO_UPDATE.md](HOW_TO_UPDATE.md): edit `content.toml`, double-click `Build.command` to
 preview, then `Publish.command` to put it online.
 
@@ -10,7 +10,7 @@ preview, then `Publish.command` to put it online.
 
 - `content.toml` is the only file to edit.
 - `build.py` and `builder/` (templates and fonts) turn it into the site. `Build.command` and `Publish.command` run it.
-- `index.html`, `Peyman_Jahanbin_CV.pdf`, `og.jpg` and `sitemap.xml` are generated. Do not edit them by hand.
+- `index.html`, `Peyman_Jahanbin_CV.pdf`, `Peyman_Jahanbin_CV.docx`, `og.jpg` and `sitemap.xml` are generated. Do not edit them by hand.
 - `portrait.jpg` is the portrait.
 
 ## Notes

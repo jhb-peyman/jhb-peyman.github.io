@@ -1,6 +1,6 @@
 # How to update your website and CV
 
-You only ever edit **one file**: `content.toml`. Your website and your CV PDF are both built from it, so they can never disagree.
+You only ever edit **one file**: `content.toml`. Your website, your CV PDF and your CV **Word file** are all built from it, so they can never disagree.
 
 ## The three steps
 
@@ -10,7 +10,7 @@ You only ever edit **one file**: `content.toml`. Your website and your CV PDF ar
 
 The first time you double-click a `.command` file, macOS may refuse. Right-click it, choose Open, then Open again. You only do this once per file.
 
-You never edit `index.html`, `sitemap.xml`, `og.jpg` or `Peyman_Jahanbin_CV.pdf` by hand. They are rebuilt every time and your edits to them would be overwritten.
+You never edit `index.html`, `sitemap.xml`, `og.jpg`, `Peyman_Jahanbin_CV.pdf` or `Peyman_Jahanbin_CV.docx` by hand. They are rebuilt every time and your edits to them would be overwritten.
 
 ## Rules of the file
 
@@ -94,6 +94,7 @@ Under `[person]`. It changes everywhere.
 
 ## Good to know
 
+- **The Word file (`Peyman_Jahanbin_CV.docx`)** uses Cambria, like your original CV, and has the same sections and wording as the PDF. Word can open and tweak it freely (for one-off versions for a specific job, for example), but a hand-edited copy is not connected to `content.toml`: the next build writes a fresh one over it, so save one-off edits under a different file name.
 - **The CV PDF is built with a free font (Caladea), not Cambria.** Caladea is designed to match Cambria's measurements, so the layout is the same, but the letter shapes are slightly different from your Word original. Keep your Word file if you want the exact original look.
 - The footer date ("Updated October 2026") and the sitemap date update by themselves every time you build.
 - The PDF is only rebuilt when something in it changed, so publishing twice in a row does not create noise.
@@ -108,4 +109,4 @@ Under `[person]`. It changes everywhere.
 | `Build.command`, `Publish.command` | double-click to preview and to publish |
 | `build.py` | the program that builds everything |
 | `builder/site.html`, `cv.html`, `og.html`, `fonts/` | the page templates and the fonts for the offline build |
-| `index.html`, `Peyman_Jahanbin_CV.pdf`, `og.jpg`, `sitemap.xml` | built for you, do not edit |
+| `index.html`, `Peyman_Jahanbin_CV.pdf`, `Peyman_Jahanbin_CV.docx`, `og.jpg`, `sitemap.xml` | built for you, do not edit |
