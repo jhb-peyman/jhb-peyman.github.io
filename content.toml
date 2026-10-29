@@ -76,7 +76,8 @@ text = "Teaching C&T 330, *Instructional Approaches for ESOL Learners in the Ele
 
 [[news]]
 date = "Aug 2026"
-text = "Submitted “Acoustic Gap Placement in Fixed-Passage Read Speech” to *PLOS ONE*."
+text = "Submitted a paper on acoustic gap placement in second-language read speech to *PLOS ONE*, with a preprint on arXiv."
+link = "https://doi.org/10.48550/arXiv.2610.02582"
 
 [[news]]
 date = "May 2026"
@@ -247,7 +248,7 @@ bibkey     = "jahanbin2026ethical"
 cv_note    = "Preprint (Version 1)"
 
 [[publications]]
-id         = "acousticpre"
+id         = "acoustic"
 date       = "2026-10-01"
 status     = "preprint"
 year       = 2026
@@ -255,11 +256,12 @@ topics     = ["speech"]
 title      = "Acoustic Gap Placement in Second-Language Read Speech Production"
 cite_title = "Acoustic gap placement in second-language read speech production"
 authors    = ["Peyman Jahanbin"]
+label      = "Preprint, under review at PLOS ONE"
 venue      = "arXiv"
 doi        = "10.48550/arXiv.2610.02582"
 eprint     = "2610.02582"
 bibkey     = "jahanbin2026gap"
-cv_note    = "Preprint"
+cv_note    = "Preprint; under review at PLOS ONE"
 
 [[publications]]
 id         = "beyond"
@@ -386,20 +388,6 @@ cv_status  = "Revised (minor revisions) after peer review; currently out for rev
 bibkey     = "jahanbin2026accent"
 
 [[publications]]
-id         = "acoustic"
-date       = "2026-08-30"
-status     = "review"
-year       = 2026
-topics     = ["speech"]
-label      = "Submitted Aug 2026"
-title      = "Acoustic Gap Placement in Fixed-Passage Read Speech: A Comparison of Mandarin-L1 and American English-L1 Speakers"
-cite_title = "Acoustic gap placement in fixed-passage read speech: A comparison of Mandarin-L1 and American English-L1 speakers"
-authors    = ["Peyman Jahanbin"]
-venue      = "PLOS ONE"
-cv_status  = "Submitted August 30, 2026; Currently in editorial processing"
-bibkey     = "jahanbin2026acoustic"
-
-[[publications]]
 id         = "arxiv"
 date       = "2025-04-18"
 status     = "preprint"
@@ -445,6 +433,14 @@ venue_text = "Reproducible research artifact"
 
 # ------------------------------------------------------------------ selected presentations (newest first)
 #  Add  id, doi  and the cite_* fields to give a presentation its own cite buttons (see the first one).
+[[presentations]]
+date        = "Oct 2026"
+cv_date     = "October 2026"
+title       = "Beyond Symbolic Recognition: Examining Access, Fidelity, and Student Outcomes in the Seal of Biliteracy"
+site_venue  = "MIDTESOL 2027"
+cv_event    = "MIDTESOL 2027"
+doi         = "10.1002/tesq.70236"
+
 [[presentations]]
 id          = "aera"
 date        = "Apr 2026"
@@ -537,12 +533,11 @@ items = ["Interview inquiry", "Thematic analysis", "Integrative review", "Policy
 dates   = "2023 to 2026"
 role    = "Ad hoc reviewer"
 cv_role = "Ad Hoc Reviewer"
-#  The big number on the website is the total of the counts below, so it updates when you add a journal.
-summary = "manuscript reviews for peer-reviewed journals, documented in Web of Science Researcher Profiles."
-# link  = "https://..."        (optional: your Web of Science / Publons / ORCID reviewer page)
+#  The total shown is the sum of the counts below, so it updates when you add a journal.
+#  url = the journal's homepage; the name becomes a link to it.
 journals = [
-  { name = "SAGE Open", count = "12 reviews" },
-  { name = "Journal of Research on Technology in Education", count = "3 reviews" },
+  { name = "SAGE Open", count = "12 reviews", url = "https://journals.sagepub.com/home/sgo" },
+  { name = "Journal of Research on Technology in Education", count = "3 reviews", url = "https://www.tandfonline.com/journals/ujrt20" },
 ]
 
 [[leadership]]
