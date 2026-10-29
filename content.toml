@@ -437,8 +437,10 @@ venue_text = "Reproducible research artifact"
 date        = "Oct 2026"
 cv_date     = "October 2026"
 title       = "Beyond Symbolic Recognition: Examining Access, Fidelity, and Student Outcomes in the Seal of Biliteracy"
-site_venue  = "MIDTESOL 2027"
+site_venue  = "MIDTESOL 2027 · Overland Park, KS"
 cv_event    = "MIDTESOL 2027"
+place       = "Overland Park, KS"
+coauthors   = "Sarah C. Swyers"
 doi         = "10.1002/tesq.70236"
 
 [[presentations]]
