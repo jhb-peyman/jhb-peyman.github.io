@@ -207,6 +207,21 @@ section{padding:var(--secpad) 0 0;scroll-margin-top:calc(var(--secpad) * -1 + 96
 .mcol li{position:relative;padding:5px 0 5px 22px;color:var(--soft);font-size:15.5px;line-height:1.55}
 .mcol li::before{content:"";position:absolute;left:3px;top:.95em;width:5px;height:5px;background:var(--gold);transform:rotate(45deg)}
 .mcol li small{display:block;color:var(--muted);font-size:13.5px}
+.mcol.wide{grid-column:1/-1}
+.mcol.wide ul{columns:2;column-gap:clamp(28px,5vw,64px)}
+.mcol.wide li{break-inside:avoid}
+.mcol .lead{margin:-4px 0 18px;max-width:640px;color:var(--muted);font-size:15.5px;line-height:1.6}
+.prv{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px clamp(20px,4vw,52px);padding-bottom:34px}
+.prn{font:300 clamp(96px,14vw,176px)/.78 var(--serif);letter-spacing:-.03em;color:var(--gold-hi);font-variant-numeric:lining-nums}
+.prt{max-width:440px;padding-bottom:4px}
+.prr{font:500 11px/1.6 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.prt p{margin-top:8px;font:300 clamp(20px,2vw,25px)/1.4 var(--serif);color:var(--ink)}
+.prj{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(70px,1fr) 84px;gap:clamp(14px,3vw,30px);align-items:center;padding:17px 0;border-top:1px solid var(--line2)}
+.prj:last-child{border-bottom:1px solid var(--line2)}
+.prj i{font:italic 400 clamp(19px,2vw,24px)/1.3 var(--serif);color:var(--ink)}
+.prj .bar{position:relative;height:1px;background:var(--line)}
+.prj .bar b{position:absolute;left:0;top:-1px;height:3px;background:var(--gold)}
+.prj .cnt{text-align:right;font:500 13px var(--sans);letter-spacing:.04em;color:var(--gold);white-space:nowrap;font-variant-numeric:tabular-nums}
 .svc{display:grid;grid-template-columns:130px 1fr;gap:28px;padding:24px 0;border-top:1px solid var(--line2)}
 .svc:last-child{border-bottom:1px solid var(--line2)}
 .svc .yrs{font:italic 300 24px/1.2 var(--serif);color:var(--gold)}
@@ -241,6 +256,9 @@ footer a{transition:color .3s}footer a:hover{color:var(--gold-hi)}
 @media (max-width:1000px){.intro{grid-template-columns:1fr 240px}.statement{font-size:clamp(22px,3vw,28px)}}
 @media (max-width:820px){
   .meth{grid-template-columns:1fr}
+  .mcol.wide ul{columns:1}
+  .prj{grid-template-columns:1fr;gap:8px}
+  .prj .bar{max-width:260px}
   .svc{grid-template-columns:1fr;gap:6px}
   .langs{grid-template-columns:1fr}
   .lang{padding:24px 0}

@@ -24,7 +24,7 @@
 first_name   = "Peyman"
 last_name    = "Jahanbin"
 initials     = "P. J."
-status       = "Ph.D. Student"            # change to "Ph.D. Candidate" after you advance
+status       = "Ph.D. Candidate"
 institution  = "University of Kansas"
 specialties  = ["TESOL", "Language Assessment", "AI in Education"]
 tagline      = "I study how well automated scoring judges *spoken English*, and whether it judges everyone fairly."
@@ -38,11 +38,11 @@ site_url     = "https://jhb-peyman.github.io/"
 # What search engines and link previews show
 [seo]
 title        = "Peyman Jahanbin | TESOL, Language Assessment & AI in Education"
-description  = "Ph.D. student in Curriculum & Instruction (TESOL) at the University of Kansas. Research on validity and fairness in automated speaking assessment, explainable machine learning for L2 pronunciation, and the Seal of Biliteracy."
+description  = "Ph.D. candidate in Curriculum & Instruction (TESOL) at the University of Kansas. Research on validity and fairness in automated speaking assessment, explainable machine learning for L2 pronunciation, and the Seal of Biliteracy."
 share_text   = "Validity and fairness in automated speaking assessment. Explainable machine learning for L2 pronunciation. Multilingual education policy."
 share_alt  = "Peyman Jahanbin. TESOL, language assessment and AI in education."
 share_image_line = "Language assessment, automated speaking assessment,\nand responsible AI in education."
-job_title    = "Ph.D. student and instructor of record, Curriculum & Instruction (TESOL)"
+job_title    = "Ph.D. candidate and instructor of record, Curriculum & Instruction (TESOL)"
 knows_about  = ["Language assessment", "Automated speaking assessment", "Validity and fairness", "Responsible AI in education", "Explainable machine learning", "L2 pronunciation", "Seal of Biliteracy", "TESOL"]
 alumni_of    = ["Shahid Beheshti University", "University of Isfahan"]
 
@@ -62,6 +62,10 @@ methodological_training = [
 
 # ------------------------------------------------------------------ recent news (about five, newest first)
 [[news]]
+date = "Oct 2026"
+text = "Advanced to Ph.D. candidacy at the University of Kansas."
+
+[[news]]
 date = "Sep 2026"
 text = "*Beyond Symbolic Recognition*, on access, fidelity and student outcomes in the Seal of Biliteracy, is published in *TESOL Quarterly*."
 link = "https://doi.org/10.1002/tesq.70236"
@@ -77,11 +81,6 @@ text = "Submitted “Acoustic Gap Placement in Fixed-Passage Read Speech” to *
 [[news]]
 date = "May 2026"
 text = "Completed the Graduate Certificate in Second Language Studies."
-
-[[news]]
-date = "Apr 2026"
-text = "Presented work on academic AI integrity at the AERA Annual Meeting in Los Angeles."
-link = "https://doi.org/10.3102/2288564"
 
 
 # ------------------------------------------------------------------ research
@@ -129,8 +128,8 @@ cv_title = "Ph.D. in Curriculum & Instruction, TESOL Emphasis"
 cv_dates = "September 2023-Present"
 org      = "University of Kansas"
 place    = "Lawrence, KS"
-text     = "Coursework completed; advancement to candidacy expected October 2026."
-cv_text  = "Coursework completed; expected advancement to doctoral candidacy in October 2026. Dissertation focus: validity and fairness in automated speaking assessment."
+text     = "Coursework completed; advanced to candidacy in October 2026."
+cv_text  = "Coursework completed; advanced to doctoral candidacy in October 2026. Dissertation focus: validity and fairness in automated speaking assessment."
 
 [[education]]
 dates    = "May 2026"
@@ -468,14 +467,19 @@ courses = [
 
 # ------------------------------------------------------------------ methods
 #  items: write "R | tidyverse, ggplot2, R Markdown/Quarto" to show a small second line.
+#  featured = true  makes a block span the full width (use it for the one you most want noticed).
+#  lead = a sentence under the title on the website (not used in the CV).
 [[methods]]
-title = "Quantitative methods"
-items = ["Regression", "Generalized linear models", "Multivariate modeling", "Agreement and error analysis", "Bootstrap confidence intervals", "Multilevel approaches"]
+title = "Quantitative & psychometric methods"
+cv_title = "Quantitative and psychometric methods"
+featured = true
+lead = "Applied measurement and statistical modeling, with a focus on how well automated and human scores agree and what that means for decisions."
+items = ["Regression and generalized linear models", "Multivariate and multilevel modeling", "Item response theory and Rasch-family models (LLTM)", "Scoring agreement and error analysis", "Cut-score and decision-risk analysis", "Bootstrap confidence intervals", "Predictive modeling and classification"]
 
 [[methods]]
 title = "Programming & analysis"
 cv_title = "Programming and analysis"
-items = ["R | tidyverse, ggplot2, R Markdown/Quarto", "Python", "IBM SPSS", "Microsoft Excel"]
+items = ["R | tidyverse, ggplot2, R Markdown/Quarto", "Python", "IBM SPSS"]
 
 [[methods]]
 title = "Computational language research"
@@ -486,13 +490,14 @@ title = "Qualitative research"
 items = ["Interview inquiry", "Thematic analysis", "Integrative review", "Policy and document analysis"]
 
 
-# ------------------------------------------------------------------ service
+# ------------------------------------------------------------------ peer review and service
 [peer_review]
 dates   = "2023 to 2026"
 role    = "Ad hoc reviewer"
 cv_role = "Ad Hoc Reviewer"
-summary = "Fifteen manuscript reviews documented in Web of Science"
-cv_summary = "15 manuscript reviews documented in Web of Science Researcher Profiles: SAGE Open (12) and Journal of Research on Technology in Education (3)."
+#  The big number on the website is the total of the counts below, so it updates when you add a journal.
+summary = "manuscript reviews for peer-reviewed journals, documented in Web of Science Researcher Profiles."
+# link  = "https://..."        (optional: your Web of Science / Publons / ORCID reviewer page)
 journals = [
   { name = "SAGE Open", count = "12 reviews" },
   { name = "Journal of Research on Technology in Education", count = "3 reviews" },
@@ -568,8 +573,8 @@ note = "University of Isfahan · 2019"
 cv_note = "University of Isfahan  |  2019"
 
 [[honors]]
-name = "Ranked 99th of 9,881 candidates"
-site_name = "Ranked 99th of 9,881 candidates, B.A. Public Entrance Exam"
+name = "Ranked 99th nationally"
+site_name = "Ranked 99th nationally on the B.A. Public Entrance Exam"
 note = "2016"
 cv_note = "B.A. Public Entrance Exam  |  2016"
 

@@ -434,29 +434,43 @@ def s_methods(c):
                 lis.append(f"<li>{esc(a.strip())} <small>{esc(b.strip())}</small></li>")
             else:
                 lis.append(f"<li>{esc(it)}</li>")
-        parts.append(f'        <div class="mcol rv"><h3>{esc(m["title"])}</h3><ul>\n          {"".join(lis)}</ul></div>')
+        wide = " wide" if m.get("featured") else ""
+        lead = f'<p class="lead">{inline(m["lead"])}</p>' if m.get("lead") else ""
+        parts.append(f'        <div class="mcol{wide} rv"><h3>{esc(m["title"])}</h3>{lead}<ul>\n          {"".join(lis)}</ul></div>')
     parts.append("      </div>")
     return "craft", "Methods", "Methods", "\n".join(parts), True
 
 
+def review_total(pr):
+    if pr.get("total"):
+        return str(pr["total"])
+    nums = [re.match(r"\s*(\d+)", str(j.get("count", ""))) for j in pr.get("journals", [])]
+    return str(sum(int(m.group(1)) for m in nums)) if nums and all(nums) else ""
+
+
+def s_review(c):
+    pr = c["peer_review"]
+    total = review_total(pr)
+    big = f'<div class="prn">{esc(total)}</div>' if total else ""
+    link = (f' <a class="doi" href="{attr(pr["link"])}" target="_blank" rel="noopener">Verify</a>' if pr.get("link") else "")
+    summary = get(pr, "summary", "manuscript reviews for peer-reviewed journals.")
+    parts = [f'      <div class="prv rv">{big}<div class="prt"><div class="prr">{esc(pr["role"])} · {esc(pr["dates"])}</div>'
+             f'<p>{esc(summary)}{link}</p></div></div>']
+    counts = [int(m.group(1)) if (m := re.match(r"\s*(\d+)", str(j.get("count", "")))) else 0 for j in pr.get("journals", [])]
+    top = max(counts + [1])
+    for j, n in zip(pr.get("journals", []), counts):
+        parts.append(f'      <div class="prj rv"><i>{esc(j["name"])}</i><span class="bar"><b style="width:{max(6, round(100 * n / top))}%"></b></span>'
+                     f'<span class="cnt">{esc(j["count"])}</span></div>')
+    return "review", "Peer Review", "Peer review", "\n".join(parts), False
+
+
 def s_service(c):
-    parts = []
-    pr = c.get("peer_review")
-    if pr:
-        parts.append('      <div class="grp">Peer review</div>')
-        tally = ""
-        if pr.get("journals"):
-            tally = '\n        <ul class="tally">' + "".join(
-                f'<li><i>{esc(j["name"])}</i><span>{esc(j["count"])}</span></li>' for j in pr["journals"]) + "</ul>"
-        parts.append(f'      <div class="svc rv"><div class="yrs">{esc(pr["dates"])}</div><div>\n        <h3>{esc(pr["role"])}</h3>\n'
-                     f'        <div class="who">{esc(get(pr, "summary"))}</div>{tally}</div></div>\n')
-    if c.get("leadership"):
-        parts.append('      <div class="grp">Leadership</div>')
-        for x in c["leadership"]:
-            who = x.get("site_who") or x.get("org", "")
-            txt = f'\n        <p>{inline(x["text"])}</p>' if x.get("text") else ""
-            parts.append(f'      <div class="svc rv"><div class="yrs">{esc(x["dates"])}</div><div>\n        <h3>{esc(x["role"])}</h3>\n'
-                         f'        <div class="who">{esc(who)}</div>{txt}</div></div>')
+    parts = ['      <div class="grp">Leadership</div>']
+    for x in c["leadership"]:
+        who = x.get("site_who") or x.get("org", "")
+        txt = f'\n        <p>{inline(x["text"])}</p>' if x.get("text") else ""
+        parts.append(f'      <div class="svc rv"><div class="yrs">{esc(x["dates"])}</div><div>\n        <h3>{esc(x["role"])}</h3>\n'
+                     f'        <div class="who">{esc(who)}</div>{txt}</div></div>')
     return "service", "Service", "Service", "\n".join(parts), True
 
 
@@ -592,11 +606,13 @@ def build_site(c, today):
         secs.append(s_path(c))
     if c.get("publications") or c.get("presentations"):
         secs.append(s_publications(c))
+    if c.get("peer_review"):
+        secs.append(s_review(c))
     if c.get("teaching"):
         secs.append(s_teaching(c))
     if c.get("methods"):
         secs.append(s_methods(c))
-    if c.get("peer_review") or c.get("leadership"):
+    if c.get("leadership"):
         secs.append(s_service(c))
     if c.get("languages"):
         secs.append(s_languages(c))
@@ -756,6 +772,13 @@ def cv_pub_parts(x):
     return x["venue"], f'. {x["year"]}; {x.get("cv_note") or "Preprint"}', x.get("doi")
 
 
+def cv_review_text(pr):
+    if pr.get("cv_summary"):
+        return pr["cv_summary"]
+    total = review_total(pr)
+    return (total + " " if total else "") + get(pr, "summary", "manuscript reviews for peer-reviewed journals.")
+
+
 def cv_body(c, today):
     p, cv = c["person"], c.get("cv", {})
     own = own_name(c)
@@ -797,6 +820,10 @@ def cv_body(c, today):
             if doi:
                 line += f'. DOI: <a href="https://doi.org/{attr(doi)}">{esc(doi)}</a>'
             out.append(f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>')
+    pr = c.get("peer_review")
+    if pr:
+        out.append("<h2>Peer Review Service</h2>" + cv_entry(esc(pr.get("cv_role") or pr["role"]), esc(cv_dates(pr["dates"])), "", "", esc(cv_review_text(pr)))
+                   + '<ul class="b">' + "".join(f'<li><i>{esc(j["name"])}</i>, {esc(j["count"])}</li>' for j in pr.get("journals", [])) + "</ul>")
     if c.get("projects"):
         out.append("<h2>Research Projects</h2>" + "".join(
             cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(cv_dates(x["dates"])), esc(get(x, "org")), "", inline(x.get("cv_text") or get(x, "text")))
@@ -816,9 +843,6 @@ def cv_body(c, today):
         out.append("<h2>Selected Conference Presentations</h2>" + "".join(
             cv_entry(esc(x["title"]), esc(x.get("cv_date") or x["date"]), esc(x.get("cv_event") or x.get("site_venue", "")), esc(get(x, "place")))
             for x in c["presentations"]))
-    pr = c.get("peer_review")
-    if pr:
-        out.append("<h2>Peer Review Service</h2>" + cv_entry(esc(pr.get("cv_role") or pr["role"]), esc(cv_dates(pr["dates"])), "", "", esc(pr.get("cv_summary") or get(pr, "summary"))))
     if c.get("methods"):
         lis = []
         for m in c["methods"]:
@@ -940,6 +964,12 @@ def build_docx(c, today, path):
             if doi:
                 runs += [d.run(". DOI: ", color=GRAY, sz=9.5), d.run(doi, color=NAVY, sz=9.5, link=f"https://doi.org/{doi}")]
             d.para(runs, before=20, after=100, keep_lines=True)
+    pr = c.get("peer_review")
+    if pr:
+        h2("Peer Review Service")
+        entry(pr.get("cv_role") or pr["role"], cv_dates(pr["dates"]), "", "", cv_review_text(pr))
+        for j in pr.get("journals", []):
+            d.para([d.run("\u2022"), d.tab(), d.run(j["name"], i=True), d.run(", " + j["count"])], left=360, hanging=240, after=40, keep_lines=True)
     if c.get("projects"):
         h2("Research Projects")
         for x in c["projects"]:
@@ -964,11 +994,6 @@ def build_docx(c, today, path):
         h2("Selected Conference Presentations")
         for x in c["presentations"]:
             entry(x["title"], x.get("cv_date") or x["date"], x.get("cv_event") or x.get("site_venue", ""), get(x, "place"))
-    pr = c.get("peer_review")
-    if pr:
-        h2("Peer Review Service")
-        entry(pr.get("cv_role") or pr["role"], cv_dates(pr["dates"]), "", "", pr.get("cv_summary") or get(pr, "summary"))
-
     def bullets(items):
         for label, text in items:
             d.para([d.run("\u2022"), d.tab(), d.run(label + ":", b=True), d.run(" " + text)], left=360, hanging=240, after=40, keep_lines=True)
