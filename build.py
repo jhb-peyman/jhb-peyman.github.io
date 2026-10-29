@@ -173,6 +173,10 @@ def check(c):
             problems.append(f"{w}: status must be published, review or preprint")
         if p.get("year") and not re.fullmatch(r"\d{4}", str(p["year"])):
             problems.append(f"{w}: year must be four digits, like 2027")
+        if p.get("date") and not re.fullmatch(r"\d{4}(-\d{2}(-\d{2})?)?", str(p["date"])):
+            problems.append(f"{w}: date must look like 2026-10-08, 2026-10 or 2026")
+        elif p.get("date") and p.get("year") and str(p["date"])[:4] != str(p["year"]):
+            warnings.append(f"{w}: the date and the year do not match")
         if p.get("id") in seen:
             problems.append(f"{w}: the id '{p.get('id')}' is used twice")
         seen.add(p.get("id"))
@@ -369,9 +373,18 @@ def pub_ven(p):
     return s
 
 
-def sorted_pubs(c):
+def pub_date_key(p):
+    """(year, month, day) from `date`, or just the year; a missing month or day counts as 0 (so it sorts last within its year)."""
+    parts = [int(x) for x in re.findall(r"\d+", str(p.get("date") or p.get("year") or 0))][:3]
+    return tuple(parts + [0] * (3 - len(parts)))
+
+
+def sorted_pubs(c, by_status=True):
+    """Newest first. The CV keeps its status groups (by_status=True); the website list is one newest-first list."""
     pubs = list(c.get("publications", []))
-    pubs.sort(key=lambda p: (STATUS_ORDER.get(p["status"], 9), -int(p["year"])))
+    pubs.sort(key=lambda p: tuple(-v for v in pub_date_key(p)))  # stable: ties keep the order in content.toml
+    if by_status:
+        pubs.sort(key=lambda p: STATUS_ORDER.get(p["status"], 9))
     return pubs
 
 
@@ -386,7 +399,7 @@ def s_publications(c):
       <div class="topics" id="topics" role="group" aria-label="Filter publications by topic"><span class="toplab">Topic</span></div>
       <p class="none" id="pubnone" hidden>No papers match that combination.</p>
 ''']
-    for p in sorted_pubs(c):
+    for p in sorted_pubs(c, by_status=False):
         parts.append(
             f'      <article class="pub rv" data-k="{STATUS_KEY[p["status"]]}" data-id="{attr(p["id"])}" data-topics="{attr(" ".join(p.get("topics", [])))}">'
             f'<div class="yr">{esc(p["year"])}</div><div>\n'

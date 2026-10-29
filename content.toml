@@ -226,13 +226,44 @@ label = "Corpus & discourse"
 #  title       as it should be shown on the page (title case)
 #  cite_title  the same title in sentence case, used for the APA / BibTeX buttons
 #  venue       journal or server; volume / issue / pages / article for the details
+#  date        when it came out, as "2026-10-08", "2026-10" or just "2026". The website lists papers newest first by this date.
 #  online      true if the paper is online but has no volume or issue yet (cited as
 #              "Advance online publication.")
 #  label       small text before the venue, for example "Revised, in review"
 #  topics      any of the topic keys above
 #  cite        set to false to hide the cite buttons for an entry
 [[publications]]
+id         = "ethics"
+date       = "2026-10-08"
+status     = "preprint"
+year       = 2026
+topics     = ["ai", "assessment"]
+title      = "Measuring University Students’ Ethical Judgments of Generative AI Use: Development and Initial Validation of Four Instruments for Academic Integrity Research"
+cite_title = "Measuring university students' ethical judgments of generative AI use: Development and initial validation of four instruments for academic integrity research"
+authors    = ["Peyman Jahanbin", "Imogen R. Herrick", "Ian Thacker", "Atiyeh Choobkar"]
+venue      = "Research Square"
+doi        = "10.21203/rs.3.rs-11286301/v1"
+bibkey     = "jahanbin2026ethical"
+cv_note    = "Preprint (Version 1)"
+
+[[publications]]
+id         = "acousticpre"
+date       = "2026-10-01"
+status     = "preprint"
+year       = 2026
+topics     = ["speech"]
+title      = "Acoustic Gap Placement in Second-Language Read Speech Production"
+cite_title = "Acoustic gap placement in second-language read speech production"
+authors    = ["Peyman Jahanbin"]
+venue      = "arXiv"
+doi        = "10.48550/arXiv.2610.02582"
+eprint     = "2610.02582"
+bibkey     = "jahanbin2026gap"
+cv_note    = "Preprint"
+
+[[publications]]
 id         = "beyond"
+date       = "2026-09-30"
 status     = "published"
 year       = 2026
 topics     = ["policy", "assessment"]
@@ -246,6 +277,7 @@ bibkey     = "jahanbin2026beyond"
 
 [[publications]]
 id         = "lltm"
+date       = "2026-07"
 status     = "published"
 year       = 2026
 topics     = ["assessment"]
@@ -261,6 +293,7 @@ bibkey     = "elizondo2026lltm"
 
 [[publications]]
 id         = "dyadic"
+date       = "2026-06-15"
 status     = "published"
 year       = 2026
 topics     = ["classroom"]
@@ -276,6 +309,7 @@ bibkey     = "muthusamy2026dyadic"
 
 [[publications]]
 id         = "corpus"
+date       = "2025-05-20"
 status     = "published"
 year       = 2025
 topics     = ["corpus"]
@@ -291,6 +325,7 @@ bibkey     = "farashaiyan2025corpus"
 
 [[publications]]
 id         = "personality"
+date       = "2025-05-19"
 status     = "published"
 year       = 2025
 topics     = ["classroom"]
@@ -306,6 +341,7 @@ bibkey     = "muthusamy2025personality"
 
 [[publications]]
 id         = "achievements"
+date       = "2025-05-19"
 status     = "published"
 year       = 2025
 topics     = ["assessment", "classroom"]
@@ -321,6 +357,7 @@ bibkey     = "muthusamy2025achievements"
 
 [[publications]]
 id         = "audio"
+date       = "2024-10-21"
 status     = "published"
 year       = 2024
 topics     = ["classroom"]
@@ -336,6 +373,7 @@ bibkey     = "nushi2024audio"
 
 [[publications]]
 id         = "accent"
+date       = "2026"
 status     = "review"
 year       = 2026
 topics     = ["policy", "ai"]
@@ -349,6 +387,7 @@ bibkey     = "jahanbin2026accent"
 
 [[publications]]
 id         = "acoustic"
+date       = "2026-08-30"
 status     = "review"
 year       = 2026
 topics     = ["speech"]
@@ -362,6 +401,7 @@ bibkey     = "jahanbin2026acoustic"
 
 [[publications]]
 id         = "arxiv"
+date       = "2025-04-18"
 status     = "preprint"
 year       = 2025
 topics     = ["speech", "ai"]
@@ -376,6 +416,7 @@ bibkey     = "jahanbin2025mfcc"
 
 [[publications]]
 id         = "rsquare"
+date       = "2025-07-04"
 status     = "preprint"
 year       = 2025
 topics     = ["speech", "ai"]
@@ -390,6 +431,7 @@ bibkey     = "jahanbin2025pipeline"
 # An item that is not a paper: shown in the list, no cite buttons. (Send me its DOI or link and it can become a proper entry.)
 [[publications]]
 id         = "pipeline"
+date       = "2025"
 status     = "preprint"
 kind       = "artifact"
 cite       = false
