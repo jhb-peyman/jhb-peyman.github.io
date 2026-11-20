@@ -62,8 +62,17 @@ methodological_training = [
 
 # ------------------------------------------------------------------ recent news (about five, newest first)
 [[news]]
+date = "Spring 2027"
+text = "Assigned to teach C&T 331, *Instructional Approaches for ESOL Learners in Secondary Schools*, as instructor of record, and C&T 821, *Assessment in Teaching English to Speakers of Other Languages*."
+
+[[news]]
 date = "Oct 2026"
 text = "Advanced to Ph.D. candidacy at the University of Kansas."
+
+[[news]]
+date = "Oct 2026"
+text = "Posted a preprint on how university students judge the ethics of generative AI use; the paper is under review at *International Journal for Educational Integrity*."
+link = "https://doi.org/10.21203/rs.3.rs-11286301/v1"
 
 [[news]]
 date = "Sep 2026"
@@ -73,6 +82,10 @@ link = "https://doi.org/10.1002/tesq.70236"
 [[news]]
 date = "Fall 2026"
 text = "Teaching C&T 330, *Instructional Approaches for ESOL Learners in the Elementary/Early Childhood Classroom* (undergraduate), and C&T 820, *Teaching English as a Second Language/Bilingual Education* (graduate), at the University of Kansas."
+
+[[news]]
+date = "Aug 2026"
+text = "Published *Too Few to Count*, a white paper with Mike Klein-Thibodeau and Adam M. Brazil on how a uniform reporting threshold leaves rural English learners out of Kansas public data."
 
 [[news]]
 date = "Aug 2026"
@@ -177,12 +190,35 @@ text     = "Research synthesis and policy analysis on Seal of Biliteracy impleme
 cv_text  = "Conducted research synthesis and policy analysis on Seal of Biliteracy implementation, equity, outcomes, and external recognition. Project SELILLA: $2.44 million federally funded project."
 
 [[appointments]]
+dates    = "Aug 2021 to Nov 2022"
+title    = "ESL Teacher"
+cv_title = "English as a Second Language (ESL) Teacher, Contract"
+cv_dates = "August 2021-November 2022"
+org      = "IranCanada Educational Center"
+place    = "Tehran Province, Iran"
+site_text = "English as a second language teacher, on contract, Tehran Province."
+
+[[appointments]]
+dates    = "2020 to 2022"
+title    = "EFL Teacher"
+cv_title = "English as a Foreign Language (EFL) Teacher"
+org      = "Vank Cathedral"
+place    = "Isfahan, Iran"
+site_text = "EFL teacher, Isfahan."
+
+[[appointments]]
 dates    = "2018 to 2022"
 title    = "EFL Instructor"
 cv_title = "English as a Foreign Language (EFL) Instructor"
 org      = "University of Isfahan"
 place    = "Isfahan, Iran"
 text     = "General English for undergraduate and graduate students; approximately 250 instructional hours."
+site_text = "EFL instructor for undergraduate and graduate students, about 250 instructional hours. In 2019 I received the university’s Distinguished EFL Instructor award."
+courses  = [
+  { code = "1716404", title = "English as a Foreign Language I", level = "undergraduate", dates = "2018 to 2022" },
+  { code = "1716405", title = "English as a Foreign Language II", level = "undergraduate", dates = "2018 to 2022" },
+  { code = "E8012", title = "English as an Academic Language", level = "graduate", dates = "2020 to 2022" },
+]
 cv_text  = "Taught general English to undergraduate and graduate students; approximately 250 instructional hours."
 
 [[appointments]]
@@ -191,6 +227,7 @@ title    = "EFL Instructor"
 cv_title = "English as a Foreign Language (EFL) Instructor"
 org      = "Kish English Institute"
 place    = "Sabzevar, Iran"
+site_text = "EFL instructor in Sabzevar, teaching English to school students in grades 8, 10, 11 and 12."
 
 
 # ------------------------------------------------------------------ publication topics (used by the topic filter)
@@ -242,10 +279,11 @@ topics     = ["ai", "assessment"]
 title      = "Measuring University Students’ Ethical Judgments of Generative AI Use: Development and Initial Validation of Four Instruments for Academic Integrity Research"
 cite_title = "Measuring university students' ethical judgments of generative AI use: Development and initial validation of four instruments for academic integrity research"
 authors    = ["Peyman Jahanbin", "Imogen R. Herrick", "Ian Thacker", "Atiyeh Choobkar"]
+label      = "Preprint, under review at International Journal for Educational Integrity"
 venue      = "Research Square"
 doi        = "10.21203/rs.3.rs-11286301/v1"
 bibkey     = "jahanbin2026ethical"
-cv_note    = "Preprint (Version 1)"
+cv_note    = "Preprint (Version 1); under review at International Journal for Educational Integrity"
 
 [[publications]]
 id         = "acoustic"
@@ -429,6 +467,7 @@ title      = "A Reproducible MFCC-Based Pipeline for L1 Classification in L2 Eng
 authors    = ["Peyman Jahanbin"]
 label      = "Artifact"
 venue_text = "Reproducible research artifact"
+doi        = "10.5281/zenodo.15186197"
 
 
 # ------------------------------------------------------------------ selected presentations (newest first)
@@ -481,28 +520,88 @@ cv_event    = "MIDTESOL"
 
 
 # ------------------------------------------------------------------ teaching
-#  terms: write a line break as \n  (see C&T 330)
+#  One [[teaching.courses]] block per course, under its group.
+#  terms    what the CV shows (write a line break as \n)
+#  taught   for the website: one entry per section, e.g. ["Fall 2023", "Fall 2023", "Spring 2024"] for two
+#           sections in Fall 2023 and one in Spring 2024. Terms after the current one show as already assigned.
+#  short    a few words for the website's term-by-term table
+#  summary  one sentence for the website's course list
+#  next     optional: what to say about the course next term (role, days, time)
+#  note     optional: one more sentence under the course on the website
 [[teaching]]
 group = "Graduate"
-courses = [
-  { code = "C&T 820", title = "Teaching English as a Second Language/Bilingual Education", terms = "Fall 2026" },
-  { code = "C&T 821", title = "Assessment in Teaching English to Speakers of Other Languages", cv_title = "Assessment in Teaching English to Speakers of Other Languages (TESOL)", terms = "Fall 2024" },
-  { code = "C&T 825", title = "Advanced Practicum in TESOL", cv_title = "Advanced Practicum in Teaching English to Speakers of Other Languages (TESOL)", terms = "Fall 2025 · Spring 2026", cv_terms = "Fall 2025; Spring 2026" },
-]
+
+[[teaching.courses]]
+code    = "C&T 820"
+title   = "Teaching English as a Second Language/Bilingual Education"
+terms   = "Fall 2026"
+taught  = ["Fall 2026"]
+short   = "Teaching ESL and bilingual education"
+summary = "Graduate methods for ESL and bilingual education: teaching listening, speaking, reading and writing, the place of culture, and evaluating one’s own teaching and materials."
+
+[[teaching.courses]]
+code     = "C&T 821"
+title    = "Assessment in Teaching English to Speakers of Other Languages"
+cv_title = "Assessment in Teaching English to Speakers of Other Languages (TESOL)"
+terms    = "Fall 2024 · Spring 2027 (scheduled)"
+cv_terms = "Fall 2024; Spring 2027 (scheduled)"
+taught   = ["Fall 2024", "Spring 2027"]
+short    = "Assessment in TESOL"
+summary  = "Graduate course on diagnosing second language development across the four skills, including research on error analysis."
+next     = "as instructor"
+
+[[teaching.courses]]
+code     = "C&T 825"
+title    = "Advanced Practicum in TESOL"
+cv_title = "Advanced Practicum in Teaching English to Speakers of Other Languages (TESOL)"
+terms    = "Fall 2025 · Spring 2026"
+cv_terms = "Fall 2025; Spring 2026"
+taught   = ["Fall 2025", "Spring 2026"]
+short    = "Advanced practicum in TESOL"
+summary  = "Supervised teaching for future ESL and bilingual teachers in elementary, secondary or adult settings: observation, lesson planning, classroom management and self-evaluation."
 
 [[teaching]]
 group = "Undergraduate"
-courses = [
-  { code = "C&T 330", title = "Instructional Approaches for ESOL Learners in the Elementary/Early Childhood Classroom", terms = "Spring 2024 to Fall 2026\nsix terms", cv_terms = "Spring 2024-Fall 2026 (6 terms)" },
-  { code = "C&T 331", title = "Instructional Approaches for ESOL Learners in the Middle/Secondary Classroom", terms = "Spring 2025" },
-  { code = "C&T 423", title = "Assessing English Language Learners", terms = "Summers 2025 & 2026" },
-]
+
+[[teaching.courses]]
+code     = "C&T 330"
+title    = "Instructional Approaches for ESOL Learners in the Elementary/Early Childhood Classroom"
+terms    = "Spring 2024 to Fall 2026\nsix terms"
+cv_terms = "Spring 2024-Fall 2026 (6 terms)"
+taught   = ["Spring 2024", "Fall 2024", "Spring 2025", "Fall 2025", "Spring 2026", "Fall 2026"]
+short    = "ESOL approaches, elementary"
+summary  = "Teaching English learners in elementary and early childhood classrooms: who English learners are, the programs that serve them, core ESL methods, and building classroom materials."
+
+[[teaching.courses]]
+code     = "C&T 331"
+title    = "Instructional Approaches for ESOL Learners in Secondary Schools"
+terms    = "Spring 2025 · Spring 2027 (scheduled)"
+cv_terms = "Spring 2025; Spring 2027 (scheduled)"
+taught   = ["Spring 2025", "Spring 2027"]
+short    = "ESOL approaches, secondary"
+summary  = "The same foundations for future middle and secondary teachers of every subject, so they can support the English learners in their classes."
+next     = "as instructor of record (Tuesdays and Thursdays, 2:00 to 3:15 pm)"
+note     = "Taught in Spring 2025 under its earlier title, *Instructional Approaches for ESOL Learners in the Middle/Secondary Classroom*."
+
+[[teaching.courses]]
+code    = "C&T 423"
+title   = "Assessing English Language Learners"
+terms   = "Summers 2025 & 2026"
+taught  = ["Summer 2025", "Summer 2026"]
+short   = "Assessing English learners"
+summary = "Assessing English learners in U.S. PreK-12 schools with equity in view: the purposes of assessment, academic language, and using results with students, families and communities."
 
 [[teaching]]
 group = "Teacher Education Foundations"
-courses = [
-  { code = "C&T 235", title = "Cultural Diversity, Equity, and Inclusion in K-12 Schools", terms = "Fall 2023 (two sections)\nSpring 2024", cv_terms = "Fall 2023 (2 sections); Spring 2024" },
-]
+
+[[teaching.courses]]
+code     = "C&T 235"
+title    = "Cultural Diversity, Equity, and Inclusion in K-12 Schools"
+terms    = "Fall 2023 (two sections)\nSpring 2024"
+cv_terms = "Fall 2023 (2 sections); Spring 2024"
+taught   = ["Fall 2023", "Fall 2023", "Spring 2024"]
+short    = "Diversity, equity and inclusion"
+summary  = "How culture, identity and community shape students’ experience of K-12 school, taught through discussion and shared problem solving."
 
 
 # ------------------------------------------------------------------ methods
@@ -536,10 +635,11 @@ dates   = "2023 to 2026"
 role    = "Ad hoc reviewer"
 cv_role = "Ad Hoc Reviewer"
 #  The total shown is the sum of the counts below, so it updates when you add a journal.
-#  url = the journal's homepage; the name becomes a link to it.
+#  url = the journal's homepage; the name becomes a link to it. about = one line under it on the website.
 journals = [
-  { name = "SAGE Open", count = "12 reviews", url = "https://journals.sagepub.com/home/sgo" },
-  { name = "Journal of Research on Technology in Education", count = "3 reviews", url = "https://www.tandfonline.com/journals/ujrt20" },
+  { name = "SAGE Open", count = "12 reviews", url = "https://journals.sagepub.com/home/sgo", about = "Sage. Open access, across the social sciences and humanities." },
+  { name = "Journal of Research on Technology in Education", count = "3 reviews", url = "https://www.tandfonline.com/journals/ujrt20", about = "Taylor & Francis, for ISTE. Research on technology in education." },
+  { name = "Discover Education", count = "1 review", url = "https://link.springer.com/journal/44217", about = "Springer Nature. Open access, across education research." },
 ]
 
 [[leadership]]
@@ -607,7 +707,7 @@ name = "William S. Lashier Jr. Scholarship in Education"
 note = "University of Kansas"
 
 [[honors]]
-name = "Distinguished Instructor"
+name = "Distinguished EFL Instructor"
 note = "University of Isfahan · 2019"
 cv_note = "University of Isfahan  |  2019"
 

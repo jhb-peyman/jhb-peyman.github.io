@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Builds the website (index.html), the CV (Peyman_Jahanbin_CV.pdf and .docx), the share card (og.jpg)
+Builds the website (index, research, publications, teaching and service pages), the CV (Peyman_Jahanbin_CV.pdf and .docx), the share card (og.jpg)
 and sitemap.xml from content.toml.
 
     python3 build.py            build everything
@@ -741,6 +741,64 @@ def build_site(c, today):
 
 
 # ----------------------------------------------------------------------------- CV
+PAGE_DESC = {
+    "research.html": "Research by {name}: validity and fairness in automated speaking assessment, explainable machine learning for L2 pronunciation, multilingual learners and policy, and generative AI in education.",
+    "publications.html": "Journal articles, preprints, manuscripts in review and talks by {name}.",
+    "teaching.html": "Courses {name} has taught at the University of Kansas since 2023, and earlier English teaching in Iran.",
+    "service.html": "Peer review and leadership service by {name}.",
+}
+
+
+def page_head(c, page, ttl):
+    """The <head> meta for one page: title, description, canonical link, share card and (home only) structured data."""
+    p, seo = c["person"], c.get("seo", {})
+    full = own_name(c)
+    base = p["site_url"] if p["site_url"].endswith("/") else p["site_url"] + "/"
+    home = page == "index.html"
+    url = base if home else base + page
+    title = seo["title"] if home else f"{ttl} | {full}"
+    desc = seo["description"] if home else PAGE_DESC.get(page, seo["description"]).format(name=full)
+    share_alt = get(seo, "share_alt", full)
+    out = f'''<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)}</title>
+<meta name="description" content="{attr(desc)}">
+<meta property="og:title" content="{attr(full if home else title)}">
+<meta property="og:description" content="{attr(get(seo, "share_text", seo["description"]) if home else desc)}">
+<meta property="og:type" content="{"profile" if home else "website"}">
+<meta property="og:image" content="{attr(base)}og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{attr(share_alt)}">
+<meta property="og:url" content="{attr(url)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="{attr(full)}">
+<link rel="canonical" href="{attr(url)}">
+<meta name="color-scheme" content="light dark">'''
+    if home:
+        ld = {"@context": "https://schema.org", "@type": "Person", "name": full, "url": base}
+        if seo.get("job_title"):
+            ld["jobTitle"] = seo["job_title"]
+        ld["affiliation"] = {"@type": "CollegeOrUniversity", "name": p["institution"]}
+        if seo.get("alumni_of"):
+            ld["alumniOf"] = [{"@type": "CollegeOrUniversity", "name": a} for a in seo["alumni_of"]]
+        if seo.get("knows_about"):
+            ld["knowsAbout"] = seo["knows_about"]
+        ld["sameAs"] = [x for x in (p.get("linkedin"), p.get("scholar")) if x]
+        ld["image"] = base + p.get("portrait", "portrait.jpg")
+        out += '\n<script type="application/ld+json">\n' + json.dumps(ld, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "\n</script>"
+    return out
+
+
+def build_pages(c, today):
+    """The website: index, research, publications, teaching and service pages. The design lives in builder/web."""
+    web = BUILDER / "web"
+    g = {"C": c, "CITES": cite_records(c), "UPDATED": month_year(today), "TODAY": today,
+         "HEAD": lambda page, ttl: page_head(c, page, ttl), "HERE": str(web), "ROOT": str(ROOT), "__name__": "pages"}
+    exec(compile((web / "pages.py").read_text(encoding="utf-8"), str(web / "pages.py"), "exec"), g)
+    return g["OUT_PAGES"]
+
+
 def cv_entry(title, dates="", sub_l="", sub_r="", text=""):
     s = f'<div class="ent"><div class="r1"><span class="l">{title}</span><span class="d">{dates}</span></div>'
     if sub_l or sub_r:
@@ -779,7 +837,7 @@ def cv_pub_parts(x):
     if x["status"] == "review":
         return (x.get("venue") or x.get("venue_text")), f'. {x.get("cv_status") or x.get("label") or "Under review"}', None
     if x.get("venue_text"):
-        return x["venue_text"], f". {x['year']}", None
+        return x["venue_text"], f". {x['year']}", x.get("doi")
     return x["venue"], f'. {x["year"]}; {x.get("cv_note") or "Preprint"}', x.get("doi")
 
 
@@ -1059,11 +1117,13 @@ def build_cv_html(c, today):
 
 
 def build_og_html(c):
-    p, seo = c["person"], c.get("seo", {})
+    """The share card shown when the site is posted on social media or in chats (og.jpg), in the website's style."""
+    p = c["person"]
     tpl = (BUILDER / "og.html").read_text(encoding="utf-8")
-    line = "<br>".join(esc(x) for x in get(seo, "share_image_line", "").split("\n"))
-    return (tpl.replace("@@CAPS@@", esc(f'{p["status"]} · {p["institution"]}')).replace("@@FIRST@@", esc(p["first_name"]))
-            .replace("@@LAST@@", esc(p["last_name"])).replace("@@LINE@@", line))
+    url = p["site_url"].replace("https://", "").rstrip("/")
+    return (tpl.replace("@@PORTRAIT@@", (ROOT / p.get("portrait", "portrait.jpg")).as_uri()).replace("@@NAME@@", esc(own_name(c)))
+            .replace("@@ROLE@@", esc(f'{p["status"]}, {p["institution"]}')).replace("@@LINE@@", inline(get(p, "tagline"), "em"))
+            .replace("@@URL@@", esc(url)))
 
 
 # ----------------------------------------------------------------------------- Chrome
@@ -1166,7 +1226,7 @@ def make_og(c, say):
     src.write_text(body, encoding="utf-8")
     png = ROOT / "_og_tmp.png"
     try:
-        chrome([f"--screenshot={png}", "--window-size=1200,630", "--default-background-color=0a0a0aff", "--virtual-time-budget=6000", src.as_uri()], png)
+        chrome([f"--screenshot={png}", "--window-size=1200,630", "--default-background-color=ffffffff", "--virtual-time-budget=6000", src.as_uri()], png)
         if not png.exists():
             raise ContentError("The share card (og.jpg) could not be created.")
         subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "88", str(png), "--out", str(ROOT / "og.jpg")], capture_output=True, check=True)
@@ -1198,12 +1258,16 @@ def main(argv):
         today = datetime.date.today()
         if c["person"].get("updated"):
             today = datetime.datetime.strptime(c["person"]["updated"], "%B %Y").date()
-        (ROOT / "index.html").write_text(build_site(c, today), encoding="utf-8")
-        say("  Website (index.html): made")
-        site = c["person"]["site_url"]
+        pages = build_pages(c, today)
+        for name, page in pages.items():
+            (ROOT / name).write_text(page, encoding="utf-8")
+        say("  Website (" + ", ".join(pages) + "): made")
+        site = c["person"]["site_url"] if c["person"]["site_url"].endswith("/") else c["person"]["site_url"] + "/"
+        stamp = datetime.date.today().isoformat()
         (ROOT / "sitemap.xml").write_text(
-            '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n'
-            f'    <loc>{esc(site)}</loc>\n    <lastmod>{datetime.date.today().isoformat()}</lastmod>\n  </url>\n</urlset>\n', encoding="utf-8")
+            '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            + "".join(f'  <url>\n    <loc>{esc(site if n == "index.html" else site + n)}</loc>\n    <lastmod>{stamp}</lastmod>\n  </url>\n' for n in pages if n != "404.html")
+            + '</urlset>\n', encoding="utf-8")
         if not no_pdf:
             make_pdf(c, today, say)
             make_docx(c, today, say)

@@ -4,3 +4,6 @@ builder/_cv.html
 builder/_og.html
 _cv_tmp.pdf
 _og_tmp.png
+
+# Personal projects kept in this folder but not part of the website
+my-r-project2/

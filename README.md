@@ -9,12 +9,13 @@ preview, then `Publish.command` to put it online.
 ## Files
 
 - `content.toml` is the only file to edit.
-- `build.py` and `builder/` (templates and fonts) turn it into the site. `Build.command` and `Publish.command` run it.
-- `index.html`, `Peyman_Jahanbin_CV.pdf`, `Peyman_Jahanbin_CV.docx`, `og.jpg` and `sitemap.xml` are generated. Do not edit them by hand.
+- `build.py`, `builder/` (page code, CV template, fonts) and `assets/` (stylesheet, scripts, images) turn it into the site. `Build.command` and `Publish.command` run it.
+- The pages (`index.html`, `research.html`, `publications.html`, `teaching.html`, `service.html`, `404.html`), `Peyman_Jahanbin_CV.pdf`, `Peyman_Jahanbin_CV.docx`, `og.jpg` and `sitemap.xml` are generated. Do not edit them by hand.
 - `portrait.jpg` is the portrait.
 
 ## Notes
 
-- The spectrogram in the hero and the chart in Research are simulations and are labelled as such on the page.
-- Both animations stop when they are off screen or when the visitor prefers reduced motion.
+- The home spectrogram shows a synthetic voice (labelled as such) and, if the visitor allows it, their own microphone; the recording stays in the page. The scorer chart on Research is a labelled illustration.
+- The paper figures on Publications and the console on Research use numbers reported in the papers.
+- Animations stop when they are off screen or when the visitor prefers reduced motion.
 - The site itself needs no build step to be served: GitHub Pages just serves the generated files.

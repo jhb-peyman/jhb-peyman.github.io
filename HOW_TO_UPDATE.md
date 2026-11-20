@@ -10,7 +10,7 @@ You only ever edit **one file**: `content.toml`. Your website, your CV PDF and y
 
 The first time you double-click a `.command` file, macOS may refuse. Right-click it, choose Open, then Open again. You only do this once per file.
 
-You never edit `index.html`, `sitemap.xml`, `og.jpg`, `Peyman_Jahanbin_CV.pdf` or `Peyman_Jahanbin_CV.docx` by hand. They are rebuilt every time and your edits to them would be overwritten.
+You never edit the website pages (`index.html`, `research.html`, `publications.html`, `teaching.html`, `service.html`, `404.html`), `sitemap.xml`, `og.jpg`, `Peyman_Jahanbin_CV.pdf` or `Peyman_Jahanbin_CV.docx` by hand. They are rebuilt every time and your edits to them would be overwritten.
 
 ## Rules of the file
 
@@ -49,13 +49,31 @@ Online first means the paper has no issue yet (`online = true`, cited as "Advanc
 Change `status` to `"published"`, add the venue details and DOI, and delete `label` and `cv_status`.
 
 ### Add news
-Add a `[[news]]` block at the top. Keep about five. Delete the oldest when you add one.
+Add a `[[news]]` block at the top. The home page shows the newest five; older ones stay in the file but drop off the page, so delete them now and then.
 
 ### Add a presentation
 Add a `[[presentations]]` block at the top. If it has a DOI and you want cite buttons, also give it `id`, `doi`, `coauthors` and the `cite_*` fields (the AERA entry is a complete example).
 
 ### Add or change a course
-Courses sit inside the groups under `[[teaching]]`. Copy a course line, edit it, and keep the commas and braces. The CV line `teaching_summary` (under `[cv]`) is typed by hand, so update the number of courses and assignments yourself.
+Each course is a `[[teaching.courses]]` block under its group (`[[teaching]]` with `group = "Graduate"` and so on). Copy a block and edit it.
+
+| Field | What it does |
+| --- | --- |
+| `code`, `title` | the course code and title (site and CV) |
+| `terms`, `cv_terms` | the terms as the CV shows them |
+| `taught` | **the website's teaching table**: one entry per section, such as `["Fall 2023", "Fall 2023", "Spring 2024"]` for two sections in Fall 2023 and one in Spring 2024. Write terms as `"Spring 2027"`, `"Summer 2026"`, `"Fall 2026"`. |
+| `short` | a few words for the table, such as `"Assessment in TESOL"` |
+| `summary` | one sentence for the course list |
+| `next` | optional: the role or time for next term, such as `"as instructor of record (Tuesdays and Thursdays, 2:00 to 3:15 pm)"` |
+| `note` | optional: one more sentence under the course |
+
+**Each new semester:** add the new term to `taught` (and to `terms`/`cv_terms` for the CV). Terms after the current one show as already assigned; when the term starts they count as taught by themselves. The section counts, the "most taught first" order, the opening paragraph of the Teaching page and the timeline all update by themselves. Only the CV line `teaching_summary` (under `[cv]`) is typed by hand, so update its numbers yourself.
+
+### Earlier teaching (Iran) and the timeline
+An appointment with a `site_text` line appears under "Teaching in Iran" on the Teaching page and in the timeline. The University of Isfahan entry also lists its `courses`. A teaching award shows on the timeline when its `note` under `[[honors]]` names the same institution and a year.
+
+### Peer review journals
+Each journal under `[peer_review]` has a `count` and an `about` line (publisher and scope) shown under it on the Service page. The total updates by itself.
 
 ### Add a research statement, teaching statement or any document
 Put the PDF in the same folder as `content.toml`, then add a block like this and rebuild:
@@ -69,16 +87,19 @@ file  = "Peyman_Jahanbin_Research_Statement.pdf"
 (Examples are already in the file, commented out. Remove the `#` signs to use them.)
 
 ### When you advance to candidacy
-Change `status` under `[person]` to `"Ph.D. Candidate"`. That updates the hero line and the share card. Then also update, by hand, the description under `[seo]`, `job_title`, the Education entry text, and the research text if you mention it. Search the file for "student" and "candidacy".
+Change `status` under `[person]` to `"Ph.D. Candidate"`. That updates the line under your name and the share card. Then also update, by hand, the description under `[seo]`, `job_title`, the Education entry text, and the research text if you mention it. Search the file for "student" and "candidacy".
 
 ### Different wording on the CV than on the website
 Many fields have a CV-only twin that starts with `cv_`: `cv_title`, `cv_text`, `cv_dates`, `cv_terms`, `cv_note`, and so on. When it is present, the CV uses it and the website uses the normal field. Details that appear only in the CV (Research Interests sentence, Methodological Training, header line) live under `[cv]`.
 
 ### Add a whole new section (Grants, Workshops, Media, Invited Talks...)
-Near the bottom of `content.toml` there is a commented example called `[[extra_sections]]`. Remove the `#` signs, rename it, and fill in its items. It appears on the website after Honors, in the CV before Languages, and in the menu automatically. Add `site = false` or `cv = false` to show it in only one place.
+Near the bottom of `content.toml` there is a commented example called `[[extra_sections]]`. Remove the `#` signs, rename it, and fill in its items. It appears in the CV before Languages. The website has five fixed pages, so a new section does not appear there by itself; it needs a small change in `builder/web/`.
 
-### Remove a section
-Delete all of its blocks (or the whole section). It disappears from the website, the menu and the CV, and the section numbers close up by themselves. You can bring it back later by pasting the blocks again. The order of the sections is fixed.
+### What is on the website and what is only in the CV
+The website shows: home (photo, research themes, news), Research, Publications (papers and talks), Teaching and Service. Education, methodological training, honors and languages are in the CV only (linked from every page). Removing all blocks of a list removes it from the CV and from the website page that uses it.
+
+### Words that live in the design files, not in content.toml
+A few hand-written passages are part of the page design in `builder/web/`: the Research page's prose, its methods-and-data lists and the code examples (`research_page.py`), the three research themes on the home page and the spectrogram caption (`pages.py`), and the short page descriptions for search engines (`PAGE_DESC` in `build.py`). Change them there, or ask for help.
 
 ### Change the photo
 Replace `portrait.jpg` with a new file of the same name.
@@ -108,5 +129,8 @@ Under `[person]`. It changes everywhere.
 | `content.toml` | **the only file you edit** |
 | `Build.command`, `Publish.command` | double-click to preview and to publish |
 | `build.py` | the program that builds everything |
-| `builder/site.html`, `cv.html`, `og.html`, `fonts/` | the page templates and the fonts for the offline build |
-| `index.html`, `Peyman_Jahanbin_CV.pdf`, `Peyman_Jahanbin_CV.docx`, `og.jpg`, `sitemap.xml` | built for you, do not edit |
+| `builder/web/` | the website's page code (one file per page) |
+| `assets/` | the website's stylesheet, scripts and images |
+| `builder/cv.html`, `og.html`, `fonts/` | the CV and share-card templates and the fonts for the offline build |
+| `builder/site.html` | the old one-page design, no longer used |
+| `index.html`, `research.html`, `publications.html`, `teaching.html`, `service.html`, `404.html`, `Peyman_Jahanbin_CV.pdf`, `Peyman_Jahanbin_CV.docx`, `og.jpg`, `sitemap.xml` | built for you, do not edit |
