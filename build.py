@@ -793,12 +793,34 @@ def page_head(c, page, ttl):
     return out
 
 
+def small_portrait(c):
+    """A small copy of the portrait for the home page (the full file is kept for the CV, share card and search data)."""
+    src = ROOT / c["person"].get("portrait", "portrait.jpg")
+    out = ROOT / "assets" / "img" / "portrait-sm.jpg"
+    if src.exists() and (not out.exists() or out.stat().st_mtime < src.stat().st_mtime):
+        try:
+            subprocess.run(["sips", "-Z", "320", "-s", "format", "jpeg", "-s", "formatOptions", "82", str(src), "--out", str(out)],
+                           capture_output=True, check=True)
+        except Exception:
+            shutil.copy(src, out)                   # not on a Mac: fall back to the full-size photo
+    return "assets/img/portrait-sm.jpg" if out.exists() else src.name
+
+
 def build_pages(c, today):
     """The website: index, research, publications, teaching and service pages. The design lives in builder/web."""
     web = BUILDER / "web"
-    g = {"C": c, "CITES": cite_records(c), "UPDATED": month_year(today), "TODAY": today,
+    g = {"C": c, "CITES": cite_records(c), "UPDATED": month_year(today), "TODAY": today, "PORTRAIT_SM": small_portrait(c),
          "HEAD": lambda page, ttl: page_head(c, page, ttl), "HERE": str(web), "ROOT": str(ROOT), "__name__": "pages"}
-    exec(compile((web / "pages.py").read_text(encoding="utf-8"), str(web / "pages.py"), "exec"), g)
+    try:
+        exec(compile((web / "pages.py").read_text(encoding="utf-8"), str(web / "pages.py"), "exec"), g)
+    except Exception as e:                          # say where it broke, so a code problem is not mistaken for a typo
+        import traceback
+        frames = [f for f in traceback.extract_tb(e.__traceback__) if "builder" in f.filename or f.filename == "<string>"]
+        where = f" ({Path(frames[-1].filename).name}, line {frames[-1].lineno}, in {frames[-1].name})" if frames else ""
+        raise ContentError(f"The website pages could not be built: {type(e).__name__}: {e}{where}.\n"
+                           "This usually means an entry in content.toml is missing a field the page code expects "
+                           "(for example an id or a strand), or a problem in builder/web. Undo your last edit and build again, "
+                           "or ask for help. Nothing was published.")
     return g["OUT_PAGES"]
 
 

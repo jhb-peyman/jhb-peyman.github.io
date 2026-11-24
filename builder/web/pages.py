@@ -13,6 +13,7 @@ FA = re.sub(r'\swidth="\d+"\sheight="\d+"', '', FA, count=1).replace('<svg ', '<
 def esc(s): return html.escape(s, quote=False)
 def md(s): return re.sub(r"\*(.+?)\*", r"<em>\1</em>", esc(s))
 def plain(s): return s.replace('*', '')
+def stop(t): return '' if t.rstrip().endswith(('?', '!', '.')) else '.'   # no extra full stop after ? or !
 def attr(s): return html.escape(s, quote=True)
 def h2(t): return f'<h2>{t}</h2>'
 def title(t): return f'<h1 class="pt">{t}</h1>'
@@ -45,7 +46,7 @@ def shell(page, ttl, body, figs=False, cites=False, anims=False, spectro=False):
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231d6b4a'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3EPJ%3C/text%3E%3C/svg%3E">
 <script>try{{var t=localStorage.getItem('pj-theme');if(t)document.documentElement.dataset.theme=t}}catch(e){{}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Albert+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Albert+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/site.css"></head><body>
 <header class="bar"><div class="bar-in"><a class="brand" href="index.html"{' aria-current="page"' if page == 'index.html' else ''}>{ME}</a>
 <nav aria-label="Main">{nav}</nav>
@@ -96,7 +97,7 @@ def kind(p):
 
 # Live sketches of each paper's method (anims.js). Papers without a drawable method stay text only.
 ANIM = {
-  'ethics': ('ethics', 'Bar chart of mean seriousness ratings for seven GenAI behaviours, from the paper'),
+  'ethics': ('ethics', 'Bar chart of mean seriousness ratings for seven GenAI behaviors, from the paper'),
   'acoustic': ('gap', 'Line chart of the share of speakers pausing at each of 68 positions, English and Mandarin L1, after the paper\u2019s Fig 1'),
   'lltm': ('lltm', 'Bar chart of the LLTM predictor weights reported in the paper'),
   'corpus': ('hedge', 'Bar chart of hedges per category for native and Malaysian reviewers, from the paper'),
@@ -115,32 +116,37 @@ def anim(pid):
 
 def pub_li(p, filt=True):
     link = f'https://doi.org/{p["doi"]}' if p.get('doi') else p.get('url', '')
-    t = esc(p.get('cite_title') or p['title'])
-    t = f'<a class="tl" href="{attr(link)}">{t}</a>' if link else f'<span class="tl">{t}</span>'
+    raw = p.get('cite_title') or p['title']
+    t = esc(raw)
+    t = (f'<a class="tl" href="{attr(link)}">{t}</a>' if link else f'<span class="tl">{t}</span>') + stop(raw)
     acts = []
     if p.get('doi'): acts.append(f'<a href="https://doi.org/{attr(p["doi"])}">DOI</a>')
     elif p.get('url'): acts.append(f'<a href="{attr(p["url"])}">Article</a>')
     cite = f' data-cite="{p["id"]}"' if p['id'] in CITES and p.get('cite', True) else ''
     meta = f'<div class="meta"><span class="kind">{" · ".join(kind(p))}</span><span class="acts"{cite}>{"".join(acts)}</span></div>'
-    extra = f' {esc(p.get("venue_text", ""))}.' if p.get('kind') == 'artifact' else ''
+    extra = ''
+    if p.get('kind') == 'artifact':
+        extra = esc(p.get('venue_text', '')) + '.'
+        if p.get('osf'):                                   # link the OSF registration DOI written in the text
+            extra = extra.replace(f'DOI {esc(p["osf"])}', f'DOI <a href="https://doi.org/{attr(p["osf"])}">{esc(p["osf"])}</a>')
     a = anim(p['id'])
     data = f' data-status="{p["status"]}" data-topics="{" ".join(p.get("topics", []))}"' if filt else ''
-    return (f'<li class="pub{" has-anim" if a else ""}"{data}>{a}<div>{apa_authors(p["id"], p["authors"])} ({p["year"]}). {t}. {venue(p)}{extra}{meta}</div></li>')
+    return (f'<li class="pub{" has-anim" if a else ""}"{data}>{a}<div>{apa_authors(p["id"], p["authors"])} ({p["year"]}). {t} {venue(p) or extra}{meta}</div></li>')
 
 # ------------------------------------------------------------- pages
 def page_home():
     links = [('mail', 'Email', f'mailto:{P["email"]}', False), ('cv', 'CV', 'Peyman_Jahanbin_CV.pdf', False),
              ('scholar', 'Google Scholar', P['scholar'], False), ('in', 'LinkedIn', P['linkedin'], True)]
     lk = ''.join(f'<a href="{attr(u)}">{ic(k, f)}<span>{t}</span></a>' for k, t, u, f in links)
-    hero = f'''<section class="hero"><img class="avatar" src="portrait.jpg" alt="Portrait of {ME}">
+    hero = f'''<section class="hero"><img class="avatar" src="{PORTRAIT_SM}" width="136" height="136" alt="Portrait of {ME}">
 <div class="hero-r"><div class="names"><h1>{ME}</h1>{FA}</div>
 <p class="role">{P['status']} in Curriculum &amp; Instruction (TESOL)<br>{P['institution']}, {esc(P['location'])}</p>
 <p class="hook">{md(P['tagline'])}</p>
 <div class="hlinks">{lk}</div></div></section>'''
     fig = f'''<figure class="figure spectro"><div class="sp-head"><span class="sp-title">Live spectrogram</span><span class="sp-mode" id="modeS">simulated speech</span>
-<button class="sp-mic" id="micS" type="button">{ic("mic")}<span>Try your own voice</span></button></div>
+<button class="sp-ctrl" id="pauseS" type="button" aria-pressed="false">Pause</button><button class="sp-mic" id="micS" type="button" aria-pressed="false">{ic("mic")}<span>Try your own voice</span></button></div>
 <div class="viz" id="vizS" role="img" aria-label="Animated spectrogram with pitch, formants and word and phone tiers"><canvas id="specS"></canvas><canvas id="ovS" class="ov"></canvas><div class="tip" id="tipS"></div></div>
-<figcaption id="statS"><span class="lg"><i class="lg-f0"></i>pitch (f0)</span><span class="lg"><i class="lg-fm"></i>formants</span> A synthetic voice reading my research question, drawn as it speaks. Low sounds sit at the bottom, high ones at the top, and the newest is on the right. Hover anywhere to see the pitch, the formants and which sound is being made.</figcaption></figure>'''
+<figcaption id="statS" aria-live="polite"><span class="lg"><i class="lg-f0"></i>pitch (f0)</span><span class="lg"><i class="lg-fm"></i>formants</span> A synthetic voice reading my research question, drawn as it speaks. Low sounds sit at the bottom, high ones at the top, and the newest is on the right. Hover over it, or touch and drag, to see the pitch, the formants and which sound is being made.</figcaption></figure>'''
     strands = [('scoring', 'Scoring spoken English', 'Where automated scores of spoken English agree with human raters, where they do not, and what in the recording carries a speaker\u2019s first language.'),
                ('policy', 'Multilingual learners and policy', 'Who can earn the Seal of Biliteracy, and which English learners drop out of public data.'),
                ('ai', 'Generative AI and academic integrity', 'How students and universities judge the use of generative AI.')]
@@ -148,7 +154,7 @@ def page_home():
         f'<li><a href="research.html#{k}">{t}</a><p>{d}</p></li>' for k, t, d in strands)
         + '</ul><p class="more"><a href="research.html">Projects, papers and methods</a></p>')
     news = h2('News') + '<table class="kv news">' + ''.join(
-        f'<tr><th>{esc(n["date"])}</th><td>{md(n["text"])}' + (f' <a href="{attr(n["link"])}">Read</a>' if n.get('link') else '') + '</td></tr>' for n in C['news'][:6]) + '</table>'
+        f'<tr><th>{esc(n["date"])}</th><td>{md(n["text"])}' + (f' <a href="{attr(n["link"])}">{esc(n.get("link_label", "Read"))}</a>' if n.get('link') else '') + '</td></tr>' for n in C['news'][:6]) + '</table>'
     return shell('index.html', 'Home', hero + fig + research + news, figs=True, spectro=True)
 
 def reports_html():
@@ -166,17 +172,17 @@ def page_pubs():
     st = [('all', 'All'), ('published', 'Published'), ('review', 'In review'), ('preprint', 'Preprints')]
     tp = [('all', 'All')] + [(t['key'], t['label']) for t in C['topics']]
     btn = lambda k, v, on: f'<button type="button" data-v="{k}" aria-pressed="{"true" if on else "false"}">{esc(v)}</button>'
-    filt = (f'<div class="filters"><div class="frow" data-f="status"><span class="k">Status</span>{"".join(btn(k, v, k == "all") for k, v in st)}</div>'
-            f'<div class="frow" data-f="topic"><span class="k">Topic</span>{"".join(btn(k, v, k == "all") for k, v in tp)}</div><p class="count" id="count"></p></div>')
+    filt = (f'<div class="filters"><div class="frow" data-f="status" role="group" aria-label="Filter by status"><span class="k">Status</span>{"".join(btn(k, v, k == "all") for k, v in st)}</div>'
+            f'<div class="frow" data-f="topic" role="group" aria-label="Filter by topic"><span class="k">Topic</span>{"".join(btn(k, v, k == "all") for k, v in tp)}</div><p class="count" id="count" aria-live="polite"></p><button class="anim-ctrl" id="animPause" type="button" aria-pressed="false">Pause the figures</button></div>')
     years = {}
     for p in PUBS: years.setdefault(p['year'], []).append(p)
     ys = ''.join(f'<section class="yr"><div class="y">{y}</div><ul class="pubs">{"".join(pub_li(p) for p in ps)}</ul></section>' for y, ps in sorted(years.items(), reverse=True))
     talks = []
     for t in C['presentations']:
-        acts = f'<a href="https://doi.org/{attr(t["doi"])}">{"DOI" if t.get("id") == "aera" else "Related paper"}</a>' if t.get('doi') else ''
+        acts = f'<a href="https://doi.org/{attr(t["doi"])}">{"DOI" if t.get("cite_title") else "Related paper"}</a>' if t.get('doi') else ''
         cite = f' data-cite="{t["id"]}"' if t.get('id') in CITES else ''
         who = f' With {esc(t["coauthors"])}.' if t.get('coauthors') else ''
-        talks.append(f'<tr><th>{esc(t["date"])}</th><td><span class="tl2">{esc(t["title"])}</span>. <i>{esc(t["site_venue"])}</i>.{who}'
+        talks.append(f'<tr><th>{esc(t["date"])}</th><td><span class="tl2">{esc(t["title"])}</span>{stop(t["title"])} <i>{esc(t["site_venue"])}</i>.{who}'
                      + (f'<div class="meta"><span class="acts"{cite}>{acts}</span></div>' if acts or cite else '') + '</td></tr>')
     body = (title('Publications and Talks') + f'<p class="lead">Journal articles, preprints, manuscripts in review, reports and conference talks. The papers are also on <a href="{attr(P["scholar"])}">Google Scholar</a>.</p>'
             + h2('Papers') + filt + ys + reports_html() + h2('Talks') + '<table class="kv news talks">' + ''.join(talks) + '</table>')

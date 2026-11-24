@@ -160,7 +160,7 @@
   };
 
   // ---------------------------------------------------------------- runner
-  var items=[],raf=0,last=0;
+  var items=[],raf=0,last=0,paused=false,pauseBtn=document.getElementById('animPause');
   function size(it){
     var r=it.cv.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);
     if(!r.width)return;it.w=r.width;it.h=r.height;it.cv.width=Math.round(r.width*d);it.cv.height=Math.round(r.height*d);it.x.setTransform(d,0,0,d,0,0);
@@ -169,9 +169,12 @@
   function loop(ts){
     raf=0;var any=items.some(function(it){return it.vis});
     if(ts-last>30){last=ts;var t=ts/1000;items.forEach(function(it){if(it.vis)draw(it,t+it.off)})}
-    if(any&&!document.hidden)raf=requestAnimationFrame(loop);
+    if(any&&!document.hidden&&!paused)raf=requestAnimationFrame(loop);
   }
-  function kick(){if(!RM&&!raf)raf=requestAnimationFrame(loop)}
+  function kick(){if(!RM&&!paused&&!raf)raf=requestAnimationFrame(loop)}
+  if(pauseBtn){if(RM)pauseBtn.hidden=true;
+    pauseBtn.addEventListener('click',function(){paused=!paused;pauseBtn.setAttribute('aria-pressed',paused);pauseBtn.textContent=paused?'Play the figures':'Pause the figures';
+      if(paused){cancelAnimationFrame(raf);raf=0}else kick()})}
   var io=new IntersectionObserver(function(es){es.forEach(function(e){var it=e.target._it;it.vis=e.isIntersecting;if(RM||!it.vis)draw(it,5.5+it.off)});kick()});
   var ro=new ResizeObserver(function(es){es.forEach(function(e){var it=e.target._it;size(it);draw(it,performance.now()/1000+it.off)})});
   document.querySelectorAll('canvas[data-anim]').forEach(function(cv,i){

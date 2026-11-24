@@ -86,8 +86,17 @@ file  = "Peyman_Jahanbin_Research_Statement.pdf"
 
 (Examples are already in the file, commented out. Remove the `#` signs to use them.)
 
-### When you advance to candidacy
-Change `status` under `[person]` to `"Ph.D. Candidate"`. That updates the line under your name and the share card. Then also update, by hand, the description under `[seo]`, `job_title`, the Education entry text, and the research text if you mention it. Search the file for "student" and "candidacy".
+### When your status changes (for example when you graduate)
+Change `status` under `[person]`. That updates the line under your name and the share card. Then also update, by hand, the description under `[seo]`, `job_title`, the Education entry text, and any research text that mentions it.
+
+### Rebuild at the start of every term
+The pages are fixed files, so sentences about time ("next term", the shaded current term on the Teaching page, "In Spring 2027 I will teach...") only update when you build. Double-click `Build.command` and publish once at the start of each term, even if nothing else changed. Also reword news items about upcoming talks once they have happened.
+
+### Add a research project
+Copy a `[[projects]]` block and give it a new `id` (a short word, never reused) and a `strand`: `"scoring"`, `"policy"` or `"ai"` puts it in that section of the Research page; anything else puts it under Other Work. `site_title` and `site_text` are the heading and paragraph on the Research page; without them the `title` and `text` are used. The order inside a section follows the file.
+
+### Talks
+Each `[[presentations]]` block has an `id`. The Research page places talks by that id, so you can rename a talk freely; a new talk shows on the Publications page right away, and on the Research page once its id is added there (ask for help).
 
 ### Different wording on the CV than on the website
 Many fields have a CV-only twin that starts with `cv_`: `cv_title`, `cv_text`, `cv_dates`, `cv_terms`, `cv_note`, and so on. When it is present, the CV uses it and the website uses the normal field. Details that appear only in the CV (Research Interests sentence, Methodological Training, header line) live under `[cv]`.

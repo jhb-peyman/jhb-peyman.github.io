@@ -396,7 +396,11 @@
     var d=Math.max(1,Math.min(devicePixelRatio||1,Math.sqrt(2.4e6/(W*H))));ov.width=Math.round(W*d);ov.height=Math.round(H*d);ox.setTransform(d,0,0,d,0,0);
     overlay();
   }
-  var running=false,raf=0,last=0,acc=0,vis=true;
+  var running=false,raf=0,last=0,acc=0,vis=true,userPaused=false,pauseS=document.getElementById('pauseS');
+  if(pauseS){if(RM)pauseS.hidden=true;
+    pauseS.addEventListener('click',function(){userPaused=!userPaused;pauseS.setAttribute('aria-pressed',userPaused);pauseS.textContent=userPaused?'Play':'Pause';
+      if(userPaused&&!mic)stop();else start()})}
+  if(btn&&window.MutationObserver){new MutationObserver(function(){btn.setAttribute('aria-pressed',btn.classList.contains('on'))}).observe(btn,{attributes:true,attributeFilter:['class']})}
   var dbg={cols:0,t:0,err:'',top:0,f0:0};
   function showDbg(){}
   function frame(ts){
@@ -408,7 +412,7 @@
       if(mic&&ts-dbg.t>500){dbg.t=ts;showDbg()}
     }catch(e){dbg.err=(e&&e.message||String(e)).slice(0,120);if(mic)showDbg()}
   }
-  function start(){if(running||document.hidden||!vis||(RM&&!mic)||(review&&!mic))return;running=true;last=performance.now();raf=requestAnimationFrame(frame)}
+  function start(){if(running||document.hidden||!vis||(RM&&!mic)||(review&&!mic)||(userPaused&&!mic))return;running=true;last=performance.now();raf=requestAnimationFrame(frame)}
   function stop(){running=false;cancelAnimationFrame(raf)}
   box.addEventListener('pointermove',function(e){var r=box.getBoundingClientRect();px=e.clientX-r.left;py=e.clientY-r.top;if(!running)overlay()},{passive:true});
   box.addEventListener('click',function(){if(mic&&mic.ctx.state!=='running')mic.ctx.resume()});

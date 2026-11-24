@@ -52,7 +52,7 @@ subtitle     = "Curriculum & Instruction (TESOL)  |  Language Assessment  |  AI 
 contact_line = ["Peyman@KU.edu", "Lawrence, Kansas", "LinkedIn/JPeyman", "Google Scholar"]
 research_interests = "Language assessment; automated speaking assessment; validity and fairness; responsible AI in education; explainable machine learning; L2 pronunciation; multilingual education and policy; Seal of Biliteracy; quantitative and mixed-methods educational research."
 teaching_header  = "University of Kansas, Department of Curriculum & Teaching"
-teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 teaching assignments, 2023-2026; two more assigned for Spring 2027."
+teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 course sections, 2023-2026; two more assigned for Spring 2027."
 methodological_training = [
   { label = "Quantitative",  text = "EPSY 710 Introductory Statistical Analysis; EPSY 905 Fundamentals of Multivariate Modeling; SW 981 Advanced Quantitative Research Methods I; SW 983 Advanced Quantitative Research Methods II." },
   { label = "Qualitative",   text = "C&T 808 Qualitative Research: Curriculum Inquiry." },
@@ -63,11 +63,11 @@ methodological_training = [
 # ------------------------------------------------------------------ recent news (about five, newest first)
 [[news]]
 date = "Mar 2027"
-text = "Will present *What Does an AI Score Justify?*, a peer-reviewed brief paper, at SITE 2027 (Society for Information Technology & Teacher Education) in Nashville, TN."
+text = "Paper accepted at SITE 2027 (Society for Information Technology & Teacher Education) in Nashville, TN: *What Does an AI Score Justify?*, a peer-reviewed brief paper, to be presented in March 2027."
 
 [[news]]
 date = "Mar 2027"
-text = "Will lead a roundtable, *Algorithmic Suspicion: Raciolinguistic Gatekeeping of Middle Eastern Teaching Assistants*, at the TESOL 2027 International Convention & Expo in Houston, TX."
+text = "Roundtable accepted at the TESOL 2027 International Convention & Expo in Houston, TX: *Algorithmic Suspicion: Raciolinguistic Gatekeeping of Middle Eastern Teaching Assistants*, in March 2027."
 
 [[news]]
 date = "Spring 2027"
@@ -77,6 +77,7 @@ text = "Assigned to teach C&T 331, *Instructional Approaches for ESOL Learners i
 date = "Oct 2026"
 text = "Presented *Beyond Symbolic Recognition*, on the Seal of Biliteracy, with Sarah C. Swyers at MIDTESOL 2026 in Overland Park, KS."
 link = "https://doi.org/10.1002/tesq.70236"
+link_label = "Read the article"
 
 [[news]]
 date = "Oct 2026"
@@ -86,11 +87,13 @@ text = "Advanced to Ph.D. candidacy at the University of Kansas on October 23, 2
 date = "Oct 2026"
 text = "Posted a preprint on how university students judge the ethics of generative AI use; the paper is under review at *International Journal for Educational Integrity*."
 link = "https://doi.org/10.21203/rs.3.rs-11286301/v1"
+link_label = "Read the preprint"
 
 [[news]]
 date = "Sep 2026"
 text = "*Beyond Symbolic Recognition*, on access, fidelity and student outcomes in the Seal of Biliteracy, is published in *TESOL Quarterly*."
 link = "https://doi.org/10.1002/tesq.70236"
+link_label = "Read the article"
 
 [[news]]
 date = "Fall 2026"
@@ -104,6 +107,7 @@ text = "Published *Too Few to Count*, a white paper with Mike Klein-Thibodeau an
 date = "Aug 2026"
 text = "Submitted a paper on acoustic gap placement in second-language read speech to *PLOS ONE*, with a preprint on arXiv."
 link = "https://doi.org/10.48550/arXiv.2610.02582"
+link_label = "Read the preprint"
 
 [[news]]
 date = "May 2026"
@@ -117,31 +121,54 @@ themes = ["Language assessment", "Automated speaking assessment", "Validity & fa
 
 # "dates" is shown as written on the website; " to " becomes a hyphen in the CV PDF.
 # cv_title / cv_text: use these only if the CV should word something differently from the website.
+# Website (Research page):
+#   id          a short unique word for the project (never change it once set)
+#   strand      which section it belongs to: "scoring", "policy" or "ai" (anything else goes under Other Work)
+#   site_title  the heading on the Research page (if left out, the title is used)
+#   site_text   the paragraph on the Research page (if left out, text is used); *stars* make italics
+#   site_note   optional small grey line under the paragraph (for funding)
 [[projects]]
+id       = "diss"
+strand   = "scoring"
 dates    = "2025 to Present"
 title    = "Dissertation: Validity & Fairness of *Automated Speaking Assessment*"
+site_title = "Dissertation: validity and fairness of automated speaking assessment"
 cv_title = "Dissertation: Validity and Fairness of Automated Speaking Assessment"
 org      = "University of Kansas"
 text     = "Examines agreement and decision risk between human holistic ratings and automated scores from the released Speak & Improve Challenge 2025 baseline scorer (Cambridge Speak & Improve Corpus 2025), and what predicts their disagreement."
 cv_text  = "Examines agreement and decision risk between human holistic ratings and automated scores from the released Speak & Improve Challenge 2025 baseline scorer (Cambridge Speak & Improve Corpus 2025), and what predicts their disagreement."
+site_text = "Examines agreement and decision risk between human holistic ratings and automated scores from the released Speak & Improve Challenge 2025 baseline scorer (Cambridge Speak & Improve Corpus 2025), and what predicts their disagreement. Decision risk here means responses where the human and the automated score land on opposite sides of a cut score, so the same answer would pass with one scorer and fail with the other."
 
 [[projects]]
+id       = "mfcc"
+strand   = "scoring"
 dates    = "2025 to Present"
 title    = "Explainable Machine Learning for *L2 Pronunciation*"
+site_title = "What a first language leaves in L2 speech"
+site_text = "Before a scorer can be judged, it helps to know what in the signal carries a speaker’s first language. Using Speech Accent Archive recordings of Mandarin and English first-language speakers, I describe their English with MFCCs, test which coefficients separate the two groups, and show that a random forest built on that small set classifies better than one built on all thirteen. A companion study uses forced alignment to locate pauses in the same read passage: both groups pause at punctuation about equally, but the Mandarin group pauses far more often where the text gives no punctuation cue."
 cv_title = "Explainable Machine Learning for L2 Pronunciation"
 text     = "Interpretable MFCC-based models of how a first language shapes L2 pronunciation, plus reproducible workflows for feedback."
 cv_text  = "Develops interpretable MFCC-based models of L1 influence in L2 pronunciation and reproducible workflows for feedback."
 
 [[projects]]
+id       = "seal"
+strand   = "policy"
 dates    = "2025 to Present"
 title    = "Seal of Biliteracy: *Policy, Equity & Recognition*"
+site_title = "The Seal of Biliteracy: access, fidelity and recognition"
+site_text = "How the Seal of Biliteracy is implemented, who can earn it, how students qualify, and whether colleges and employers recognize it. With CEOP colleagues I am also studying Seal attainment by English learner status and district locale across all 50 states and DC; data collection began in 2026. With four colleagues I reviewed fifteen years of research on the Seal for *TESOL Quarterly*, asking who can reach it, whether programs stay true to its purpose, and what it is worth to students afterward."
+site_note = "I worked on the review in summer 2025 as a graduate research assistant on Project SEMILLA (Supporting Educators, Math Instructors, and Language Learners for Advancement), a $2.44 million project funded by the U.S. Department of Education, Office of English Language Acquisition, at the Center for Educational Opportunity Programs, University of Kansas."
 cv_title = "Seal of Biliteracy Policy, Equity, and Recognition"
 text     = "How the Seal of Biliteracy is implemented, who can earn it, how students qualify, and whether colleges and employers recognize it. With CEOP colleagues I am also studying Seal attainment by English learner status and district locale across all 50 states and DC; data collection began in 2026."
 cv_text  = "Examines implementation, equitable access, assessment pathways, postsecondary recognition, and real-world value of the Seal of Biliteracy. A national access study with CEOP colleagues examines Seal attainment by English learner status and district locale across all 50 states and DC (data collection began in 2026)."
 
 [[projects]]
+id       = "kansas"
+strand   = "policy"
 dates    = "2026 to Present"
 title    = "English Learner Visibility in *Kansas Public Reporting*"
+site_title = "English learners in Kansas public reporting"
+site_text = "How districts report English learner results, which student groups become invisible, and how small cohort sizes create gaps in public data. I conceived and led the study at CEOP in summer 2026. Kansas withholds a subgroup result when fewer than ten students are tested. In our white paper, districts that publish English learner reading results enroll about 98% of the state’s English learners, yet only about 41% of the districts that serve them report: every city district, but only about a quarter of rural ones. Once enrollment is taken into account, the rural gap is no longer statistically significant: small numbers under a uniform threshold, rather than rurality as such, decide who goes unseen. The Kansas analysis is complete (white paper, August 2026; journal version under review), and the study is now extending to about ten more states with CEOP colleagues."
 cv_title = "English Learner Visibility in Kansas Public Reporting"
 text     = "How districts report English learner results, which student groups become invisible, and how small cohort sizes create gaps in public data. The Kansas analysis is complete (white paper, August 2026; journal version under review), and the study is now extending to about ten more states with CEOP colleagues."
 cv_text  = "Examines district-level English learner result reporting, subgroup visibility, and how cohort size shapes public reporting gaps. The Kansas analysis is complete (white paper, August 2026; journal version under review); the study is now extending to about ten more states with CEOP colleagues."
@@ -512,8 +539,14 @@ url       = "https://ceop.ku.edu/publications"
 
 
 # ------------------------------------------------------------------ selected presentations (newest first)
-#  Add  id, doi  and the cite_* fields to give a presentation its own cite buttons (see the AERA one).
+#  id      a short unique word (the Research page uses it to place the talk)
+#  format  the kind of talk in citations, such as "Paper presentation" or "Roundtable" (default "Presentation")
+#  event   the event's name in website citations, if it should differ from cv_event
+#  Add doi and the cite_* fields to give a presentation its own cite buttons (see the AERA one).
 [[presentations]]
+id          = "site27"
+format      = "Brief paper, peer-reviewed, accepted"
+event       = "Society for Information Technology & Teacher Education (SITE 2027)"
 date        = "Mar 2027"
 cv_date     = "March 18, 2027"
 title       = "What Does an AI Score Justify?"
@@ -522,6 +555,9 @@ cv_event    = "Society for Information Technology & Teacher Education (SITE 2027
 place       = "Nashville, TN"
 
 [[presentations]]
+id          = "tesol27"
+format      = "Roundtable"
+event       = "TESOL 2027 International Convention & Expo"
 date        = "Mar 2027"
 cv_date     = "March 16, 2027"
 title       = "Algorithmic Suspicion: Raciolinguistic Gatekeeping of Middle Eastern Teaching Assistants"
@@ -530,6 +566,7 @@ cv_event    = "TESOL 2027 International Convention & Expo. Roundtable"
 place       = "Houston, TX"
 
 [[presentations]]
+id          = "midtesol26"
 date        = "Oct 2026"
 cv_date     = "October 30-31, 2026"
 title       = "Beyond Symbolic Recognition: Examining Access, Fidelity, and Student Outcomes in the Seal of Biliteracy"
@@ -540,6 +577,7 @@ coauthors   = "Sarah C. Swyers"
 doi         = "10.1002/tesq.70236"
 
 [[presentations]]
+id          = "ncic26"
 date        = "Apr 2026"
 cv_date     = "April 11, 2026"
 title       = "Correlation Isn’t Enough: Agreement and Decision Risk for Automated Speaking Scores in a Cambridge Dataset"
@@ -550,6 +588,7 @@ coauthors   = "Imogen R. Herrick"
 
 [[presentations]]
 id          = "aera"
+format      = "Paper presentation"
 date        = "Apr 2026"
 cv_date     = "April 2026"
 title       = "Campus Climate Counts: Insights on Institutional Versus Individual Predictors of Academic AI Integrity"
@@ -570,6 +609,7 @@ cite_booktitle = "Proceedings of the 2026 AERA Annual Meeting"
 cite_month  = "apr"
 
 [[presentations]]
+id          = "scipie25"
 date        = "Oct 2025"
 cv_date     = "October 2025"
 title       = "Machine Learning in the Service of Second Language Learning"
@@ -578,6 +618,7 @@ cv_event    = "SCIPIE, University of Oklahoma"
 place       = "Norman, OK"
 
 [[presentations]]
+id          = "midtesol24"
 date        = "Oct 2024"
 cv_date     = "October 2024"
 title       = "EFL Learners Excel: Incidental Grammar Learning through Audio-Assisted Reading"
@@ -792,9 +833,8 @@ cv_note = "B.A. Public Entrance Exam  |  2016"
 
 # ------------------------------------------------------------------ your own extra sections (optional)
 #  Need a section that does not exist yet, such as Grants, Workshops Led, Media, Invited Talks?
-#  Remove the # signs from the block below and edit it. It appears on the website after Honors and in the CV
-#  before Languages, and the menu picks it up by itself. Add more items by copying an [[extra_sections.items]] block.
-#  Use  site = false  or  cv = false  to show a section in only one of the two.
+#  Remove the # signs from the block below and edit it. It appears in the CV before Languages (the website has five
+#  fixed pages, so it does not show there by itself). Add more items by copying an [[extra_sections.items]] block.
 #
 # [[extra_sections]]
 # title = "Grants & Funding"

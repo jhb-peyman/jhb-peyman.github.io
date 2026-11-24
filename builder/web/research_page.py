@@ -1,4 +1,5 @@
-# Research page. Run by pages.py (uses its helpers: C, P, BYID, esc, md, attr, h2, title, shell, apa_authors, initials).
+# Research page. Run by pages.py (uses its helpers: C, P, BYID, esc, md, plain, attr, h2, title, shell, apa_authors, initials, venue).
+# Projects come from content.toml by their strand; papers and talks are placed below by their id.
 # Every claim about a paper below was checked against the paper's own text.
 
 SCORER_FIG = '''<figure class="figure rs-fig"><div class="viz" id="vizB" role="img" aria-label="Animated chart of human and automated scores with decision flips"><canvas id="scope"></canvas><div class="tip" id="tipB"></div></div>
@@ -6,29 +7,39 @@ SCORER_FIG = '''<figure class="figure rs-fig"><div class="viz" id="vizB" role="i
 
 def page_research():
     R = C['research']
-    PR = C['projects']
-    TALKS = C['presentations']
-    ga = [a for a in C['appointments'] if 'Research' in a['title']][0]
+    PROJ = C.get('projects', [])
+    TALKS = {t['id']: t for t in C.get('presentations', []) if t.get('id')}
 
     def link_of(p):
         return f'https://doi.org/{p["doi"]}' if p.get('doi') else p.get('url', '')
 
-    def ref(pid):                                   # APA 7 style reference, own name in bold
-        p = BYID[pid]
-        t = esc(p['title']); L = link_of(p)
+    def ref(pid):                                   # APA 7 reference, own name in bold; same details as the Publications page
+        p = BYID.get(pid)
+        if not p:
+            return ''
+        L = link_of(p)
+        raw = p.get('cite_title') or p['title']
+        stop = '' if raw.rstrip().endswith(('?', '!')) else '.'
+        t = esc(raw)
         t = f'<a href="{attr(L)}">{t}</a>' if L else t
-        tail = ' [Research artifact].' if p.get('kind') == 'artifact' else f'. <i>{esc(p["venue"])}</i>.'
+        if p.get('kind') == 'artifact':
+            stop = ''
+            tail = ' [Research artifact].'
+        else:
+            tail = ' ' + venue(p)
         note = ''
         if p['status'] == 'preprint' and p.get('kind') != 'artifact':
             lab = p.get('label', '')
-            note = 'Preprint' + (', under review at <i>' + esc(lab.split('under review at ')[1]) + '</i>' if 'under review at' in lab else '')
+            note = 'Preprint' + (', under review at <i>' + esc(lab.split('under review at ')[1]) + '</i>' if 'under review at' in lab else '') + '.'
         elif p['status'] == 'review':
-            note = esc(p.get('label', 'In review'))
+            note = esc(p.get('label', 'In review')).rstrip('.') + '.'
         note = f' <span class="rstat">{note}</span>' if note else ''
-        return f'<li>{apa_authors(pid, p["authors"])} ({p["year"]}). {t}{tail}{note}</li>'
+        return f'<li>{apa_authors(pid, p["authors"])} ({p["year"]}). {t}{stop}{tail}{note}</li>'
 
-    def talk(sub):
-        t = [x for x in TALKS if sub in x['title']][0]
+    def talk(tid):
+        t = TALKS.get(tid)
+        if not t:
+            return ''
         names = ['<b>' + esc(f'{P["last_name"]}, {initials(P["first_name"])}') + '</b>']
         for n in t.get('coauthors', '').replace(' and ', ', ').split(', '):
             n = n.strip()
@@ -36,14 +47,14 @@ def page_research():
         if len(names) == 1: au = names[0]
         elif len(names) == 2: au = f'{names[0]}, &amp; {names[1]}'
         else: au = ', '.join(names[:-1]) + ', &amp; ' + names[-1]
-        m_ = re.match(r'([A-Za-z]+)\s*([\d-]*),?\s*(\d{4})', t['cv_date'])
-        mon = (m_.group(1) + (' ' + m_.group(2) if m_.group(2) else '')) if m_ else t['cv_date']
-        yr = m_.group(3) if m_ else ''
+        m_ = re.match(r'([A-Za-z]+)\s*([\d-]*),?\s*(\d{4})', t.get('cv_date', ''))
+        when = f'{m_.group(3)}, {m_.group(1)}' + (f' {m_.group(2)}' if m_.group(2) else '') if m_ else esc(t.get('date', ''))
         tt = esc(t['title'])
-        if t.get('doi') and 'Beyond' not in t['title']:       # the MIDTESOL talk shares the article's DOI; only AERA has its own
+        if t.get('doi') and t.get('cite_title'):      # only a talk with its own citation record has its own DOI
             tt = f'<a href="https://doi.org/{attr(t["doi"])}">{tt}</a>'
-        where = esc(t['cv_event']) + (f', {esc(t["place"])}' if t.get('place') else '')
-        return f'<li>{au} ({yr}, {mon}). {tt} [Presentation]. {where}.</li>'
+        event = esc(t.get('event') or t.get('cv_event', ''))
+        where = event + (f', {esc(t["place"])}' if t.get('place') else '')
+        return f'<li>{au} ({when}). {tt} [{esc(t.get("format", "Presentation"))}]. {where}.</li>'
 
     def report(r):                                  # reports and white papers from content.toml
         au = apa_authors('', r['authors'])
@@ -54,11 +65,22 @@ def page_research():
     WHITE = ''.join(report(r) for r in C.get('reports', []))
 
     def refs(items, head='Papers and talks'):
-        h = f'<h4>{head}</h4>' if head else ''
+        items = [i for i in items if i]
+        if not items:
+            return ''
+        h = f'<h3>{head}</h3>' if head else ''
         return f'<div class="refs">{h}<ul>{"".join(items)}</ul></div>'
 
-    def proj(i, title_txt, inner):
-        return (f'<div class="pj"><div class="pj-h"><h3>{title_txt}</h3><span class="when">{esc(PR[i]["dates"])}</span></div>{inner}</div>')
+    FIG = {'diss': SCORER_FIG}                      # figures that belong to a project
+    def proj(x):
+        ttl = esc(x.get('site_title') or plain(x['title']))
+        body = f'<p>{md(x.get("site_text") or x.get("text", ""))}</p>'
+        if x.get('site_note'):
+            body += f'<p class="fund">{md(x["site_note"])}</p>'
+        return (f'<div class="pj"><div class="pj-h"><h3>{ttl}</h3><span class="when">{esc(x.get("dates", ""))}</span></div>'
+                f'{body}{FIG.get(x.get("id"), "")}</div>')
+    def projects(strand):
+        return ''.join(proj(x) for x in PROJ if x.get('strand') == strand)
 
     # ---------------------------------------------------------------- the page
     intro = ('<p class="rs-intro">The question has three parts in my work. One is technical: what an automated scorer '
@@ -66,59 +88,33 @@ def page_research():
              'students get recognized, and which ones drop out of public data. The newest asks how students and universities '
              'judge the use of generative AI.</p>')
 
-    s1 = ('<h2 id="scoring">Scoring Spoken English</h2>'
-          + proj(0, 'Dissertation: validity and fairness of automated speaking assessment',
-                 f'<p>{esc(PR[0]["text"])} Decision risk here means responses where the human and the automated score land on '
-                 'opposite sides of a cut score, so the same answer would pass with one scorer and fail with the other.</p>' + SCORER_FIG)
-          + proj(1, 'What a first language leaves in L2 speech',
-                 '<p>Before a scorer can be judged, it helps to know what in the signal carries a speaker’s first language. '
-                 'Using Speech Accent Archive recordings of Mandarin and English first-language speakers, I describe their English '
-                 'with MFCCs, test which coefficients separate the two groups, and show that a random forest built on that small '
-                 'set classifies better than one built on all thirteen. A companion study uses forced alignment to locate pauses in '
-                 'the same read passage: both groups pause at punctuation about equally, but the Mandarin group pauses far more '
-                 'often where the text gives no punctuation cue.</p>')
-          + refs([talk('What Does an AI Score'), talk('Correlation Isn'), ref('acoustic'), ref('arxiv'), ref('rsquare'), ref('pipeline'),
-                  talk('Machine Learning')]))
+    s1 = ('<h2 id="scoring">Scoring Spoken English</h2>' + projects('scoring')
+          + refs([talk('site27'), talk('ncic26'), ref('acoustic'), ref('arxiv'), ref('rsquare'), ref('pipeline'), talk('scipie25')]))
 
-    s2 = ('<h2 id="policy">Multilingual Learners and Policy</h2>'
-          + proj(2, 'The Seal of Biliteracy: access, fidelity and recognition',
-                 f'<p>{esc(PR[2]["text"])} With four colleagues I reviewed fifteen years of research on the Seal for <i>TESOL '
-                 'Quarterly</i>, asking who can reach it, whether programs stay true to its purpose, and what it is worth to '
-                 'students afterward.</p>'
-                 '<p class="fund">I worked on the review in summer 2025 as a graduate research assistant on Project SEMILLA (Supporting '
-                 'Educators, Math Instructors, and Language Learners for Advancement), a $2.44 million project funded by the U.S. '
-                 'Department of Education, Office of English Language Acquisition, at the Center for Educational Opportunity '
-                 'Programs, University of Kansas.</p>')
-          + proj(3, 'English learners in Kansas public reporting',
-                 f'<p>{esc(PR[3]["text"].split(" The Kansas analysis")[0])} I conceived and led the study at CEOP in summer 2026. '
-                 'Kansas withholds a subgroup result when fewer than ten students are tested. In our white '
-                 'paper, districts that publish English learner reading results enroll about 98% of the state\u2019s English learners, '
-                 'yet only about 41% of the districts that serve them report: every city district, but only about a quarter of rural '
-                 'ones. Once enrollment is taken into account, the rural gap is no longer statistically significant: small numbers under a '
-                 'uniform threshold, rather than rurality as such, decide who goes unseen.'
-                 + (' The Kansas analysis' + esc(PR[3]["text"].split(" The Kansas analysis")[1]) if " The Kansas analysis" in PR[3]["text"] else '')
-                 + '</p>')
-          + refs([ref('beyond'), talk('Beyond Symbolic'), WHITE, ref('toofew')]))
+    s2 = ('<h2 id="policy">Multilingual Learners and Policy</h2>' + projects('policy')
+          + refs([ref('beyond'), talk('midtesol26'), WHITE, ref('toofew')]))
 
-    s3 = ('<h2 id="ai">Generative AI and Academic Integrity</h2>'
+    s3 = ('<h2 id="ai">Generative AI and Academic Integrity</h2>' + projects('ai')
           + '<p class="sec-p">With colleagues at Kansas I developed and tested four short instruments for how university students '
             'judge the use of generative AI in their coursework, and presented work at AERA on whether campus climate or individual '
-            'factors better predict academic AI integrity. A manuscript with Hyesun Cho, now in revision, looks at raciolinguistic '
-            'gatekeeping and algorithmic suspicion of Middle Eastern graduate teaching assistants, and I will lead a roundtable on '
-            'the same topic at TESOL 2027.</p>'
-          + refs([ref('ethics'), ref('accent'), talk('Algorithmic Suspicion'), talk('Campus Climate')]))
+            'factors better predict academic AI integrity. A manuscript with Hyesun Cho, revised and back under review, looks at '
+            'raciolinguistic gatekeeping and algorithmic suspicion of Middle Eastern graduate teaching assistants, and I will lead a '
+            'roundtable on the same topic at TESOL 2027.</p>'
+          + refs([ref('ethics'), ref('accent'), talk('tesol27'), talk('aera')]))
 
-    s4 = (h2('Other Work')
+    other_proj = ''.join(proj(x) for x in PROJ if x.get('strand') not in ('scoring', 'policy', 'ai'))
+    s4 = (h2('Other Work') + other_proj
           + '<p class="sec-p">Shorter projects in language testing, classroom learning and academic discourse.</p>'
           + refs([ref('lltm'), ref('dyadic'), ref('corpus'), ref('personality'), ref('achievements'), ref('audio'),
-                  talk('EFL Learners Excel')], head=''))
+                  talk('midtesol24')], head=''))
 
     # ---------------------------------------------------------------- methods, each with where it was used
     NAMES = {'ethics': 'GenAI ethics instruments', 'lltm': 'LLTM study', 'acoustic': 'acoustic gaps', 'arxiv': 'MFCC framework',
              'rsquare': 'MFCC pipeline', 'audio': 'audio-assisted reading', 'corpus': 'book-review corpus',
              'personality': 'lecturer creativity', 'dyadic': 'peer-review talk', 'beyond': 'Seal of Biliteracy review'}
     def used(*ids):
-        out = ['dissertation' if i == 'diss' else 'Too Few to Count' if i == 'white' else f'<a href="{attr(link_of(BYID[i]))}">{NAMES[i]}</a>' for i in ids]
+        out = ['dissertation' if i == 'diss' else 'Too Few to Count' if i == 'white' else
+               f'<a href="{attr(link_of(BYID[i]))}">{NAMES.get(i, i)}</a>' if i in BYID else NAMES.get(i, i) for i in ids]
         return '<span class="used">' + ', '.join(out) + '</span>'
     M = [
       ('Measurement', [
@@ -145,7 +141,7 @@ def page_research():
       ]),
     ]
     meth = (h2('Methods') + '<p class="sec-p">Each method links to the study where I used it.</p>'
-            + ''.join(f'<div class="mg"><h4>{g}</h4><ul>' + ''.join(f'<li><span>{esc(a)}</span>{b}</li>' for a, b in rows) + '</ul></div>' for g, rows in M)
+            + ''.join(f'<div class="mg"><h3>{g}</h3><ul>' + ''.join(f'<li><span>{esc(a)}</span>{b}</li>' for a, b in rows) + '</ul></div>' for g, rows in M)
             )
 
     body = title('Research') + f'<p class="lead">{md(R["statement"])}</p>' + intro + s1 + s2 + s3 + s4 + meth + data_section(link_of) + software_section()
@@ -195,7 +191,7 @@ def software_section():
             '<div class="snip-chart"><div class="snip-lab" id="codeH"></div><svg id="codeV" role="img" aria-label="Chart of the reported results"></svg><div class="snip-tip" id="codeTip"></div></div></div>'
             '<div class="snip-foot"><span id="codeEnv"></span><span id="codeRef"></span></div>'
             '</div><figcaption id="codeC"></figcaption></figure>')
-    return (h2('Software') + '<p class="sec-p">What I analyse with. Below, the core model of four studies is written out as a short sketch, '
+    return (h2('Software') + '<p class="sec-p">What I analyze with. Below, the core model of four studies is written out as a short sketch, '
             'run, and shown with the results the paper reports.</p>'
             + grid + also + code
             + '<script>window.SNIP_ICONS=' + json.dumps(icons) + '</script><script src="assets/codepanel.js"></script>')

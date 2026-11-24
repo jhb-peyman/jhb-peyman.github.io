@@ -1,5 +1,5 @@
 # Teaching page. Run by pages.py (uses its helpers: C, esc, md, attr, h2, title, shell, TODAY).
-# Everything comes from content.toml: [[teaching]] courses (taught, short, summary, next, note),
+# The course data comes from content.toml: [[teaching]] courses (taught, short, summary, next, note),
 # the appointments with a site_text, and the honors. Edit content.toml, not this file.
 import datetime
 
@@ -42,7 +42,12 @@ def page_teaching():
         ts = sorted(set(k['taught']), key=term_key)
         multi = [t for t in ts if k['taught'].count(t) > 1]
         regular = all(t.split()[0] != 'Summer' for t in ts)
-        if len(ts) >= 4 and regular:
+        def nxt_reg(k):
+            y, se = k
+            return (y, 2) if se == 0 else (y + 1, 0)
+        keys = [term_key(t) for t in ts]
+        unbroken = all(nxt_reg(keys[i]) == keys[i + 1] for i in range(len(keys) - 1))
+        if len(ts) >= 4 and regular and unbroken:
             txt = f'Every fall and spring, {ts[0]} to {ts[-1]}'
         else:
             parts = [t + (f' ({WORD.get(k["taught"].count(t), k["taught"].count(t))} sections)' if t in multi else '') for t in ts]
@@ -50,20 +55,15 @@ def page_teaching():
         return txt
 
     # ---------------------------------------------------------------- opening paragraph
-    top = max(courses, key=n)
-    repeat = sum(1 for k in courses if n(k) > 1)
     ncw = WORD.get(len(courses), str(len(courses)))
-    s1 = (f'I have taught since 2014: English to school and university students in Iran, and since 2023 teacher education and '
-          f'graduate TESOL at the University of Kansas, where I have been instructor of record for {ncw} courses and {total} course '
-          f'sections so far' + (f', with {WORD.get(upcoming, upcoming)} more assigned for {nxt}' if nxt else '') + '.')
-    s2 = []
-    tts = sorted(set(top['taught']), key=term_key)
-    if len(tts) >= 4 and all(t.split()[0] != 'Summer' for t in tts):
-        s2.append(f'I have taught {esc(top["code"])} every fall and spring since {tts[0]}')
-    if repeat > 1:
-        s2.append(f'{WORD.get(repeat, repeat)} of my {ncw} Kansas courses more than once' + (f', counting {nxt}' if nxt else ''))
-    s2t = (' ' + (s2[0] + ', and ' + s2[1] if len(s2) == 2 else ('I have taught ' + s2[0] if not s2[0].startswith('I ') else s2[0])) + '.') if s2 else ''
-    lead = f'<p class="lead">{s1}{s2t}</p>'
+    repeated = sum(1 for k in courses if done(k) > 1)
+    often = ('most of them' if repeated > len(courses) / 2 else 'several of them' if repeated > 1 else '')
+    lead = ('<p class="lead">I have taught since 2014: English to school and university students in Iran, and since 2023 '
+            'teacher education and graduate TESOL courses at the University of Kansas. '
+            f'At Kansas I have taught {ncw} courses as instructor of record, {total} sections so far'
+            + (f', {often} more than once' if often else '') + '.'
+            + (f' {WORD.get(upcoming, str(upcoming)).capitalize()} more {"section is" if upcoming == 1 else "sections are"} assigned for {nxt}.' if nxt else '')
+            + '</p>')
 
     # ---------------------------------------------------------------- Kansas: the term-by-term record
     ku = next((a for a in C['appointments'] if 'Instructor of Record' in a['title']), None)
@@ -80,9 +80,11 @@ def page_teaching():
             c_ = k['taught'].count(t)
             if c_:
                 lab = f'{k["code"]}, {t}' + (f', {c_} sections' if c_ > 1 else '') + (' (assigned)' if term_key(t) > now else '')
-                cells += f'<td class="{tcls(t)}"><span class="cell" title="{attr(lab)}" aria-label="{attr(lab)}">{"<i class=\"sq\"></i>" * c_}</span></td>'
+                said = f'{c_} section' + ('s' if c_ > 1 else '') + (' (assigned)' if term_key(t) > now else '')
+                cells += (f'<td class="{tcls(t)}"><span class="cell" title="{attr(lab)}" aria-hidden="true">{"<i class=\"sq\"></i>" * c_}</span>'
+                          f'<span class="sr">{said}</span></td>')
             else:
-                cells += f'<td class="{tcls(t)}"><span class="sr">not taught</span></td>'
+                cells += f'<td class="{tcls(t)}"></td>'
         cid = k['code'].replace('&', '').replace(' ', '').lower()
         rows += (f'<tr><th scope="row" class="tr-c"><a href="#{cid}">{esc(k["code"])}<span>{esc(k.get("short", ""))}</span></a></th>{cells}'
                  f'<td class="tt"><span class="tn">{n(k)}</span><span class="tbar"><span style="width:{100 * n(k) / mx:.0f}%"></span></span></td></tr>')

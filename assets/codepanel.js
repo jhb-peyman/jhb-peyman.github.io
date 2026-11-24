@@ -29,7 +29,8 @@
       out=document.getElementById('codeO'),stat=document.getElementById('codeS'),svg=document.getElementById('codeV'),
       head=document.getElementById('codeH'),cap=document.getElementById('codeC'),run=box.querySelector('.snip-run'),
       tip=document.getElementById('codeTip'),env=document.getElementById('codeEnv'),refEl=document.getElementById('codeRef'),
-      btnRun=document.getElementById('codeRun'),btnCopy=document.getElementById('codeCopy'),hover=false,DWELL=9000;
+      btnRun=document.getElementById('codeRun'),btnCopy=document.getElementById('codeCopy'),hover=false,stopped=false,DWELL=9000,ed=box.querySelector('.snip-ed');
+  if(ed){ed.id='codeEd';ed.setAttribute('role','tabpanel')}
   var RM=matchMedia('(prefers-reduced-motion: reduce)').matches,cur=0,n=0,T=0,vis=false,phase='idle',ICON=window.SNIP_ICONS||{};
   function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
   var KW={r:/\b(library|function|TRUE|FALSE|NULL)\b/g,py:/\b(import|from|as|def|return|for|in)\b/g};
@@ -87,7 +88,7 @@
     if(anim)requestAnimationFrame(function(){requestAnimationFrame(function(){[].forEach.call(svg.querySelectorAll('.g-item'),function(g){g.classList.add('on')})})});
   }
   // ---------------------------------------------------------------- sequence: type, run, print, plot
-  function reset(k){cur=k;clearTimeout(T);cap.textContent=S[k].cap;env.textContent=S[k].env;tip.style.display='none';
+  function reset(k){cur=k;clearTimeout(T);if(ed)ed.setAttribute('aria-labelledby','snip-tab-'+k);cap.textContent=S[k].cap;env.textContent=S[k].env;tip.style.display='none';
     refEl.innerHTML=S[k].doi?'<a href="https://doi.org/'+S[k].doi+'" target="_blank" rel="noopener">'+S[k].ref+' \u2197</a>':S[k].ref;
     box.style.setProperty('--dwell','0ms');box.classList.remove('counting');
     [].forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===k);b.tabIndex=j===k?0:-1})}
@@ -101,13 +102,14 @@
     if(phase==='print'){var L=s.out.split('\n'),i=+out.dataset.i+1;out.innerHTML=cmd(s)+'\n'+hlOut(L.slice(0,i).join('\n'));out.dataset.i=i;
       if(i<L.length){T=setTimeout(step,140);return}
       phase='plot';chart(s.chart,true);setStat('done');phase='done';dwell()}}
-  function dwell(){clearTimeout(T);if(hover||RM||!vis)return;box.classList.remove('counting');void box.offsetWidth;
+  function dwell(){clearTimeout(T);if(hover||RM||!vis||stopped){box.classList.remove('counting');return}box.classList.remove('counting');void box.offsetWidth;
     box.style.setProperty('--dwell',DWELL+'ms');box.classList.add('counting');T=setTimeout(next,DWELL)}
   function next(){if(vis)start((cur+1)%S.length)}
-  S.forEach(function(s,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');
+  S.forEach(function(s,k){var b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.id='snip-tab-'+k;b.setAttribute('aria-controls','codeEd');
     b.innerHTML=(ICON[s.lang]||'')+'<span>'+s.file+'</span>';
-    b.addEventListener('click',function(){complete(k)});
-    b.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();var j=(k+(e.key==='ArrowRight'?1:S.length-1))%S.length;complete(j);tabs.children[j].focus()}});
+    b.addEventListener('click',function(){stopped=true;complete(k)});
+    b.addEventListener('keydown',function(e){var j=-1;if(e.key==='ArrowRight')j=(k+1)%S.length;else if(e.key==='ArrowLeft')j=(k+S.length-1)%S.length;else if(e.key==='Home')j=0;else if(e.key==='End')j=S.length-1;
+      if(j>=0){e.preventDefault();stopped=true;complete(j);tabs.children[j].focus()}});
     tabs.appendChild(b)});
   complete(0);
   if(!RM){n=0;drawCode();out.innerHTML='';run.classList.remove('on');setStat('');phase='wait'}
@@ -116,7 +118,8 @@
     if(!vis){clearTimeout(T);box.classList.remove('counting')}},{threshold:.35}).observe(box);
   box.addEventListener('pointerenter',function(){hover=true;if(phase==='done'){clearTimeout(T);box.classList.remove('counting')}});
   box.addEventListener('pointerleave',function(){hover=false;if(phase==='done')dwell()});
-  btnRun.addEventListener('click',function(){if(RM){complete(cur);return}vis=true;start(cur)});
+  box.addEventListener('focusin',function(){stopped=true;clearTimeout(T);box.classList.remove('counting')});   // a keyboard visitor keeps the tab they chose
+  btnRun.addEventListener('click',function(){stopped=true;if(RM){complete(cur);return}vis=true;start(cur)});
   btnCopy.addEventListener('click',function(){var t=S[cur].code,lab=btnCopy.querySelector('span');
     (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){lab.textContent='Copied'},function(){lab.textContent='Select'}).then(function(){setTimeout(function(){lab.textContent='Copy'},1600)})});
   // values on hover
