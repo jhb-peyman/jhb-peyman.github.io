@@ -62,8 +62,21 @@ methodological_training = [
 
 # ------------------------------------------------------------------ recent news (about five, newest first)
 [[news]]
+date = "Mar 2027"
+text = "Will present *What Does an AI Score Justify?*, a peer-reviewed brief paper, at SITE 2027 (Society for Information Technology & Teacher Education) in Nashville, TN."
+
+[[news]]
+date = "Mar 2027"
+text = "Will lead a roundtable, *Algorithmic Suspicion: Raciolinguistic Gatekeeping of Middle Eastern Teaching Assistants*, at the TESOL 2027 International Convention & Expo in Houston, TX."
+
+[[news]]
 date = "Spring 2027"
 text = "Assigned to teach C&T 331, *Instructional Approaches for ESOL Learners in Secondary Schools*, as instructor of record, and C&T 821, *Assessment in Teaching English to Speakers of Other Languages*."
+
+[[news]]
+date = "Oct 2026"
+text = "Presented *Beyond Symbolic Recognition*, on the Seal of Biliteracy, with Sarah C. Swyers at MIDTESOL 2026 in Overland Park, KS."
+link = "https://doi.org/10.1002/tesq.70236"
 
 [[news]]
 date = "Oct 2026"

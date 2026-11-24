@@ -49,7 +49,7 @@ Online first means the paper has no issue yet (`online = true`, cited as "Advanc
 Change `status` to `"published"`, add the venue details and DOI, and delete `label` and `cv_status`.
 
 ### Add news
-Add a `[[news]]` block at the top. The home page shows the newest five; older ones stay in the file but drop off the page, so delete them now and then.
+Add a `[[news]]` block at the top. The home page shows the newest six; older ones stay in the file but drop off the page, so delete them now and then.
 
 ### Add a presentation
 Add a `[[presentations]]` block at the top. If it has a DOI and you want cite buttons, also give it `id`, `doi`, `coauthors` and the `cite_*` fields (the AERA entry is a complete example).

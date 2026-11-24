@@ -148,7 +148,7 @@ def page_home():
         f'<li><a href="research.html#{k}">{t}</a><p>{d}</p></li>' for k, t, d in strands)
         + '</ul><p class="more"><a href="research.html">Projects, papers and methods</a></p>')
     news = h2('News') + '<table class="kv news">' + ''.join(
-        f'<tr><th>{esc(n["date"])}</th><td>{md(n["text"])}' + (f' <a href="{attr(n["link"])}">Read</a>' if n.get('link') else '') + '</td></tr>' for n in C['news'][:5]) + '</table>'
+        f'<tr><th>{esc(n["date"])}</th><td>{md(n["text"])}' + (f' <a href="{attr(n["link"])}">Read</a>' if n.get('link') else '') + '</td></tr>' for n in C['news'][:6]) + '</table>'
     return shell('index.html', 'Home', hero + fig + research + news, figs=True, spectro=True)
 
 def reports_html():
