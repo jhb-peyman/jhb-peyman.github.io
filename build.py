@@ -787,7 +787,9 @@ def page_head(c, page, ttl):
             ld["alumniOf"] = [{"@type": "CollegeOrUniversity", "name": a} for a in seo["alumni_of"]]
         if seo.get("knows_about"):
             ld["knowsAbout"] = seo["knows_about"]
-        ld["sameAs"] = [x for x in (p.get("linkedin"), p.get("scholar")) if x]
+        ld["sameAs"] = [x for x in (p.get("linkedin"), p.get("scholar"), ("https://orcid.org/" + p["orcid"]) if p.get("orcid") else None) if x]
+        ld["email"] = "mailto:" + p["email"]
+        ld["worksFor"] = {"@type": "CollegeOrUniversity", "name": p["institution"]}
         ld["image"] = base + p.get("portrait", "portrait.jpg")
         out += '\n<script type="application/ld+json">\n' + json.dumps(ld, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") + "\n</script>"
     return out
@@ -888,6 +890,10 @@ def cv_body(c, today):
             contact.append(f'<a href="{attr(p["linkedin"])}">{esc(it)}</a>')
         elif "scholar" in it.lower() and p.get("scholar"):
             contact.append(f'<a href="{attr(p["scholar"])}">{esc(it)}</a>')
+        elif it.lower().startswith("orcid") and p.get("orcid"):
+            contact.append(f'<a href="https://orcid.org/{attr(p["orcid"])}">{esc(it)}</a>')
+        elif p.get("site_url") and it.rstrip("/") in p["site_url"]:
+            contact.append(f'<a href="{attr(p["site_url"])}">{esc(it)}</a>')
         else:
             contact.append(esc(it))
     out.append(f'<header class="top"><h1>{esc(own)}</h1><div class="sub">{esc(get(cv, "subtitle"))}</div>'
@@ -1038,6 +1044,10 @@ def build_docx(c, today, path):
             contact.append(d.run(it, color=GRAY, link=p["linkedin"]))
         elif "scholar" in it.lower() and p.get("scholar"):
             contact.append(d.run(it, color=GRAY, link=p["scholar"]))
+        elif it.lower().startswith("orcid") and p.get("orcid"):
+            contact.append(d.run(it, color=GRAY, link="https://orcid.org/" + p["orcid"]))
+        elif p.get("site_url") and it.rstrip("/") in p["site_url"]:
+            contact.append(d.run(it, color=GRAY, link=p["site_url"]))
         else:
             contact.append(d.run(it, color=GRAY))
     runs = []

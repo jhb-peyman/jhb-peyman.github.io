@@ -32,6 +32,7 @@ location     = "Lawrence, Kansas"
 email        = "Peyman@KU.edu"
 linkedin     = "https://www.linkedin.com/in/jpeyman/"
 scholar      = "https://scholar.google.com/citations?user=wlhGmcEAAAAJ&hl=en"
+orcid        = "0000-0002-5692-3379"
 portrait     = "portrait.jpg"
 site_url     = "https://jhb-peyman.github.io/"
 
@@ -49,7 +50,7 @@ alumni_of    = ["Shahid Beheshti University", "University of Isfahan"]
 # The labels in the CV PDF header
 [cv]
 subtitle     = "Curriculum & Instruction (TESOL)  |  Language Assessment  |  AI in Education"
-contact_line = ["Peyman@KU.edu", "Lawrence, Kansas", "LinkedIn/JPeyman", "Google Scholar"]
+contact_line = ["Peyman@KU.edu", "Lawrence, Kansas", "jhb-peyman.github.io", "LinkedIn/JPeyman", "Google Scholar", "ORCID"]
 research_interests = "Language assessment; automated speaking assessment; validity and fairness; responsible AI in education; explainable machine learning; L2 pronunciation; multilingual education and policy; Seal of Biliteracy; quantitative and mixed-methods educational research."
 teaching_header  = "University of Kansas, Department of Curriculum & Teaching"
 teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 course sections, 2023-2026; two more assigned for Spring 2027."

@@ -23,6 +23,7 @@ ICON = {
  'mail': '<path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/>',
  'cv': '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/>',
  'scholar': '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',
+ 'orcid': '<path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-2.016-1.284-3.722-4.097-3.722h-2.222z"/>',
  'in': '<path d="M4 9h3v11H4zM5.5 4.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3zM10 9h3v1.6c.6-1 1.8-1.8 3.5-1.8 2.6 0 3.5 1.7 3.5 4.5V20h-3v-6c0-1.5-.4-2.6-1.9-2.6S13 12.6 13 14v6h-3z"/>',
  'down': '<path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19h14"/>',
  'sun': '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>',
@@ -137,6 +138,8 @@ def pub_li(p, filt=True):
 def page_home():
     links = [('mail', 'Email', f'mailto:{P["email"]}', False), ('cv', 'CV', 'Peyman_Jahanbin_CV.pdf', False),
              ('scholar', 'Google Scholar', P['scholar'], False), ('in', 'LinkedIn', P['linkedin'], True)]
+    if P.get('orcid'):
+        links.append(('orcid', 'ORCID', 'https://orcid.org/' + P['orcid'], True))
     lk = ''.join(f'<a href="{attr(u)}">{ic(k, f)}<span>{t}</span></a>' for k, t, u, f in links)
     hero = f'''<section class="hero"><img class="avatar" src="{PORTRAIT_SM}" width="136" height="136" alt="Portrait of {ME}">
 <div class="hero-r"><div class="names"><h1>{ME}</h1>{FA}</div>
@@ -146,7 +149,7 @@ def page_home():
     fig = f'''<figure class="figure spectro"><div class="sp-head"><span class="sp-title">Live spectrogram</span><span class="sp-mode" id="modeS">simulated speech</span>
 <button class="sp-ctrl" id="pauseS" type="button" aria-pressed="false">Pause</button><button class="sp-mic" id="micS" type="button" aria-pressed="false">{ic("mic")}<span>Try your own voice</span></button></div>
 <div class="viz" id="vizS" role="img" aria-label="Animated spectrogram with pitch, formants and word and phone tiers"><canvas id="specS"></canvas><canvas id="ovS" class="ov"></canvas><div class="tip" id="tipS"></div></div>
-<figcaption id="statS" aria-live="polite"><span class="lg"><i class="lg-f0"></i>pitch (f0)</span><span class="lg"><i class="lg-fm"></i>formants</span> A synthetic voice reading my research question, drawn as it speaks. Low sounds sit at the bottom, high ones at the top, and the newest is on the right. Hover over it, or touch and drag, to see the pitch, the formants and which sound is being made.</figcaption></figure>'''
+<figcaption id="statS" aria-live="polite">A synthetic voice reading my research question, drawn as it speaks. Low sounds sit at the bottom, high ones at the top, and the newest is on the right. The solid line is the pitch; the dotted marks are the formants, the resonances that tell vowels apart. Hover over it, or touch and drag, to see the values and which sound is being made.</figcaption></figure>'''
     strands = [('scoring', 'Scoring spoken English', 'Where automated scores of spoken English agree with human raters, where they do not, and what in the recording carries a speaker\u2019s first language.'),
                ('policy', 'Multilingual learners and policy', 'Who can earn the Seal of Biliteracy, and which English learners drop out of public data.'),
                ('ai', 'Generative AI and academic integrity', 'How students and universities judge the use of generative AI.')]
@@ -155,7 +158,15 @@ def page_home():
         + '</ul><p class="more"><a href="research.html">Projects, papers and methods</a></p>')
     news = h2('News') + '<table class="kv news">' + ''.join(
         f'<tr><th>{esc(n["date"])}</th><td>{md(n["text"])}' + (f' <a href="{attr(n["link"])}">{esc(n.get("link_label", "Read"))}</a>' if n.get('link') else '') + '</td></tr>' for n in C['news'][:6]) + '</table>'
-    return shell('index.html', 'Home', hero + fig + research + news, figs=True, spectro=True)
+    edu = ''
+    if C.get('education'):
+        rows = ''
+        for e in C['education']:
+            where = esc(e.get('org', '')) + (f', {esc(e["place"])}' if e.get('place') else '')
+            more = f'<span class="edu-more">{md(e["text"])}</span>' if e.get('text') else ''
+            rows += f'<tr><th>{esc(e["dates"])}</th><td><b>{md(e["title"])}</b>, {where}.{more}</td></tr>'
+        edu = h2('Education') + f'<table class="kv news edu">{rows}</table>'
+    return shell('index.html', 'Home', hero + fig + research + news + edu, figs=True, spectro=True)
 
 def reports_html():
     rs = C.get('reports', [])

@@ -88,6 +88,11 @@ def page_research():
              'students get recognized, and which ones drop out of public data. The newest asks how students and universities '
              'judge the use of generative AI.</p>')
 
+    toc = ('<p class="rs-toc2" aria-label="On this page">' + ' <span aria-hidden="true">·</span> '.join(
+        f'<a href="#{k}">{t}</a>' for k, t in [('scoring', 'Scoring spoken English'), ('policy', 'Multilingual learners and policy'),
+                                               ('ai', 'Generative AI and academic integrity'), ('other', 'Other work'),
+                                               ('methods', 'Methods'), ('data', 'Data'), ('software', 'Software')]) + '</p>')
+
     s1 = ('<h2 id="scoring">Scoring Spoken English</h2>' + projects('scoring')
           + refs([talk('site27'), talk('ncic26'), ref('acoustic'), ref('arxiv'), ref('rsquare'), ref('pipeline'), talk('scipie25')]))
 
@@ -103,7 +108,7 @@ def page_research():
           + refs([ref('ethics'), ref('accent'), talk('tesol27'), talk('aera')]))
 
     other_proj = ''.join(proj(x) for x in PROJ if x.get('strand') not in ('scoring', 'policy', 'ai'))
-    s4 = (h2('Other Work') + other_proj
+    s4 = ('<h2 id="other">Other Work</h2>' + other_proj
           + '<p class="sec-p">Shorter projects in language testing, classroom learning and academic discourse.</p>'
           + refs([ref('lltm'), ref('dyadic'), ref('corpus'), ref('personality'), ref('achievements'), ref('audio'),
                   talk('midtesol24')], head=''))
@@ -140,11 +145,11 @@ def page_research():
         ('Integrative literature review, reported with PRISMA 2020 items', used('beyond')),
       ]),
     ]
-    meth = (h2('Methods') + '<p class="sec-p">Each method links to the study where I used it.</p>'
+    meth = ('<h2 id="methods">Methods</h2>' + '<p class="sec-p">Each method links to the study where I used it.</p>'
             + ''.join(f'<div class="mg"><h3>{g}</h3><ul>' + ''.join(f'<li><span>{esc(a)}</span>{b}</li>' for a, b in rows) + '</ul></div>' for g, rows in M)
             )
 
-    body = title('Research') + f'<p class="lead">{md(R["statement"])}</p>' + intro + s1 + s2 + s3 + s4 + meth + data_section(link_of) + software_section()
+    body = title('Research') + f'<p class="lead">{md(R["statement"])}</p>' + intro + toc + s1 + s2 + s3 + s4 + meth + data_section(link_of) + software_section()
     return shell('research.html', 'Research', body, figs=True)
 
 
@@ -160,7 +165,7 @@ def data_section(link_of):
       ('Academic book reviews', '240 reviews in applied linguistics, 2015 to 2020, by native and non-native English-speaking reviewers', u('corpus', 'book-review corpus')),
       ('Kansas public reporting', 'District-level Kansas ELA assessment results with KSDE and NCES enrollment and locale data, 2023-24 and 2024-25', 'Too Few to Count'),
     ]
-    return (h2('Data') + '<p class="sec-p">The main datasets behind the studies above.</p><ul class="data">'
+    return ('<h2 id="data">Data</h2>' + '<p class="sec-p">The main datasets behind the studies above.</p><ul class="data">'
             + ''.join(f'<li><b>{a}</b><span class="dd">{b}</span><span class="used">{c}</span></li>' for a, b, c in rows) + '</ul>')
 
 # ---------------------------------------------------------------- software
@@ -191,7 +196,7 @@ def software_section():
             '<div class="snip-chart"><div class="snip-lab" id="codeH"></div><svg id="codeV" role="img" aria-label="Chart of the reported results"></svg><div class="snip-tip" id="codeTip"></div></div></div>'
             '<div class="snip-foot"><span id="codeEnv"></span><span id="codeRef"></span></div>'
             '</div><figcaption id="codeC"></figcaption></figure>')
-    return (h2('Software') + '<p class="sec-p">What I analyze with. Below, the core model of four studies is written out as a short sketch, '
+    return ('<h2 id="software">Software</h2>' + '<p class="sec-p">What I analyze with. Below, the core model of four studies is written out as a short sketch, '
             'run, and shown with the results the paper reports.</p>'
             + grid + also + code
             + '<script>window.SNIP_ICONS=' + json.dumps(icons) + '</script><script src="assets/codepanel.js"></script>')

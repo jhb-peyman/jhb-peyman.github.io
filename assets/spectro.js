@@ -306,7 +306,7 @@
   playBtn.innerHTML='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg><span>Play back</span>';
   if(btn){btn.parentNode.insertBefore(playBtn,btn);playBtn.addEventListener('click',playBack)}
   var defaultNote=stat?stat.innerHTML:'';
-  function note(t){if(!stat)return;stat.innerHTML=t===null?defaultNote:'<span class="lg"><i class="lg-f0"></i>pitch (f0)</span><span class="lg"><i class="lg-fm"></i>formants</span> '+t}
+  function note(t){if(!stat)return;stat.innerHTML=t===null?defaultNote:t}
   if(btn)btn.addEventListener('click',function(){if(mic){stopMic();return}stopPlayback();clearTimeout(resumeT);review=false;playBtn.hidden=true;rec.chunks=[];rec.len=0;startMic()});
 
   // ---------------------------------------------------------------- history

@@ -327,11 +327,7 @@ function placeTip(tip,box,x,y){
     var yh2=yh,ym2=ym;if(Math.abs(yh2-ym2)<26){var mid=(yh2+ym2)/2,sg=yh2<ym2?-1:1;yh2=mid+sg*13;ym2=mid-sg*13}
     ctx.textAlign='left';ctx.fillStyle=C.accHex;ctx.fillText('Human '+hN.toFixed(1),xR+16,yh2);
     ctx.fillStyle='rgba('+C.inkR+',.92)';ctx.fillText('Automated '+mN.toFixed(1),xR+16,ym2);
-    var lx=padL,ly=28;                                                // legend
-    ctx.fillStyle=C.accHex;ctx.fillRect(lx,ly-1,18,2);ctx.fillText('Human raters',lx+26,ly);
-    ctx.fillStyle='rgba('+C.inkR+',.9)';ctx.fillRect(lx+108,ly-1,18,2);ctx.fillText('Automated scorer',lx+134,ly);
-    if(lx+330<W){ctx.setLineDash([4,4]);ctx.strokeStyle='rgba('+C.accR+',.7)';ctx.beginPath();ctx.moveTo(lx+246,ly);ctx.lineTo(lx+264,ly);ctx.stroke();ctx.setLineDash([]);
-      ctx.fillStyle='rgba('+C.accR+',.85)';ctx.fillText('Cut score',lx+272,ly)}
+    ctx.textAlign='left';ctx.fillStyle='rgba('+C.accR+',.85)';ctx.fillText('cut score',xL+4,yOf(CUT)-6);   // the dashed line, named in place (no legend)
 
     if(px>=xL&&px<=xR&&py>=0&&py<=H){                                 // the listener
       var tau=tauOf(px),h=at(tau,'h'),m=at(tau,'m'),flip=(h>=CUT)!==(m>=CUT);
