@@ -126,7 +126,7 @@ def normalize(c):
 
 def check(c):
     problems, warnings = [], []
-    LISTS = ["news", "projects", "education", "appointments", "topics", "publications", "presentations", "teaching", "methods",
+    LISTS = ["news", "projects", "education", "appointments", "topics", "publications", "reports", "presentations", "teaching", "methods",
              "leadership", "languages", "honors", "documents", "extra_sections"]
     TABLES = ["person", "seo", "cv", "research", "peer_review", "contact"]
     for k in LISTS:
@@ -199,6 +199,9 @@ def check(c):
             lst(x, "cite_authors", f"presentation #{i}")
             if not x.get("cite_year"):
                 problems.append(f"presentation #{i}: cite_year is missing (needed for the cite buttons)")
+    for i, x in enumerate(c.get("reports", []), 1):
+        need(x, ["title", "date", "publisher"], f"report #{i}")
+        lst(x, "authors", f"report #{i}")
     for i, g in enumerate(c.get("teaching", []), 1):
         need(g, ["group"], f"teaching group #{i}")
         if not isinstance(g.get("courses", []), list) or not all(isinstance(k, dict) for k in g.get("courses", [])):
@@ -837,7 +840,7 @@ def cv_pub_parts(x):
     if x["status"] == "review":
         return (x.get("venue") or x.get("venue_text")), f'. {x.get("cv_status") or x.get("label") or "Under review"}', None
     if x.get("venue_text"):
-        return x["venue_text"], f". {x['year']}", x.get("doi")
+        return x["venue_text"], ("" if x.get("doi") else f". {x['year']}"), x.get("doi")
     return x["venue"], f'. {x["year"]}; {x.get("cv_note") or "Preprint"}', x.get("doi")
 
 
@@ -845,7 +848,10 @@ def cv_review_text(pr):
     if pr.get("cv_summary"):
         return pr["cv_summary"]
     total = review_total(pr)
-    return (total + " " if total else "") + "manuscript reviews for peer-reviewed journals."
+    n = len(pr.get("journals", []))
+    words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine"}
+    where = f"{words.get(n, n)} journal{'s' if n != 1 else ''}" if n else "peer-reviewed journals"
+    return (total + " " if total else "") + f"manuscript reviews for {where}, {cv_dates(pr['dates'])}."
 
 
 def cv_body(c, today):
@@ -888,6 +894,13 @@ def cv_body(c, today):
             line = f"<i>{esc(it)}</i>{esc(tail)}"
             if doi:
                 line += f'. DOI: <a href="https://doi.org/{attr(doi)}">{esc(doi)}</a>'
+            out.append(f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>')
+    if c.get("reports"):
+        out.append("<h2>Reports &amp; White Papers</h2>")
+        for x in c["reports"]:
+            line = f'[{esc(x.get("kind", "Report"))}]. <i>{esc(x["publisher"])}</i>. {esc(x.get("cv_date") or x["date"])}'
+            if x.get("url"):
+                line += f'. <a href="{attr(x["url"])}">{esc(x["url"].replace("https://", ""))}</a>'
             out.append(f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>')
     pr = c.get("peer_review")
     if pr:
@@ -1034,6 +1047,16 @@ def build_docx(c, today, path):
             runs = [d.run(it, i=True, color=GRAY, sz=9.5), d.run(tail, color=GRAY, sz=9.5)]
             if doi:
                 runs += [d.run(". DOI: ", color=GRAY, sz=9.5), d.run(doi, color=NAVY, sz=9.5, link=f"https://doi.org/{doi}")]
+            d.para(runs, before=20, after=100, keep_lines=True)
+    if c.get("reports"):
+        h2("Reports & White Papers")
+        for x in c["reports"]:
+            d.para([d.run(plain(x["title"]), b=True, sz=10.5)], keep_next=True)
+            d.para(docx_author_runs(d, x["authors"], own), keep_next=True, before=20)
+            runs = [d.run(f'[{x.get("kind", "Report")}]. ', color=GRAY, sz=9.5), d.run(x["publisher"], i=True, color=GRAY, sz=9.5),
+                    d.run(f'. {x.get("cv_date") or x["date"]}', color=GRAY, sz=9.5)]
+            if x.get("url"):
+                runs += [d.run(". ", color=GRAY, sz=9.5), d.run(x["url"].replace("https://", ""), color=NAVY, sz=9.5, link=x["url"])]
             d.para(runs, before=20, after=100, keep_lines=True)
     pr = c.get("peer_review")
     if pr:

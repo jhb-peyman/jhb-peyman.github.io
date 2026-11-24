@@ -52,7 +52,7 @@ subtitle     = "Curriculum & Instruction (TESOL)  |  Language Assessment  |  AI 
 contact_line = ["Peyman@KU.edu", "Lawrence, Kansas", "LinkedIn/JPeyman", "Google Scholar"]
 research_interests = "Language assessment; automated speaking assessment; validity and fairness; responsible AI in education; explainable machine learning; L2 pronunciation; multilingual education and policy; Seal of Biliteracy; quantitative and mixed-methods educational research."
 teaching_header  = "University of Kansas, Department of Curriculum & Teaching"
-teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 teaching assignments, 2023-2026."
+teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 teaching assignments, 2023-2026; two more assigned for Spring 2027."
 methodological_training = [
   { label = "Quantitative",  text = "EPSY 710 Introductory Statistical Analysis; EPSY 905 Fundamentals of Multivariate Modeling; advanced quantitative methods." },
   { label = "Qualitative",   text = "C&T 808 Qualitative Research: Curriculum Inquiry." },
@@ -67,7 +67,7 @@ text = "Assigned to teach C&T 331, *Instructional Approaches for ESOL Learners i
 
 [[news]]
 date = "Oct 2026"
-text = "Advanced to Ph.D. candidacy at the University of Kansas."
+text = "Advanced to Ph.D. candidacy at the University of Kansas on October 23, 2026, after written and oral comprehensive examinations."
 
 [[news]]
 date = "Oct 2026"
@@ -105,12 +105,12 @@ themes = ["Language assessment", "Automated speaking assessment", "Validity & fa
 # "dates" is shown as written on the website; " to " becomes a hyphen in the CV PDF.
 # cv_title / cv_text: use these only if the CV should word something differently from the website.
 [[projects]]
-dates    = "2026 to Present"
+dates    = "2025 to Present"
 title    = "Dissertation: Validity & Fairness of *Automated Speaking Assessment*"
 cv_title = "Dissertation: Validity and Fairness of Automated Speaking Assessment"
 org      = "University of Kansas"
-text     = "Compares human audio ratings with transcript-based automated speaking scores in the Cambridge Speak & Improve corpus, looking at where they agree, where they meaningfully disagree, and what predicts the gap."
-cv_text  = "Examines agreement and meaningful disagreement between human audio ratings and transcript-based automated speaking scores in the Cambridge Speak & Improve corpus, with emphasis on decision risk and predictors of discrepancy."
+text     = "Examines agreement and decision risk between human holistic ratings and automated scores from the released Speak & Improve Challenge 2025 baseline scorer (Cambridge Speak & Improve Corpus 2025), and what predicts their disagreement."
+cv_text  = "Examines agreement and decision risk between human holistic ratings and automated scores from the released Speak & Improve Challenge 2025 baseline scorer (Cambridge Speak & Improve Corpus 2025), and what predicts their disagreement."
 
 [[projects]]
 dates    = "2025 to Present"
@@ -123,15 +123,15 @@ cv_text  = "Develops interpretable MFCC-based models of L1 influence in L2 pronu
 dates    = "2025 to Present"
 title    = "Seal of Biliteracy: *Policy, Equity & Recognition*"
 cv_title = "Seal of Biliteracy Policy, Equity, and Recognition"
-text     = "How the Seal of Biliteracy is implemented, who can earn it, how students qualify, and whether colleges and employers recognize it."
-cv_text  = "Examines implementation, equitable access, assessment pathways, postsecondary recognition, and real-world value of the Seal of Biliteracy."
+text     = "How the Seal of Biliteracy is implemented, who can earn it, how students qualify, and whether colleges and employers recognize it. With CEOP colleagues I am also studying Seal attainment by English learner status and district locale across all 50 states and DC; data collection began in 2026."
+cv_text  = "Examines implementation, equitable access, assessment pathways, postsecondary recognition, and real-world value of the Seal of Biliteracy. A national access study with CEOP colleagues examines Seal attainment by English learner status and district locale across all 50 states and DC (data collection began in 2026)."
 
 [[projects]]
 dates    = "2026 to Present"
 title    = "English Learner Visibility in *Kansas Public Reporting*"
 cv_title = "English Learner Visibility in Kansas Public Reporting"
-text     = "How districts report English learner results, which student groups become invisible, and how small cohort sizes create gaps in public data."
-cv_text  = "Examines district-level English learner result reporting, subgroup visibility, and how cohort size shapes public reporting gaps."
+text     = "How districts report English learner results, which student groups become invisible, and how small cohort sizes create gaps in public data. The Kansas analysis is complete (white paper, August 2026; journal version under review), and the study is now extending to about ten more states with CEOP colleagues."
+cv_text  = "Examines district-level English learner result reporting, subgroup visibility, and how cohort size shapes public reporting gaps. The Kansas analysis is complete (white paper, August 2026; journal version under review); the study is now extending to about ten more states with CEOP colleagues."
 
 
 # ------------------------------------------------------------------ education
@@ -139,11 +139,11 @@ cv_text  = "Examines district-level English learner result reporting, subgroup v
 dates    = "2023 to Present"
 title    = "Ph.D., Curriculum & Instruction, *TESOL*"
 cv_title = "Ph.D. in Curriculum & Instruction, TESOL Emphasis"
-cv_dates = "September 2023-Present"
+cv_dates = "August 2023-Present (Expected December 2028)"
 org      = "University of Kansas"
 place    = "Lawrence, KS"
-text     = "Coursework completed; advanced to candidacy in October 2026."
-cv_text  = "Coursework completed; advanced to doctoral candidacy in October 2026. Dissertation focus: validity and fairness in automated speaking assessment."
+text     = "Coursework completed; advanced to doctoral candidacy on October 23, 2026 (written and oral comprehensive examinations). Expected December 2028. Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
+cv_text  = "Coursework completed; advanced to doctoral candidacy on October 23, 2026 (written and oral comprehensive examinations). Dissertation focus: validity and fairness in automated speaking assessment. Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
 
 [[education]]
 dates    = "May 2026"
@@ -180,14 +180,14 @@ site_who = "Department of Curriculum & Teaching, University of Kansas"     # sit
 text     = "Instructor of record for undergraduate and graduate courses in TESOL methods, language assessment, practicum, multilingual learner instruction, and teacher education."
 
 [[appointments]]
-dates    = "May 2025 to Aug 2026"
-title    = "Graduate Research Assistant"
-cv_dates = "May 2025-August 2026"
-org      = "Center for Educational Opportunity Programs, University of Kansas"
+dates    = "Summers 2025 and 2026"
+title    = "Graduate Research Assistant (summer appointments)"
+cv_dates = "Summers 2025 and 2026"
+org      = "Center for Educational Opportunity Programs (CEOP), University of Kansas"
 place    = "Lawrence, KS"
-site_who = "Center for Educational Opportunity Programs, University of Kansas"
-text     = "Research synthesis and policy analysis on Seal of Biliteracy implementation, equity, outcomes, and external recognition. Project SELILLA: $2.44 million, federally funded."
-cv_text  = "Conducted research synthesis and policy analysis on Seal of Biliteracy implementation, equity, outcomes, and external recognition. Project SELILLA: $2.44 million federally funded project."
+site_who = "Center for Educational Opportunity Programs (CEOP), University of Kansas"
+text     = "Summer 2025: Project SEMILLA (Supporting Educators, Math Instructors, and Language Learners for Advancement), funded by the U.S. Department of Education, Office of English Language Acquisition ($2.44 million). Research synthesis and policy analysis on the Seal of Biliteracy, which became the *TESOL Quarterly* review. Summer 2026: conceived and led *Too Few to Count*, a study of English learner reporting in Kansas, and contributed the literature review and needs section to a U.S. Department of Labor grant proposal submitted in July 2026."
+cv_text  = "Summer 2025: Project SEMILLA (Supporting Educators, Math Instructors, and Language Learners for Advancement), funded by the U.S. Department of Education, Office of English Language Acquisition ($2.44 million). Conducted research synthesis and policy analysis on the Seal of Biliteracy, which became the *TESOL Quarterly* review.\nSummer 2026: Conceived and led *Too Few to Count*, a study of English learner reporting in Kansas. Contributed to a U.S. Department of Labor grant proposal (literature review and needs section), submitted July 2026."
 
 [[appointments]]
 dates    = "Aug 2021 to Nov 2022"
@@ -426,6 +426,19 @@ cv_status  = "Revised (minor revisions) after peer review; currently out for rev
 bibkey     = "jahanbin2026accent"
 
 [[publications]]
+id         = "toofew"
+date       = "2026-11"
+status     = "review"
+year       = 2026
+topics     = ["policy", "assessment"]
+title      = "Too Few to Count: Small English Learner Populations and Uneven Assessment Reporting"
+cite_title = "Too few to count: Small English learner populations and uneven assessment reporting"
+authors    = ["Peyman Jahanbin", "Adam M. Brazil"]
+venue      = "Bilingual Research Journal"
+label      = "Submitted November 2026"
+cv_status  = "Under review (submitted November 2026)"
+
+[[publications]]
 id         = "arxiv"
 date       = "2025-04-18"
 status     = "preprint"
@@ -466,21 +479,61 @@ topics     = ["speech", "ai"]
 title      = "A Reproducible MFCC-Based Pipeline for L1 Classification in L2 English Pronunciation Using Python"
 authors    = ["Peyman Jahanbin"]
 label      = "Artifact"
-venue_text = "Reproducible research artifact"
+venue_text = "Reproducible research artifact. Method registration: OSF, April 13, 2025, DOI 10.17605/OSF.IO/4UXGM. Code: Zenodo, April 10, 2025"
+osf        = "10.17605/OSF.IO/4UXGM"
 doi        = "10.5281/zenodo.15186197"
 
 
+# ------------------------------------------------------------------ reports and white papers (newest first)
+#  Shown in the CV under "Reports & White Papers" and on the website's Publications and Research pages.
+[[reports]]
+id        = "toofew-wp"
+date      = "Aug 2026"
+cv_date   = "August 2026"
+year      = 2026
+title     = "Too Few to Count: How a Uniform Reporting Threshold Renders Rural English Learners Invisible in Kansas"
+authors   = ["Peyman Jahanbin", "Mike Klein-Thibodeau", "Adam M. Brazil"]
+kind      = "White paper"
+publisher = "Center for Educational Opportunity Programs, University of Kansas"
+url       = "https://ceop.ku.edu/publications"
+
+
 # ------------------------------------------------------------------ selected presentations (newest first)
-#  Add  id, doi  and the cite_* fields to give a presentation its own cite buttons (see the first one).
+#  Add  id, doi  and the cite_* fields to give a presentation its own cite buttons (see the AERA one).
+[[presentations]]
+date        = "Mar 2027"
+cv_date     = "March 18, 2027"
+title       = "What Does an AI Score Justify?"
+site_venue  = "SITE 2027 · Nashville, TN · brief paper (peer-reviewed), accepted"
+cv_event    = "Society for Information Technology & Teacher Education (SITE 2027). Brief paper (peer-reviewed), accepted"
+place       = "Nashville, TN"
+
+[[presentations]]
+date        = "Mar 2027"
+cv_date     = "March 16, 2027"
+title       = "Algorithmic Suspicion: Raciolinguistic Gatekeeping of Middle Eastern Teaching Assistants"
+site_venue  = "TESOL 2027 International Convention & Expo · Houston, TX · roundtable"
+cv_event    = "TESOL 2027 International Convention & Expo. Roundtable"
+place       = "Houston, TX"
+
 [[presentations]]
 date        = "Oct 2026"
-cv_date     = "October 2026"
+cv_date     = "October 30-31, 2026"
 title       = "Beyond Symbolic Recognition: Examining Access, Fidelity, and Student Outcomes in the Seal of Biliteracy"
-site_venue  = "MIDTESOL 2027 · Overland Park, KS"
-cv_event    = "MIDTESOL 2027"
+site_venue  = "MIDTESOL 2026 · Overland Park, KS"
+cv_event    = "MIDTESOL 2026, Johnson County Community College"
 place       = "Overland Park, KS"
 coauthors   = "Sarah C. Swyers"
 doi         = "10.1002/tesq.70236"
+
+[[presentations]]
+date        = "Apr 2026"
+cv_date     = "April 11, 2026"
+title       = "Correlation Isn’t Enough: Agreement and Decision Risk for Automated Speaking Scores in a Cambridge Dataset"
+site_venue  = "NCIC 2026 Research Program · University of Southern California, Los Angeles"
+cv_event    = "National Consortium for Instruction and Cognition (NCIC) 2026 Research Program, University of Southern California"
+place       = "Los Angeles, CA"
+coauthors   = "Imogen R. Herrick"
 
 [[presentations]]
 id          = "aera"
@@ -636,10 +689,12 @@ role    = "Ad hoc reviewer"
 cv_role = "Ad Hoc Reviewer"
 #  The total shown is the sum of the counts below, so it updates when you add a journal.
 #  url = the journal's homepage; the name becomes a link to it. about = one line under it on the website.
+#  logo = optional small square image in assets/img/logos/ (the publisher's site icon), shown beside the name.
 journals = [
-  { name = "SAGE Open", count = "12 reviews", url = "https://journals.sagepub.com/home/sgo", about = "Sage. Open access, across the social sciences and humanities." },
-  { name = "Journal of Research on Technology in Education", count = "3 reviews", url = "https://www.tandfonline.com/journals/ujrt20", about = "Taylor & Francis, for ISTE. Research on technology in education." },
-  { name = "Discover Education", count = "1 review", url = "https://link.springer.com/journal/44217", about = "Springer Nature. Open access, across education research." },
+  { name = "SAGE Open", count = "12 reviews", url = "https://journals.sagepub.com/home/sgo", about = "Sage. Open access, across the social sciences and humanities.", logo = "assets/img/logos/sage.png" },
+  { name = "Journal of Research on Technology in Education", count = "3 reviews", url = "https://www.tandfonline.com/journals/ujrt20", about = "Taylor & Francis, for ISTE. Research on technology in education.", logo = "assets/img/logos/tandf.png" },
+  { name = "Discover Education", count = "1 review (2026)", url = "https://link.springer.com/journal/44217", about = "Springer Nature. Open access, across education research.", logo = "assets/img/logos/springernature.png" },
+  { name = "Scientific Reports", count = "1 review (2026)", url = "https://www.nature.com/srep/", about = "Springer Nature (Nature Portfolio). Open access, across the natural sciences, psychology, medicine and engineering.", logo = "assets/img/logos/nature.png" },
 ]
 
 [[leadership]]

@@ -15,7 +15,8 @@ def page_service():
         sq = ''.join('<i class="sq"></i>' for _ in range(n))
         blocks += (f'<article class="crs2 rep"><div class="crs2-code"><div class="crs2-count"><span class="big">{n}</span>{"review" if n == 1 else "reviews"}</div>'
                    f'<div class="crs2-sq">{sq}</div></div><div class="crs2-body">'
-                   f'<h4><a class="jn" href="{attr(j["url"])}"><i>{esc(j["name"])}</i></a></h4>'
+                   f'<h4 class="jh">' + (f'<img class="jlogo" src="{attr(j["logo"])}" alt="" width="28" height="28" loading="lazy">' if j.get('logo') else '')
+                   + f'<a class="jn" href="{attr(j["url"])}"><i>{esc(j["name"])}</i></a></h4>'
                    f'<p class="c-meta"><span>{esc(j.get("about", ""))}</span></p></div></article>')
     review = ('<section class="tsec">' + h2('Peer Review')
               + f'<p class="sec-role">{esc(pr["role"]).capitalize()}, {esc(pr["dates"])}: {total} manuscript reviews for {words[len(js)]} journals.</p>'

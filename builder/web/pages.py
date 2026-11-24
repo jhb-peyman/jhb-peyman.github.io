@@ -151,6 +151,17 @@ def page_home():
         f'<tr><th>{esc(n["date"])}</th><td>{md(n["text"])}' + (f' <a href="{attr(n["link"])}">Read</a>' if n.get('link') else '') + '</td></tr>' for n in C['news'][:5]) + '</table>'
     return shell('index.html', 'Home', hero + fig + research + news, figs=True, spectro=True)
 
+def reports_html():
+    rs = C.get('reports', [])
+    if not rs: return ''
+    out = ''
+    for r in rs:
+        t = esc(r['title'])
+        t = f'<a class="tl" href="{attr(r["url"])}">{t}</a>' if r.get('url') else f'<span class="tl">{t}</span>'
+        out += (f'<li class="pub"><div>{apa_authors("", r["authors"])} ({r["year"]}, {esc(r.get("cv_date", r["date"]).split()[0])}). {t} '
+                f'[{esc(r.get("kind", "Report"))}]. {esc(r["publisher"])}.</div></li>')
+    return h2('Reports') + f'<ul class="pubs">{out}</ul>'
+
 def page_pubs():
     st = [('all', 'All'), ('published', 'Published'), ('review', 'In review'), ('preprint', 'Preprints')]
     tp = [('all', 'All')] + [(t['key'], t['label']) for t in C['topics']]
@@ -168,7 +179,7 @@ def page_pubs():
         talks.append(f'<tr><th>{esc(t["date"])}</th><td><span class="tl2">{esc(t["title"])}</span>. <i>{esc(t["site_venue"])}</i>.{who}'
                      + (f'<div class="meta"><span class="acts"{cite}>{acts}</span></div>' if acts or cite else '') + '</td></tr>')
     body = (title('Publications') + f'<p class="lead">Journal articles, preprints and manuscripts in review. The same list is on <a href="{attr(P["scholar"])}">Google Scholar</a>.</p>'
-            + h2('Papers') + filt + ys + h2('Talks') + '<table class="kv news talks">' + ''.join(talks) + '</table>')
+            + h2('Papers') + filt + ys + reports_html() + h2('Talks') + '<table class="kv news talks">' + ''.join(talks) + '</table>')
     return shell('publications.html', 'Publications', body, cites=True, anims=True)
 
 exec(open(os.path.join(HERE, 'research_page.py')).read())   # defines page_research

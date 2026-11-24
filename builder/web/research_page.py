@@ -36,16 +36,22 @@ def page_research():
         if len(names) == 1: au = names[0]
         elif len(names) == 2: au = f'{names[0]}, &amp; {names[1]}'
         else: au = ', '.join(names[:-1]) + ', &amp; ' + names[-1]
-        mon, yr = t['cv_date'].split()
+        m_ = re.match(r'([A-Za-z]+)\s*([\d-]*),?\s*(\d{4})', t['cv_date'])
+        mon = (m_.group(1) + (' ' + m_.group(2) if m_.group(2) else '')) if m_ else t['cv_date']
+        yr = m_.group(3) if m_ else ''
         tt = esc(t['title'])
         if t.get('doi') and 'Beyond' not in t['title']:       # the MIDTESOL talk shares the article's DOI; only AERA has its own
             tt = f'<a href="https://doi.org/{attr(t["doi"])}">{tt}</a>'
         where = esc(t['cv_event']) + (f', {esc(t["place"])}' if t.get('place') else '')
         return f'<li>{au} ({yr}, {mon}). {tt} [Presentation]. {where}.</li>'
 
-    WHITE = ('<li><b>Jahanbin, P.</b>, Klein-Thibodeau, M., &amp; Brazil, A. M. (2026, August). Too few to count: How a uniform '
-             'reporting threshold renders rural English learners invisible in Kansas [White paper]. Center for Educational '
-             'Opportunity Programs, University of Kansas.</li>')
+    def report(r):                                  # reports and white papers from content.toml
+        au = apa_authors('', r['authors'])
+        mon_ = r.get('cv_date', '').split()[0] if r.get('cv_date') else ''
+        t_ = esc(r['title'])
+        t_ = f'<a href="{attr(r["url"])}">{t_}</a>' if r.get('url') else t_
+        return f'<li>{au} ({r["year"]}{", " + mon_ if mon_ else ""}). {t_} [{esc(r.get("kind", "Report"))}]. {esc(r["publisher"])}.</li>'
+    WHITE = ''.join(report(r) for r in C.get('reports', []))
 
     def refs(items, head='Papers and talks'):
         h = f'<h4>{head}</h4>' if head else ''
@@ -62,7 +68,7 @@ def page_research():
 
     s1 = ('<h2 id="scoring">Scoring Spoken English</h2>'
           + proj(0, 'Dissertation: validity and fairness of automated speaking assessment',
-                 f'<p>{esc(PR[0]["text"])} The focus is decision risk: responses where the human and the automated score land on '
+                 f'<p>{esc(PR[0]["text"])} Decision risk here means responses where the human and the automated score land on '
                  'opposite sides of a cut score, so the same answer would pass with one scorer and fail with the other.</p>' + SCORER_FIG)
           + proj(1, 'What a first language leaves in L2 speech',
                  '<p>Before a scorer can be judged, it helps to know what in the signal carries a speaker’s first language. '
@@ -71,29 +77,36 @@ def page_research():
                  'set classifies better than one built on all thirteen. A companion study uses forced alignment to locate pauses in '
                  'the same read passage: both groups pause at punctuation about equally, but the Mandarin group pauses far more '
                  'often where the text gives no punctuation cue.</p>')
-          + refs([ref('acoustic'), ref('arxiv'), ref('rsquare'), ref('pipeline'), talk('Machine Learning')]))
+          + refs([talk('What Does an AI Score'), talk('Correlation Isn'), ref('acoustic'), ref('arxiv'), ref('rsquare'), ref('pipeline'),
+                  talk('Machine Learning')]))
 
     s2 = ('<h2 id="policy">Multilingual Learners and Policy</h2>'
           + proj(2, 'The Seal of Biliteracy: access, fidelity and recognition',
                  f'<p>{esc(PR[2]["text"])} With four colleagues I reviewed fifteen years of research on the Seal for <i>TESOL '
                  'Quarterly</i>, asking who can reach it, whether programs stay true to its purpose, and what it is worth to '
                  'students afterward.</p>'
-                 '<p class="fund">I worked on this as a graduate research assistant on Project SELILLA, a $2.44 million federally '
-                 f'funded project at the Center for Educational Opportunity Programs, University of Kansas ({esc(ga["dates"])}).</p>')
+                 '<p class="fund">I worked on the review in summer 2025 as a graduate research assistant on Project SEMILLA (Supporting '
+                 'Educators, Math Instructors, and Language Learners for Advancement), a $2.44 million project funded by the U.S. '
+                 'Department of Education, Office of English Language Acquisition, at the Center for Educational Opportunity '
+                 'Programs, University of Kansas.</p>')
           + proj(3, 'English learners in Kansas public reporting',
-                 f'<p>{esc(PR[3]["text"])} Kansas withholds a subgroup result when fewer than ten students are tested. In our white '
+                 f'<p>{esc(PR[3]["text"].split(" The Kansas analysis")[0])} I conceived and led the study at CEOP in summer 2026. '
+                 'Kansas withholds a subgroup result when fewer than ten students are tested. In our white '
                  'paper, districts that publish English learner reading results enroll about 98% of the state\u2019s English learners, '
                  'yet only about 41% of the districts that serve them report: every city district, but only about a quarter of rural '
                  'ones. Once enrollment is taken into account, the rural gap is no longer statistically significant: small numbers under a '
-                 'uniform threshold, rather than rurality as such, decide who goes unseen.</p>')
-          + refs([ref('beyond'), talk('Beyond Symbolic'), WHITE]))
+                 'uniform threshold, rather than rurality as such, decide who goes unseen.'
+                 + (' The Kansas analysis' + esc(PR[3]["text"].split(" The Kansas analysis")[1]) if " The Kansas analysis" in PR[3]["text"] else '')
+                 + '</p>')
+          + refs([ref('beyond'), talk('Beyond Symbolic'), WHITE, ref('toofew')]))
 
     s3 = ('<h2 id="ai">Generative AI and Academic Integrity</h2>'
           + '<p class="sec-p">With colleagues at Kansas I developed and tested four short instruments for how university students '
             'judge the use of generative AI in their coursework, and presented work at AERA on whether campus climate or individual '
             'factors better predict academic AI integrity. A manuscript with Hyesun Cho, now in revision, looks at raciolinguistic '
-            'gatekeeping and algorithmic suspicion of Middle Eastern graduate teaching assistants.</p>'
-          + refs([ref('ethics'), ref('accent'), talk('Campus Climate')]))
+            'gatekeeping and algorithmic suspicion of Middle Eastern graduate teaching assistants, and I will lead a roundtable on '
+            'the same topic at TESOL 2027.</p>'
+          + refs([ref('ethics'), ref('accent'), talk('Algorithmic Suspicion'), talk('Campus Climate')]))
 
     s4 = (h2('Other Work')
           + '<p class="sec-p">Shorter projects in language testing, classroom learning and academic discourse.</p>'
@@ -143,7 +156,7 @@ def page_research():
 def data_section(link_of):
     def u(pid, nm): return f'<a href="{attr(link_of(BYID[pid]))}">{nm}</a>'
     rows = [
-      ('Cambridge Speak &amp; Improve corpus', 'Spoken responses with human audio ratings and transcript-based automated scores', 'dissertation'),
+      ('Cambridge Speak &amp; Improve Corpus 2025', 'Spoken responses with human holistic ratings, compared with scores from the released Speak &amp; Improve Challenge 2025 baseline scorer', 'dissertation'),
       ('Speech Accent Archive', 'Recordings of speakers reading the same English paragraph; 115 Mandarin and American English speakers in the gap study',
        u('acoustic', 'acoustic gaps') + ', ' + u('arxiv', 'MFCC framework')),
       ('PELEx reading subtest', '50 calibrated items, ten at each CEFR level from A1 to C1', u('lltm', 'LLTM study')),

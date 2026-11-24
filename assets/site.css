@@ -459,3 +459,5 @@ h3.grp+.crs2{border-top:0}
 /* publications: status line in plain type, like the Research page */
 .pub .meta .kind{font:400 13.5px/1.5 var(--sans);letter-spacing:0;text-transform:none;color:var(--mute)}
 .c-formerly{font-size:14px;color:var(--mute)}
+.jh{display:flex;align-items:center;gap:12px}
+.jlogo{width:28px;height:28px;flex:none;border-radius:6px;box-shadow:0 0 0 1px var(--rule);background:#fff;object-fit:cover}
