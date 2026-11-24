@@ -461,3 +461,5 @@ h3.grp+.crs2{border-top:0}
 .c-formerly{font-size:14px;color:var(--mute)}
 .jh{display:flex;align-items:center;gap:12px}
 .jlogo{width:28px;height:28px;flex:none;border-radius:6px;box-shadow:0 0 0 1px var(--rule);background:#fff;object-fit:cover}
+.sv-conf .place{padding-left:0}
+.sv-conf .sv-org{padding-left:40px}

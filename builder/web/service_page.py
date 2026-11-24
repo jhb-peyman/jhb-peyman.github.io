@@ -7,8 +7,9 @@ def page_service():
     words = {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five'}
     total = sum(n for _, n in js)
 
-    lead = (f'<p class="lead">I review for {words[len(js)]} journals and have served on student and institutional boards at the University of '
-            'Kansas and in Isfahan.</p>')
+    confs = pr.get('conferences', [])
+    lead = (f'<p class="lead">I review for {words[len(js)]} journals' + (' and for TESOL International Association' if any('TESOL' in x.get('org', '') for x in confs) else '')
+            + ', and have served on student and institutional boards at the University of Kansas and in Isfahan.</p>')
 
     blocks = ''
     for j, n in sorted(js, key=lambda x: -x[1]):
@@ -20,7 +21,13 @@ def page_service():
                    f'<p class="c-meta"><span>{esc(j.get("about", ""))}</span></p></div></article>')
     review = ('<section class="tsec">' + h2('Peer Review')
               + f'<p class="sec-role">{esc(pr["role"]).capitalize()}, {esc(pr["dates"])}: {total} manuscript reviews for {words[len(js)]} journals.</p>'
-              + f'<div class="sv-rev">{blocks}</div></section>')
+              + f'<div class="sv-rev">{blocks}</div>'
+              + (('<h3 class="grp">Conference proposals</h3><div class="sv-conf">' + ''.join(
+                    f'<div class="place"><h3 class="jh">' + (f'<img class="jlogo" src="{attr(x["logo"])}" alt="" width="28" height="28" loading="lazy">' if x.get('logo') else '')
+                    + (f'<a class="jn" href="{attr(x["url"])}">{esc(x["name"])}</a>' if x.get('url') else esc(x['name']))
+                    + f' <span class="p-when">{esc(x.get("date", ""))}</span></h3>'
+                    f'<p class="sv-org">{esc(x.get("role", "Proposal reviewer"))}, {esc(x.get("org", ""))}</p></div>' for x in confs) + '</div>') if confs else '')
+              + '</section>')
 
     def entry(l):
         txt = f'<p>{esc(l["text"])}</p>' if l.get('text') else ''

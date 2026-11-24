@@ -696,6 +696,10 @@ journals = [
   { name = "Discover Education", count = "1 review (2026)", url = "https://link.springer.com/journal/44217", about = "Springer Nature. Open access, across education research.", logo = "assets/img/logos/springernature.png" },
   { name = "Scientific Reports", count = "1 review (2026)", url = "https://www.nature.com/srep/", about = "Springer Nature (Nature Portfolio). Open access, across the natural sciences, psychology, medicine and engineering.", logo = "assets/img/logos/nature.png" },
 ]
+#  Conference proposal reviewing (shown under Peer Review on the Service page and in the CV)
+conferences = [
+  { name = "TESOL 2026 Virtual Graduate Student Forum", role = "Proposal reviewer", org = "TESOL International Association", date = "November 2026", url = "https://www.tesol.org/", logo = "assets/img/logos/tesol.png" },
+]
 
 [[leadership]]
 dates  = "2025 to 2026"

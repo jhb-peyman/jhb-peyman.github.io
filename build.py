@@ -907,7 +907,9 @@ def cv_body(c, today):
         out.append("<h2>Peer Review Service</h2>" + cv_entry(esc(pr.get("cv_role") or pr["role"]), esc(cv_dates(pr["dates"])), "", "", esc(cv_review_text(pr)))
                    + '<ul class="b">' + "".join(
                        f'<li><i>' + (f'<a href="{attr(j["url"])}">{esc(j["name"])}</a>' if j.get("url") else esc(j["name"])) + f'</i>, {esc(j["count"])}</li>'
-                       for j in pr.get("journals", [])) + "</ul>")
+                       for j in pr.get("journals", [])) + "</ul>"
+                   + "".join(cv_entry(esc(f'{x.get("role", "Proposal reviewer").title()}, {x["name"]}'), esc(x.get("date", "")), esc(get(x, "org")), "", "")
+                             for x in pr.get("conferences", [])))
     if c.get("projects"):
         out.append("<h2>Research Projects</h2>" + "".join(
             cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(cv_dates(x["dates"])), esc(get(x, "org")), "", inline(x.get("cv_text") or get(x, "text")))
@@ -1064,6 +1066,8 @@ def build_docx(c, today, path):
         entry(pr.get("cv_role") or pr["role"], cv_dates(pr["dates"]), "", "", cv_review_text(pr))
         for j in pr.get("journals", []):
             d.para([d.run("\u2022"), d.tab(), d.run(j["name"], i=True, color=NAVY if j.get("url") else None, link=j.get("url")), d.run(", " + j["count"])], left=360, hanging=240, after=40, keep_lines=True)
+        for x in pr.get("conferences", []):
+            entry(f'{x.get("role", "Proposal reviewer").title()}, {x["name"]}', x.get("date", ""), get(x, "org"), "", "")
     if c.get("projects"):
         h2("Research Projects")
         for x in c["projects"]:
