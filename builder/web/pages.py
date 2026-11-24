@@ -32,7 +32,7 @@ def ic(k, fill=False):
     st = 'fill="currentColor" stroke="none"' if fill else 'fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"'
     return f'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true" {st}>{ICON[k]}</svg>'
 
-PAGES = [('research.html', 'Research'), ('publications.html', 'Publications'), ('teaching.html', 'Teaching'), ('service.html', 'Service')]
+PAGES = [('research.html', 'Research'), ('publications.html', 'Publications and Talks'), ('teaching.html', 'Teaching'), ('service.html', 'Service')]
 
 def shell(page, ttl, body, figs=False, cites=False, anims=False, spectro=False):
     nav = ''.join(f'<a href="{h}"{" aria-current=\"page\"" if h == page else ""}>{t}</a>' for h, t in PAGES)
@@ -178,9 +178,9 @@ def page_pubs():
         who = f' With {esc(t["coauthors"])}.' if t.get('coauthors') else ''
         talks.append(f'<tr><th>{esc(t["date"])}</th><td><span class="tl2">{esc(t["title"])}</span>. <i>{esc(t["site_venue"])}</i>.{who}'
                      + (f'<div class="meta"><span class="acts"{cite}>{acts}</span></div>' if acts or cite else '') + '</td></tr>')
-    body = (title('Publications') + f'<p class="lead">Journal articles, preprints and manuscripts in review. The same list is on <a href="{attr(P["scholar"])}">Google Scholar</a>.</p>'
+    body = (title('Publications and Talks') + f'<p class="lead">Journal articles, preprints, manuscripts in review, reports and conference talks. The papers are also on <a href="{attr(P["scholar"])}">Google Scholar</a>.</p>'
             + h2('Papers') + filt + ys + reports_html() + h2('Talks') + '<table class="kv news talks">' + ''.join(talks) + '</table>')
-    return shell('publications.html', 'Publications', body, cites=True, anims=True)
+    return shell('publications.html', 'Publications and Talks', body, cites=True, anims=True)
 
 exec(open(os.path.join(HERE, 'research_page.py')).read())   # defines page_research
 

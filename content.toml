@@ -54,7 +54,7 @@ research_interests = "Language assessment; automated speaking assessment; validi
 teaching_header  = "University of Kansas, Department of Curriculum & Teaching"
 teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 teaching assignments, 2023-2026; two more assigned for Spring 2027."
 methodological_training = [
-  { label = "Quantitative",  text = "EPSY 710 Introductory Statistical Analysis; EPSY 905 Fundamentals of Multivariate Modeling; advanced quantitative methods." },
+  { label = "Quantitative",  text = "EPSY 710 Introductory Statistical Analysis; EPSY 905 Fundamentals of Multivariate Modeling; SW 981 Advanced Quantitative Research Methods I; SW 983 Advanced Quantitative Research Methods II." },
   { label = "Qualitative",   text = "C&T 808 Qualitative Research: Curriculum Inquiry." },
   { label = "Research design and teaching", text = "LA&S 720 Introduction to Language Teaching Research; C&T 996 Teaching and Learning in the College Classroom." },
 ]

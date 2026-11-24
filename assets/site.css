@@ -171,7 +171,7 @@ p+p{margin-top:10px}
   .bar-in{height:auto;padding:14px 16px 0;flex-wrap:wrap;gap:0}
   .brand{order:1}
   .theme{order:2}
-  .bar nav{order:3;width:100%;gap:15px;margin-top:6px;font-size:14px;overflow-x:auto;scrollbar-width:none}
+  .bar nav{order:3;width:100%;gap:0 18px;margin-top:6px;font-size:14px;flex-wrap:wrap}
   .bar nav a{padding:8px 0 10px;white-space:nowrap}
   .page{padding:28px 16px 36px}
   .foot{padding:16px 16px 34px}
