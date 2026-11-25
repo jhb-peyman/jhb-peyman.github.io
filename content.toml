@@ -180,10 +180,10 @@ cv_text  = "Examines district-level English learner result reporting, subgroup v
 dates    = "2023 to Present"
 title    = "Ph.D., Curriculum & Instruction, *TESOL*"
 cv_title = "Ph.D. in Curriculum & Instruction, TESOL Emphasis"
-cv_dates = "August 2023-Present (Expected December 2028)"
+cv_dates = "August 2023-Present"
 org      = "University of Kansas"
 place    = "Lawrence, KS"
-text     = "Coursework completed; advanced to doctoral candidacy on October 23, 2026 (written and oral comprehensive examinations). Expected December 2028. Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
+text     = "Coursework completed; advanced to doctoral candidacy on October 23, 2026 (written and oral comprehensive examinations). Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
 cv_text  = "Coursework completed; advanced to doctoral candidacy on October 23, 2026 (written and oral comprehensive examinations). Dissertation focus: validity and fairness in automated speaking assessment. Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
 
 [[education]]
