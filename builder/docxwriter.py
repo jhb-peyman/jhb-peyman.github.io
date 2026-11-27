@@ -22,7 +22,7 @@ class Doc:
             self.links.append(url)
         return f"rIdL{self.links.index(url) + 1}"
 
-    def run(self, text, b=False, i=False, color=None, sz=10, caps=False, link=None):
+    def run(self, text, b=False, i=False, color=None, sz=10, caps=False, link=None, sp=None):
         pr = ""
         if b:
             pr += "<w:b/><w:bCs/>"
@@ -32,6 +32,8 @@ class Doc:
             pr += "<w:caps/>"
         if color:
             pr += f'<w:color w:val="{color}"/>'
+        if sp:
+            pr += f'<w:spacing w:val="{int(sp)}"/>'
         if sz:
             pr += f'<w:sz w:val="{int(sz * 2)}"/><w:szCs w:val="{int(sz * 2)}"/>'
         r = f'<w:r>{"<w:rPr>" + pr + "</w:rPr>" if pr else ""}<w:t xml:space="preserve">{_x(text)}</w:t></w:r>'
@@ -40,19 +42,23 @@ class Doc:
         return r
 
     @staticmethod
+    def br():
+        return "<w:r><w:br/></w:r>"
+
+    @staticmethod
     def tab():
         return "<w:r><w:tab/></w:r>"
 
     # ---- blocks
     def para(self, runs, jc=None, before=0, after=0, right_tab=False, keep_next=False, keep_lines=False,
-             border=False, left=None, hanging=None, line=None):
+             border=False, left=None, hanging=None, line=None, border_color="B9C6D8", border_sz=10):
         pr = ""
         if keep_next:
             pr += "<w:keepNext/>"
         if keep_lines:
             pr += "<w:keepLines/>"
         if border:
-            pr += '<w:pBdr><w:bottom w:val="single" w:sz="10" w:space="2" w:color="B9C6D8"/></w:pBdr>'
+            pr += f'<w:pBdr><w:bottom w:val="single" w:sz="{border_sz}" w:space="2" w:color="{border_color}"/></w:pBdr>'
         if right_tab:
             pr += f'<w:tabs><w:tab w:val="right" w:pos="{self.text_width}"/></w:tabs>'
         pr += f'<w:spacing w:before="{before}" w:after="{after}"' + (f' w:line="{line}" w:lineRule="auto"' if line else "") + "/>"

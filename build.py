@@ -878,99 +878,201 @@ def cv_review_text(pr):
     return (total + " " if total else "") + f"manuscript reviews for {where}, {cv_dates(pr['dates'])}."
 
 
+MONTHS = {"January": "Jan", "February": "Feb", "March": "Mar", "April": "Apr", "June": "Jun", "July": "Jul",
+          "August": "Aug", "September": "Sep", "October": "Oct", "November": "Nov", "December": "Dec"}
+
+
+def gutter_text(s):
+    """A date for the CV's left column, with short months."""
+    s = cv_dates(s or "")
+    for k, v in MONTHS.items():
+        s = s.replace(k, v)
+    return s
+
+
+def gutter_date(s):
+    """gutter_text as HTML, with a line break allowed after the hyphen."""
+    return esc(gutter_text(s)).replace("-", "-<wbr>")
+
+
+def cv_row(gut, title="", org="", text="", cls=""):
+    """One CV line: the date (or year, or code) on the left, the entry on the right."""
+    body = f'<div class="t">{title}</div>' if title else ""
+    if org:
+        body += f'<div class="o">{org}</div>'
+    if text:
+        body += "".join(f'<div class="x">{t}</div>' for t in text.split("\n"))
+    return f'<div class="row{(" " + cls) if cls else ""}"><div class="g">{gut}</div><div class="b">{body}</div></div>'
+
+
+def stop(t):
+    """End a title with a full stop unless it already ends with ? or !."""
+    return t if t.rstrip("”’\"'").endswith(("?", "!", ".")) else t + "."
+
+
+def org_place(x):
+    return ", ".join(esc(v) for v in (get(x, "org"), get(x, "place")) if v)
+
+
 def cv_body(c, today):
     p, cv = c["person"], c.get("cv", {})
     own = own_name(c)
     out = []
-    contact = []
+
+    # ---- header: name and title on the left, contact on the right
+    lines, profiles = [], []
     for it in cv.get("contact_line", []):
+        low = it.lower()
         if "@" in it:
-            contact.append(f'<a href="mailto:{attr(it)}">{esc(it)}</a>')
-        elif it.lower().startswith("linkedin") and p.get("linkedin"):
-            contact.append(f'<a href="{attr(p["linkedin"])}">{esc(it)}</a>')
-        elif "scholar" in it.lower() and p.get("scholar"):
-            contact.append(f'<a href="{attr(p["scholar"])}">{esc(it)}</a>')
-        elif it.lower().startswith("orcid") and p.get("orcid"):
-            contact.append(f'<a href="https://orcid.org/{attr(p["orcid"])}">{esc(it)}</a>')
+            lines.append(f'<a href="mailto:{attr(it)}">{esc(it)}</a>')
+        elif low.startswith("linkedin") and p.get("linkedin"):
+            profiles.append(f'<a href="{attr(p["linkedin"])}">LinkedIn</a>')
+        elif "scholar" in low and p.get("scholar"):
+            profiles.append(f'<a href="{attr(p["scholar"])}">{esc(it)}</a>')
+        elif low.startswith("orcid") and p.get("orcid"):
+            profiles.append(f'<a href="https://orcid.org/{attr(p["orcid"])}">{esc(it)}</a>')
         elif p.get("site_url") and it.rstrip("/") in p["site_url"]:
-            contact.append(f'<a href="{attr(p["site_url"])}">{esc(it)}</a>')
+            lines.append(f'<a href="{attr(p["site_url"])}">{esc(it)}</a>')
         else:
-            contact.append(esc(it))
-    out.append(f'<header class="top"><h1>{esc(own)}</h1><div class="sub">{esc(get(cv, "subtitle"))}</div>'
-               f'<div class="contact">{"<span class=sep>|</span>".join(contact)}</div></header>')
+            lines.append(esc(it))
+    if profiles:
+        lines.append(" &nbsp;|&nbsp; ".join(profiles))
+    out.append(f'<header class="top"><div class="head-l"><h1>{esc(own)}</h1>'
+               f'<div class="sub">{esc(cv.get("headline") or get(cv, "subtitle"))}</div></div>'
+               f'<div class="head-r">{"<br>".join(lines)}</div></header>')
+
     if cv.get("research_interests"):
-        out.append(f'<h2>Research Interests</h2><p>{inline(cv["research_interests"])}</p>')
+        out.append(f'<h2>Research Interests</h2><p class="lede">{inline(cv["research_interests"])}</p>')
+
+    def appt(x):
+        return cv_row(gutter_date(x.get("cv_dates") or x["dates"]), esc(plain(x.get("cv_title") or x["title"])), org_place(x),
+                      inline(x.get("cv_text") or get(x, "text")))
     if c.get("education"):
-        out.append("<h2>Education</h2>" + "".join(
-            cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(x.get("cv_dates") or cv_dates(x["dates"])), esc(get(x, "org")), esc(get(x, "place")),
-                     inline(x.get("cv_text") or get(x, "text"))) for x in c["education"]))
-    def appt_html(xs):
-        return "".join(cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(x.get("cv_dates") or cv_dates(x["dates"])), esc(get(x, "org")),
-                                esc(get(x, "place")), inline(x.get("cv_text") or get(x, "text"))) for x in xs)
+        out.append("<h2>Education</h2>" + "".join(appt(x) for x in c["education"]))
     academic = [x for x in c.get("appointments", []) if not x.get("cv_section")]
     if academic:
-        out.append("<h2>Academic Appointments</h2>" + appt_html(academic))
-    groups = [("published", "Peer-Reviewed Publications &amp; Accepted Manuscripts"),
-              ("review", "Manuscripts in Review / Editorial Processing"),
-              ("preprint", "Preprints &amp; Reproducible Research")]
+        out.append("<h2>Academic Appointments</h2>" + "".join(appt(x) for x in academic))
+
+    # ---- publications: one section, grouped
     pubs = sorted_pubs(c)
-    def pub_html(x):
-        it, tail, doi = cv_pub_parts(x)
-        line = f"<i>{esc(it)}</i>{esc(tail)}"
-        if doi:
-            line += f'. DOI: <a href="https://doi.org/{attr(doi)}">{esc(doi)}</a>'
-        return f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>'
+    def ref(x):
+        au = cv_authors(x["authors"], own)
+        t = esc(plain(x["title"]))
+        st = x["status"]
+        if st == "published":
+            v = f'<i>{esc(x.get("venue") or x.get("venue_text"))}'
+            if x.get("volume"):
+                v += f', {esc(x["volume"])}</i>' + (f'({esc(x["issue"])})' if x.get("issue") else "")
+            else:
+                v += "</i>"
+            if x.get("pages"):
+                v += ", " + esc(x["pages"])
+            elif x.get("article"):
+                v += ", Article " + esc(x["article"])
+            if x.get("online") and not x.get("volume"):
+                v += ". Advance online publication"
+            gut = str(x["year"])
+        elif st == "review":
+            v = f'<i>{esc(x.get("venue") or x.get("venue_text"))}</i>. <span class="st">{esc(x.get("cv_status") or x.get("label") or "Under review")}</span>'
+            gut = "In review"
+        else:
+            if x.get("venue_text"):
+                v = esc(x["venue_text"])
+            else:
+                v = f'<i>{esc(x["venue"])}</i>. <span class="st">{esc(x.get("cv_note") or "Preprint")}</span>'
+            gut = str(x["year"])
+        line = f"{au}. {stop(t)} {v}."
+        if x.get("doi"):
+            line += f' <a href="https://doi.org/{attr(x["doi"])}">https://doi.org/{esc(x["doi"])}</a>'
+        return cv_row(gut, "", "", line, "ref")
+    groups = [("published", "Peer-Reviewed Journal Articles"), ("review", "Manuscripts in Review"),
+              ("preprint", "Preprints and Research Artifacts")]
+    others = [x for x in pubs if x.get("cv_section") == "other"]
+    if pubs or c.get("reports"):
+        out.append("<h2>Publications</h2>")
     for st, head in groups:
         items = [x for x in pubs if x["status"] == st and x.get("cv_section") != "other"]
-        if not items:
-            continue
-        out.append(f"<h2>{head}</h2>")
-        out.extend(pub_html(x) for x in items)
+        if items:
+            out.append(f"<h3>{head}</h3>" + "".join(ref(x) for x in items))
     if c.get("reports"):
-        out.append("<h2>Reports &amp; White Papers</h2>")
+        out.append("<h3>Reports and White Papers</h3>")
         for x in c["reports"]:
-            line = f'[{esc(x.get("kind", "Report"))}]. <i>{esc(x["publisher"])}</i>. {esc(x.get("cv_date") or x["date"])}'
+            line = f'{cv_authors(x["authors"], own)}. {esc(plain(x["title"]))} [{esc(x.get("kind", "Report"))}]. {esc(x["publisher"])}.'
             if x.get("url"):
-                line += f'. <a href="{attr(x["url"])}">{esc(x["url"].replace("https://", ""))}</a>'
-            out.append(f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>')
-    others = [x for x in pubs if x.get("cv_section") == "other"]
+                line += f' <a href="{attr(x["url"])}">{esc(x["url"].replace("https://", ""))}</a>'
+            out.append(cv_row(gutter_date(x.get("cv_date") or x["date"]), "", "", line, "ref"))
     if others:
-        out.append(f'<h2>{esc(cv.get("other_publications_heading", "Other Publications"))}</h2>')
-        out.extend(pub_html(x) for x in others)
-    pr = c.get("peer_review")
-    if pr:
-        out.append("<h2>Peer Review Service</h2>" + cv_entry(esc(pr.get("cv_role") or pr["role"]), esc(cv_dates(pr["dates"])), "", "", esc(cv_review_text(pr)))
-                   + '<ul class="b">' + "".join(
-                       f'<li><i>' + (f'<a href="{attr(j["url"])}">{esc(j["name"])}</a>' if j.get("url") else esc(j["name"])) + f'</i>, {esc(j["count"])}</li>'
-                       for j in pr.get("journals", [])) + "</ul>"
-                   + "".join(cv_entry(esc(f'{x.get("role", "Proposal reviewer").title()}, {x["name"]}'), esc(x.get("date", "")), esc(get(x, "org")), "", "")
-                             for x in pr.get("conferences", [])))
+        out.append(f'<h3>{esc(cv.get("other_publications_heading", "Other Publications"))}</h3>' + "".join(ref(x) for x in others))
+
+    if c.get("presentations"):
+        rows = []
+        for x in c["presentations"]:
+            ev = x.get("cv_event") or x.get("site_venue", "")
+            evi, _, rest = ev.partition(". ")
+            line = f'{stop(esc(x["title"]))} <i>{esc(evi)}</i>' + (f', {esc(x["place"])}' if x.get("place") else "") + "."
+            if rest:
+                line += f' {esc(rest[:1].upper() + rest[1:])}.'
+            if x.get("coauthors"):
+                line += f' With {esc(x["coauthors"])}.'
+            rows.append(cv_row(gutter_date(x.get("date", "")), "", "", line, "ref"))
+        out.append("<h2>Conference Presentations</h2>" + "".join(rows))
+
     if c.get("projects"):
         out.append("<h2>Research Projects</h2>" + "".join(
-            cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(cv_dates(x["dates"])), esc(get(x, "org")), "", inline(x.get("cv_text") or get(x, "text")))
+            cv_row(gutter_date(x["dates"]), esc(plain(x.get("cv_title") or x["title"])), esc(get(x, "org")), inline(x.get("cv_text") or get(x, "text")))
             for x in c["projects"]))
-    if c.get("teaching"):
+
+    # ---- teaching: KU courses, then Iran
+    iran = [x for x in c.get("appointments", []) if x.get("cv_section") == "teaching_iran"]
+    if c.get("teaching") or iran:
         out.append("<h2>Teaching Experience</h2>")
+    if c.get("teaching"):
         if cv.get("teaching_header"):
-            out.append(f'<div class="tuni">{esc(cv["teaching_header"])}</div>')
+            out.append(f'<h3>{esc(cv["teaching_header"])}</h3>')
         if cv.get("teaching_summary"):
-            out.append(f'<div class="tsum">{esc(cv["teaching_summary"])}</div>')
+            out.append(f'<p class="lede note">{esc(cv["teaching_summary"])}</p>')
         for g in c["teaching"]:
-            out.append(f'<h3 class="grp">{esc(g["group"])} Courses</h3>' if g["group"] in ("Graduate", "Undergraduate") else f'<h3 class="grp">{esc(g["group"])}</h3>')
+            out.append(f'<h4>{esc(g["group"])} courses</h4>' if g["group"] in ("Graduate", "Undergraduate") else f'<h4>{esc(g["group"])}</h4>')
             for k in g.get("courses", []):
                 terms = k.get("cv_terms") or cv_dates(k.get("terms", "")).replace(" · ", "; ").replace("\n", " ")
-                out.append(f'<div class="crs"><div class="n"><b>{esc(k["code"])} {esc(k.get("cv_title") or k["title"])}</b></div><div class="tm">{esc(terms)}</div></div>')
-                if (k.get("cv_detail") or k.get("cv_practicum")):
-                    out.append(f'<div class="crsn">{esc(k.get("cv_detail") or k["cv_practicum"])}</div>')
-    iran = [x for x in c.get("appointments", []) if x.get("cv_section") == "teaching_iran"]
+                note = k.get("cv_detail") or k.get("cv_practicum")
+                out.append(f'<div class="row crs"><div class="g">{esc(k["code"])}</div><div class="b"><div class="ln"><span>{esc(k.get("cv_title") or k["title"])}</span>'
+                           f'<span class="tm">{esc(terms)}</span></div>' + (f'<div class="nt">{esc(note)}</div>' if note else "") + "</div></div>")
     if iran:
-        out.append(f'<h2>{esc(cv.get("iran_teaching_heading", "Teaching Experience (Iran)"))}</h2>' + appt_html(iran))
-    if c.get("presentations"):
-        out.append("<h2>Selected Conference Presentations</h2>" + "".join(
-            cv_entry(esc(x["title"]), esc(x.get("cv_date") or x["date"]), esc(x.get("cv_event") or x.get("site_venue", "")), esc(get(x, "place")))
-            for x in c["presentations"]))
+        out.append(f'<h3>{esc(cv.get("iran_teaching_heading_short", "English Language Teaching, Iran"))}</h3>' + "".join(appt(x) for x in iran))
+
+    # ---- service: peer review and leadership
+    pr = c.get("peer_review")
+    if pr or c.get("leadership"):
+        out.append("<h2>Service</h2>")
+    if pr:
+        js = ", ".join(f'<i>{esc(j["name"])}</i> ({esc(j["count"].split()[0])})' for j in pr.get("journals", []))
+        total = review_total(pr)
+        n = len(pr.get("journals", []))
+        words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
+        lead = f'{total} manuscript reviews for {words.get(n, n)} journals: ' if total else ""
+        out.append("<h3>Peer Review</h3>" + cv_row(gutter_date(pr["dates"]), esc(pr.get("cv_role") or pr["role"]), "", lead + js + "."))
+        for x in pr.get("conferences", []):
+            out.append(cv_row(gutter_date(x.get("date", "")), esc(f'{x.get("role", "Proposal reviewer").title()}, {x["name"]}'), esc(get(x, "org"))))
+    if c.get("leadership"):
+        out.append("<h3>Leadership</h3>" + "".join(
+            cv_row(gutter_date(x["dates"]), esc(x.get("cv_role") or x["role"]), ", ".join(esc(v) for v in (x.get("cv_org") or x.get("org", ""), get(x, "place")) if v),
+                   esc(get(x, "text")))
+            for x in c["leadership"]))
+
+    if c.get("honors"):
+        rows = []
+        for h in c["honors"]:
+            note = (h.get("cv_note") or h.get("note") or "").replace("  |  ", ", ").replace(" · ", ", ")
+            m = re.search(r",?\s*\b((?:19|20)\d\d)\s*$", note)
+            yr = m.group(1) if m else ""
+            note = note[:m.start()] if m else note
+            rows.append(f'<div class="hn"><span><b>{esc(h["name"])}</b>{", " + esc(note) if note else ""}</span><span class="tm">{yr}</span></div>')
+        out.append('<h2>Awards and Honors</h2><div class="hon">' + "".join(rows) + "</div>")
+
+    if c.get("methods") or cv.get("methodological_training"):
+        out.append("<h2>Research Methods and Training</h2>")
     if c.get("methods"):
-        lis = []
         for m in c["methods"]:
             items = []
             for it in m.get("items", []):
@@ -979,31 +1081,19 @@ def cv_body(c, today):
                     items.append(f"{a.strip()} ({b.strip()})")
                 else:
                     items.append(lowfirst(it))
-            lis.append(f'<li><b>{esc(m.get("cv_title") or m["title"])}:</b> {esc(human_join(items))}.</li>')
-        out.append('<h2>Research Methods &amp; Technical Skills</h2><ul class="b">' + "".join(lis) + "</ul>")
+            out.append(f'<p class="plain"><b>{esc(m.get("cv_title") or m["title"])}:</b> {esc(human_join(items))}.</p>')
     if cv.get("methodological_training"):
-        out.append('<h2>Methodological Training</h2><ul class="b">' + "".join(
-            f'<li><b>{esc(m["label"])}:</b> {esc(m["text"])}</li>' for m in cv["methodological_training"]) + "</ul>")
-    if c.get("leadership"):
-        out.append("<h2>Academic &amp; Professional Service</h2>" + "".join(
-            cv_entry(esc(x.get("cv_role") or x["role"]), esc(cv_dates(x["dates"])), esc(x.get("cv_org") or x.get("org", "")), esc(get(x, "place")), esc(get(x, "text")))
-            for x in c["leadership"]))
-    if c.get("honors"):
-        out.append("<h2>Awards, Scholarships &amp; Honors</h2>" + "".join(
-            f'<div class="hon"><b>{esc(h["name"])}</b>{", " + esc(h.get("cv_note") or h["note"]) if (h.get("cv_note") or h.get("note")) else ""}</div>'
-            for h in c["honors"]))
+        out.append("<h3>Graduate Methods Coursework</h3>" + "".join(
+            f'<p class="plain"><b>{esc(m["label"])}:</b> {esc(m["text"])}</p>' for m in cv["methodological_training"]))
+
     for e in c.get("extra_sections", []):
         if e.get("cv", True) is False or not e.get("items"):
             continue
-        out.append(f"<h2>{esc(e.get('cv_title') or e['title'])}</h2>" + "".join(
-            cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(x.get("cv_dates") or cv_dates(get(x, "dates"))), esc(get(x, "org")), esc(get(x, "place")),
-                     inline(x.get("cv_text") or get(x, "text")))
-            for x in e["items"]))
+        out.append(f"<h2>{esc(e.get('cv_title') or e['title'])}</h2>" + "".join(appt(x) for x in e["items"]))
     if c.get("languages"):
-        out.append('<h2>Languages</h2><p class="langs">' + '<span class="sep">|</span>'.join(
+        out.append('<h2>Languages</h2><p class="lede langs">' + '<span class="sep">|</span>'.join(
             f'<b>{esc(l["name"])}</b> ({esc(l.get("cv_level") or l["level"])})' for l in c["languages"]) + "</p>")
     return "\n".join(out)
-
 
 NAVY, GRAY = "1F4E79", "5C6975"
 
@@ -1028,174 +1118,235 @@ def docx_author_runs(d, authors, own):
 
 
 def build_docx(c, today, path):
+    """The Word CV, in the same layout as the PDF: dates on the left, entries on the right."""
     d = Doc(10166)
     p, cv = c["person"], c.get("cv", {})
     own = own_name(c)
+    GUT, BODY = 1720, 10166 - 1720
 
     def h2(text):
-        d.para([d.run(text, b=True, caps=True, color=NAVY, sz=11.5)], before=200, after=100, border=True, keep_next=True)
+        d.para([d.run(text, b=True, caps=True, color=NAVY, sz=10.5, sp=19)], before=200, after=100, border=True, border_sz=5, keep_next=True)
 
-    def entry(title, dates="", sub_l="", sub_r="", text=""):
-        has_sub, has_text = bool(sub_l or sub_r), bool(text)
-        rows = [([([d.run(title, b=True, sz=10.5)], None), ([d.run(dates, b=True)], "right")], 0 if (has_sub or has_text) else 100)]
-        if has_sub:
-            rows.append(([([d.run(sub_l, i=True, color=GRAY, sz=9.5)], None), ([d.run(sub_r, i=True, color=GRAY, sz=9.5)], "right")], 0 if has_text else 100))
-        d.table(rows, [6600, 3566], keep_next=has_text)
-        if has_text:
-            d.para(rich(d, text), after=100, keep_lines=True, before=20)
+    def h3(text, before=150):
+        d.para([d.run(text, b=True, color=NAVY)], left=GUT, before=before, after=70, keep_next=True)
 
-    # header
-    d.para([d.run(own, b=True, color=NAVY, sz=27)], jc="center", after=40)
-    if cv.get("subtitle"):
-        d.para([d.run(cv["subtitle"], sz=11)], jc="center", before=40)
-    contact = []
+    def h4(text):
+        d.para([d.run(text, i=True, color=GRAY, sz=9.5)], left=GUT, before=110, after=50, keep_next=True)
+
+    def lines(body, runs):
+        return body + ([d.br()] if body else []) + runs
+
+    def row(gut, title="", org="", text="", runs=None, after=80):
+        body = []
+        if title:
+            body = [d.run(title, b=True)]
+        if org:
+            body = lines(body, [d.run(org, i=True, color=GRAY, sz=9.5)])
+        for t in (text.split("\n") if text else []):
+            body = lines(body, rich(d, t))
+        if runs:
+            body = lines(body, runs)
+        d.table([([([d.run(gut, color=GRAY, sz=9.5)], None), (body, None)], after)], [GUT, BODY])
+
+    def place(x):
+        return ", ".join(v for v in (get(x, "org"), get(x, "place")) if v)
+
+    def appt(x):
+        row(gutter_text(x.get("cv_dates") or x["dates"]), plain(x.get("cv_title") or x["title"]), place(x), x.get("cv_text") or get(x, "text"))
+
+    # ---- header: name and title on the left, contact on the right
+    right, profiles = [], []
     for it in cv.get("contact_line", []):
+        low = it.lower()
         if "@" in it:
-            contact.append(d.run(it, color=GRAY, link="mailto:" + it))
-        elif it.lower().startswith("linkedin") and p.get("linkedin"):
-            contact.append(d.run(it, color=GRAY, link=p["linkedin"]))
-        elif "scholar" in it.lower() and p.get("scholar"):
-            contact.append(d.run(it, color=GRAY, link=p["scholar"]))
-        elif it.lower().startswith("orcid") and p.get("orcid"):
-            contact.append(d.run(it, color=GRAY, link="https://orcid.org/" + p["orcid"]))
+            right.append(d.run(it, color=GRAY, sz=9.5, link="mailto:" + it))
+        elif low.startswith("linkedin") and p.get("linkedin"):
+            profiles.append(d.run("LinkedIn", color=GRAY, sz=9.5, link=p["linkedin"]))
+        elif "scholar" in low and p.get("scholar"):
+            profiles.append(d.run(it, color=GRAY, sz=9.5, link=p["scholar"]))
+        elif low.startswith("orcid") and p.get("orcid"):
+            profiles.append(d.run(it, color=GRAY, sz=9.5, link="https://orcid.org/" + p["orcid"]))
         elif p.get("site_url") and it.rstrip("/") in p["site_url"]:
-            contact.append(d.run(it, color=GRAY, link=p["site_url"]))
+            right.append(d.run(it, color=GRAY, sz=9.5, link=p["site_url"]))
         else:
-            contact.append(d.run(it, color=GRAY))
-    runs = []
-    for k, r in enumerate(contact):
-        if k:
-            runs.append(d.run("   |   ", color=GRAY))
-        runs.append(r)
-    d.para(runs, jc="center", before=20, after=200)
+            right.append(d.run(it, color=GRAY, sz=9.5))
+    rr = []
+    for k, r in enumerate(right):
+        rr += ([d.br()] if k else []) + [r]
+    if profiles:
+        prof = []
+        for k, r in enumerate(profiles):
+            prof += ([d.run("  |  ", color=GRAY, sz=9.5)] if k else []) + [r]
+        rr += [d.br()] + prof
+    left = [d.run(own, b=True, color=NAVY, sz=25), d.br(), d.run(cv.get("headline") or get(cv, "subtitle"), sz=10.5)]
+    d.table([([(left, None), (rr, "right")], 0)], [7166, 3000])
+    d.para([d.run("", sz=4)], border=True, border_color=NAVY, border_sz=12, after=60)
 
     if cv.get("research_interests"):
         h2("Research Interests")
-        d.para(rich(d, cv["research_interests"]), after=100)
-    def appt_docx(xs):
-        for x in xs:
-            entry(plain(x.get("cv_title") or x["title"]), x.get("cv_dates") or cv_dates(x["dates"]), get(x, "org"), get(x, "place"),
-                  x.get("cv_text") or get(x, "text"))
+        d.para(rich(d, cv["research_interests"]), left=GUT, after=60)
     if c.get("education"):
         h2("Education")
-        appt_docx(c["education"])
+        for x in c["education"]:
+            appt(x)
     academic = [x for x in c.get("appointments", []) if not x.get("cv_section")]
     if academic:
         h2("Academic Appointments")
-        appt_docx(academic)
-    groups = [("published", "Peer-Reviewed Publications & Accepted Manuscripts"), ("review", "Manuscripts in Review / Editorial Processing"),
-              ("preprint", "Preprints & Reproducible Research")]
+        for x in academic:
+            appt(x)
+
+    # ---- publications
     pubs = sorted_pubs(c)
-    def pub_docx(x):
-        d.para([d.run(plain(x["title"]), b=True, sz=10.5)], keep_next=True)
-        d.para(docx_author_runs(d, x["authors"], own), keep_next=True, before=20)
-        it, tail, doi = cv_pub_parts(x)
-        runs = [d.run(it, i=True, color=GRAY, sz=9.5), d.run(tail, color=GRAY, sz=9.5)]
-        if doi:
-            runs += [d.run(". DOI: ", color=GRAY, sz=9.5), d.run(doi, color=NAVY, sz=9.5, link=f"https://doi.org/{doi}")]
-        d.para(runs, before=20, after=100, keep_lines=True)
+    def ref(x):
+        runs = docx_author_runs(d, x["authors"], own) + [d.run(". " + stop(plain(x["title"])) + " ")]
+        st = x["status"]
+        if st == "published":
+            if x.get("volume"):
+                runs.append(d.run(f'{x.get("venue") or x.get("venue_text")}, {x["volume"]}', i=True))
+                if x.get("issue"):
+                    runs.append(d.run(f'({x["issue"]})'))
+            else:
+                runs.append(d.run(x.get("venue") or x.get("venue_text"), i=True))
+            tail = (", " + x["pages"]) if x.get("pages") else ((", Article " + x["article"]) if x.get("article") else "")
+            if x.get("online") and not x.get("volume"):
+                tail += ". Advance online publication"
+            runs.append(d.run(tail + "."))
+            gut = str(x["year"])
+        elif st == "review":
+            runs += [d.run(x.get("venue") or x.get("venue_text"), i=True), d.run(". "),
+                     d.run((x.get("cv_status") or x.get("label") or "Under review") + ".", color=GRAY)]
+            gut = "In review"
+        else:
+            if x.get("venue_text"):
+                runs.append(d.run(x["venue_text"] + "."))
+            else:
+                runs += [d.run(x["venue"], i=True), d.run(". "), d.run((x.get("cv_note") or "Preprint") + ".", color=GRAY)]
+            gut = str(x["year"])
+        if x.get("doi"):
+            runs += [d.run(" "), d.run("https://doi.org/" + x["doi"], color=NAVY, link="https://doi.org/" + x["doi"])]
+        row(gut, runs=runs, after=60)
+    groups = [("published", "Peer-Reviewed Journal Articles"), ("review", "Manuscripts in Review"),
+              ("preprint", "Preprints and Research Artifacts")]
+    others = [x for x in pubs if x.get("cv_section") == "other"]
+    if pubs or c.get("reports"):
+        h2("Publications")
+    first = True
     for st, head in groups:
         items = [x for x in pubs if x["status"] == st and x.get("cv_section") != "other"]
-        if not items:
-            continue
-        h2(head)
-        for x in items:
-            pub_docx(x)
+        if items:
+            h3(head, before=20 if first else 150)
+            first = False
+            for x in items:
+                ref(x)
     if c.get("reports"):
-        h2("Reports & White Papers")
+        h3("Reports and White Papers")
         for x in c["reports"]:
-            d.para([d.run(plain(x["title"]), b=True, sz=10.5)], keep_next=True)
-            d.para(docx_author_runs(d, x["authors"], own), keep_next=True, before=20)
-            runs = [d.run(f'[{x.get("kind", "Report")}]. ', color=GRAY, sz=9.5), d.run(x["publisher"], i=True, color=GRAY, sz=9.5),
-                    d.run(f'. {x.get("cv_date") or x["date"]}', color=GRAY, sz=9.5)]
+            runs = docx_author_runs(d, x["authors"], own) + [d.run(f'. {plain(x["title"])} [{x.get("kind", "Report")}]. {x["publisher"]}.')]
             if x.get("url"):
-                runs += [d.run(". ", color=GRAY, sz=9.5), d.run(x["url"].replace("https://", ""), color=NAVY, sz=9.5, link=x["url"])]
-            d.para(runs, before=20, after=100, keep_lines=True)
-    others = [x for x in pubs if x.get("cv_section") == "other"]
+                runs += [d.run(" "), d.run(x["url"].replace("https://", ""), color=NAVY, link=x["url"])]
+            row(gutter_text(x.get("cv_date") or x["date"]), runs=runs, after=60)
     if others:
-        h2(cv.get("other_publications_heading", "Other Publications"))
+        h3(cv.get("other_publications_heading", "Other Publications"))
         for x in others:
-            pub_docx(x)
-    pr = c.get("peer_review")
-    if pr:
-        h2("Peer Review Service")
-        entry(pr.get("cv_role") or pr["role"], cv_dates(pr["dates"]), "", "", cv_review_text(pr))
-        for j in pr.get("journals", []):
-            d.para([d.run("\u2022"), d.tab(), d.run(j["name"], i=True, color=NAVY if j.get("url") else None, link=j.get("url")), d.run(", " + j["count"])], left=360, hanging=240, after=40, keep_lines=True)
-        for x in pr.get("conferences", []):
-            entry(f'{x.get("role", "Proposal reviewer").title()}, {x["name"]}', x.get("date", ""), get(x, "org"), "", "")
+            ref(x)
+
+    if c.get("presentations"):
+        h2("Conference Presentations")
+        for x in c["presentations"]:
+            ev = x.get("cv_event") or x.get("site_venue", "")
+            evi, _, rest = ev.partition(". ")
+            runs = [d.run(stop(x["title"]) + " "), d.run(evi, i=True), d.run((f', {x["place"]}' if x.get("place") else "") + ".")]
+            if rest:
+                runs.append(d.run(f" {rest[:1].upper() + rest[1:]}."))
+            if x.get("coauthors"):
+                runs.append(d.run(f' With {x["coauthors"]}.'))
+            row(gutter_text(x.get("date", "")), runs=runs, after=60)
+
     if c.get("projects"):
         h2("Research Projects")
         for x in c["projects"]:
-            entry(plain(x.get("cv_title") or x["title"]), cv_dates(x["dates"]), get(x, "org"), "", x.get("cv_text") or get(x, "text"))
-    if c.get("teaching"):
+            row(gutter_text(x["dates"]), plain(x.get("cv_title") or x["title"]), get(x, "org"), x.get("cv_text") or get(x, "text"))
+
+    # ---- teaching
+    iran = [x for x in c.get("appointments", []) if x.get("cv_section") == "teaching_iran"]
+    if c.get("teaching") or iran:
         h2("Teaching Experience")
+    if c.get("teaching"):
         if cv.get("teaching_header"):
-            d.para([d.run(cv["teaching_header"], b=True, sz=10.5)], keep_next=True)
+            h3(cv["teaching_header"], before=20)
         if cv.get("teaching_summary"):
-            d.para([d.run(cv["teaching_summary"], i=True, color=GRAY, sz=9.5)], after=60, keep_next=True)
+            d.para([d.run(cv["teaching_summary"], i=True, color=GRAY, sz=9.5)], left=GUT, after=40, keep_next=True)
         for g in c["teaching"]:
-            label = f'{g["group"]} Courses' if g["group"] in ("Graduate", "Undergraduate") else g["group"]
-            d.para([d.run(label, b=True, caps=True, color=NAVY, sz=10.5)], before=160, after=60, keep_next=True)
-            rows = []
+            h4(f'{g["group"]} courses' if g["group"] in ("Graduate", "Undergraduate") else g["group"])
             for k in g.get("courses", []):
                 terms = k.get("cv_terms") or cv_dates(k.get("terms", "")).replace(" · ", "; ").replace("\n", " ")
-                rows.append(([([d.run(f'{k["code"]} {k.get("cv_title") or k["title"]}', b=True)], None),
-                              ([d.run(terms, color=GRAY)], "right")], 60 if not (k.get("cv_detail") or k.get("cv_practicum")) else 10))
-                if (k.get("cv_detail") or k.get("cv_practicum")):
-                    d.table(rows, [7000, 3166], keep_next=True); rows = []
-                    d.para([d.run(k.get("cv_detail") or k["cv_practicum"], color=GRAY, sz=9.5)], after=60)
-            if rows:
-                d.table(rows, [7000, 3166])
-    iran = [x for x in c.get("appointments", []) if x.get("cv_section") == "teaching_iran"]
+                note = k.get("cv_detail") or k.get("cv_practicum")
+                mid = [d.run(k.get("cv_title") or k["title"])] + ([d.br(), d.run(note, color=GRAY, sz=9.5)] if note else [])
+                d.table([([([d.run(k["code"], b=True, color="3C4650", sz=9.5)], None), (mid, None), ([d.run(terms, color=GRAY, sz=9.5)], "right")], 60)],
+                        [GUT, BODY - 3000, 3000])
     if iran:
-        h2(cv.get("iran_teaching_heading", "Teaching Experience (Iran)"))
-        appt_docx(iran)
-    if c.get("presentations"):
-        h2("Selected Conference Presentations")
-        for x in c["presentations"]:
-            entry(x["title"], x.get("cv_date") or x["date"], x.get("cv_event") or x.get("site_venue", ""), get(x, "place"))
-    def bullets(items):
-        for label, text in items:
-            d.para([d.run("\u2022"), d.tab(), d.run(label + ":", b=True), d.run(" " + text)], left=360, hanging=240, after=40, keep_lines=True)
+        h3(cv.get("iran_teaching_heading_short", "English Language Teaching, Iran"))
+        for x in iran:
+            appt(x)
 
-    if c.get("methods"):
-        h2("Research Methods & Technical Skills")
-        lis = []
-        for m in c["methods"]:
-            items = [f"{a.strip()} ({b.strip()})" if "|" in it else lowfirst(it) for it in m.get("items", []) for a, b in [it.split("|", 1) if "|" in it else (it, "")]]
-            lis.append((m.get("cv_title") or m["title"], human_join(items) + "."))
-        bullets(lis)
-    if cv.get("methodological_training"):
-        h2("Methodological Training")
-        bullets([(m["label"], m["text"]) for m in cv["methodological_training"]])
+    # ---- service
+    pr = c.get("peer_review")
+    if pr or c.get("leadership"):
+        h2("Service")
+    if pr:
+        h3("Peer Review", before=20)
+        total = review_total(pr)
+        n = len(pr.get("journals", []))
+        words = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
+        runs = [d.run(f'{total} manuscript reviews for {words.get(n, n)} journals: ' if total else "")]
+        for k, j in enumerate(pr.get("journals", [])):
+            runs += ([d.run(", ")] if k else []) + [d.run(j["name"], i=True), d.run(f' ({j["count"].split()[0]})')]
+        runs.append(d.run("."))
+        row(gutter_text(pr["dates"]), pr.get("cv_role") or pr["role"], runs=runs)
+        for x in pr.get("conferences", []):
+            row(gutter_text(x.get("date", "")), f'{x.get("role", "Proposal reviewer").title()}, {x["name"]}', get(x, "org"))
     if c.get("leadership"):
-        h2("Academic & Professional Service")
+        h3("Leadership")
         for x in c["leadership"]:
-            entry(x.get("cv_role") or x["role"], cv_dates(x["dates"]), x.get("cv_org") or x.get("org", ""), get(x, "place"), get(x, "text"))
+            row(gutter_text(x["dates"]), x.get("cv_role") or x["role"],
+                ", ".join(v for v in (x.get("cv_org") or x.get("org", ""), get(x, "place")) if v), get(x, "text"))
+
     if c.get("honors"):
-        h2("Awards, Scholarships & Honors")
+        h2("Awards and Honors")
         for h in c["honors"]:
-            note = h.get("cv_note") or h.get("note")
-            d.para([d.run(h["name"], b=True)] + ([d.run(", " + note)] if note else []), after=20, keep_lines=True)
+            note = (h.get("cv_note") or h.get("note") or "").replace("  |  ", ", ").replace(" · ", ", ")
+            m = re.search(r",?\s*\b((?:19|20)\d\d)\s*$", note)
+            yr = m.group(1) if m else ""
+            note = note[:m.start()] if m else note
+            d.table([([([], None), ([d.run(h["name"], b=True)] + ([d.run(", " + note)] if note else []), None),
+                       ([d.run(yr, color=GRAY, sz=9.5)], "right")], 30)], [GUT, BODY - 900, 900])
+
+    if c.get("methods") or cv.get("methodological_training"):
+        h2("Research Methods and Training")
+    for m in c.get("methods", []):
+        items = [f"{a.strip()} ({b.strip()})" if "|" in it else lowfirst(it) for it in m.get("items", []) for a, b in [it.split("|", 1) if "|" in it else (it, "")]]
+        d.para([d.run((m.get("cv_title") or m["title"]) + ":", b=True), d.run(" " + human_join(items) + ".")], left=GUT, after=60, keep_lines=True)
+    if cv.get("methodological_training"):
+        h3("Graduate Methods Coursework")
+        for m in cv["methodological_training"]:
+            d.para([d.run(m["label"] + ":", b=True), d.run(" " + m["text"])], left=GUT, after=60, keep_lines=True)
+
     for e in c.get("extra_sections", []):
         if e.get("cv", True) is False or not e.get("items"):
             continue
         h2(e.get("cv_title") or e["title"])
         for x in e["items"]:
-            entry(plain(x.get("cv_title") or x["title"]), x.get("cv_dates") or cv_dates(get(x, "dates")), get(x, "org"), get(x, "place"),
-                  x.get("cv_text") or get(x, "text"))
+            appt(x)
     if c.get("languages"):
         h2("Languages")
         runs = []
         for k, l in enumerate(c["languages"]):
             if k:
-                runs.append(d.run("   |   "))
+                runs.append(d.run("  |  ", color=GRAY))
             runs += [d.run(l["name"], b=True), d.run(f' ({l.get("cv_level") or l["level"]})')]
-        d.para(runs)
+        d.para(runs, left=GUT)
     foot = f"{own} | Academic Curriculum Vitae | Updated {month_year(today)} | Page "
     return d.save(path, f"{own}, Curriculum Vitae", own, d.run(foot, color=GRAY, sz=9))
-
 
 def build_cv_html(c, today):
     tpl = (BUILDER / "cv.html").read_text(encoding="utf-8")

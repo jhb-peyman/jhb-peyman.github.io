@@ -50,6 +50,7 @@ alumni_of    = ["Shahid Beheshti University", "University of Isfahan"]
 # The labels in the CV PDF header
 [cv]
 subtitle     = "Curriculum & Instruction (TESOL)  |  Language Assessment  |  AI in Education"
+headline     = "Ph.D. Candidate, Curriculum & Instruction (TESOL), University of Kansas"   # CV: the line under the name
 contact_line = ["Peyman@KU.edu", "Lawrence, Kansas", "jhb-peyman.github.io", "LinkedIn/JPeyman", "Google Scholar", "ORCID"]
 research_interests = "Language assessment; automated speaking assessment; validity and fairness; responsible AI in education; explainable machine learning; L2 pronunciation; multilingual education and policy; Seal of Biliteracy; quantitative and mixed-methods educational research."
 teaching_header  = "University of Kansas, Department of Curriculum & Teaching"
@@ -243,17 +244,17 @@ site_text = "ESL teacher on contract, Tehran Province. I taught IELTS test prepa
 
 [[appointments]]
 dates    = "2020 to 2022"
-title    = "EFL Teacher"
-cv_title = "English as a Foreign Language (EFL) Teacher"
+title    = "EFL Teacher and Instructor"
+cv_title = "English as a Foreign Language (EFL) Teacher and Instructor"
 cv_section = "teaching_iran"
 org      = "Vank School (Armen)"
 place    = "Isfahan, Iran"
-text     = "School classes: taught English as a foreign language to students in grades 6 to 8 whose first languages were Armenian and Persian (Farsi).\nEvening classes: taught English as a foreign language to adults, the staff of the Prelacy at Vank Cathedral and the head of the Prelacy."
-site_text = "EFL teacher in Isfahan, in two settings."
+text     = "Teacher, school classes: taught English as a foreign language to students in grades 6 to 8 whose first languages were Armenian and Persian (Farsi).\nInstructor, evening classes: taught English as a foreign language to adults, the staff of the Prelacy at Vank Cathedral and the head of the Prelacy."
+site_text = "EFL teacher in school classes and instructor in evening classes for adults, Isfahan."
 #  parts = a short list under the entry on the Teaching page: label = the setting, text = what I taught there.
 parts = [
-  { label = "School classes", text = "English as a foreign language to students in grades 6 to 8, whose first languages were Armenian and Persian (Farsi)." },
-  { label = "Evening classes for adults", text = "English as a foreign language to the staff of the Prelacy at Vank Cathedral and to the head of the Prelacy." },
+  { label = "School classes (teacher)", text = "English as a foreign language to students in grades 6 to 8, whose first languages were Armenian and Persian (Farsi)." },
+  { label = "Evening classes for adults (instructor)", text = "English as a foreign language to the staff of the Prelacy at Vank Cathedral and to the head of the Prelacy." },
 ]
 
 [[appointments]]
@@ -273,13 +274,13 @@ cv_text  = "Taught general English to undergraduate and graduate students; appro
 
 [[appointments]]
 dates    = "2014 to 2016"
-title    = "EFL Instructor"
-cv_title = "English as a Foreign Language (EFL) Instructor"
+title    = "EFL Teacher"
+cv_title = "English as a Foreign Language (EFL) Teacher"
 cv_section = "teaching_iran"
 org      = "Farhangian School"
 place    = "Sabzevar, Iran"
 text     = "Taught English as a foreign language to students in grades 6 and 8. Designed and validated English language tests for grades 6 to 8."
-site_text = "EFL instructor in Sabzevar, teaching English as a foreign language to students in grades 6 and 8. I also designed and validated English language tests for grades 6 to 8."
+site_text = "EFL teacher in Sabzevar, teaching English as a foreign language to students in grades 6 and 8. I also designed and validated English language tests for grades 6 to 8."
 
 
 # ------------------------------------------------------------------ publication topics (used by the topic filter)
@@ -418,6 +419,7 @@ bibkey     = "farashaiyan2025corpus"
 
 [[publications]]
 id         = "personality"
+cv_section = "other"     # CV: under "Other Publications" (outside-field journal)
 date       = "2025-05-19"
 status     = "published"
 year       = 2025
@@ -434,6 +436,7 @@ bibkey     = "muthusamy2025personality"
 
 [[publications]]
 id         = "achievements"
+cv_section = "other"     # CV: under "Other Publications" (outside-field journal)
 date       = "2025-05-19"
 status     = "published"
 year       = 2025
