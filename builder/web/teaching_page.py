@@ -87,7 +87,10 @@ def page_teaching():
                 cells += f'<td class="{tcls(t)}"></td>'
         cid = k['code'].replace('&', '').replace(' ', '').lower()
         rows += (f'<tr><th scope="row" class="tr-c"><a href="#{cid}">{esc(k["code"])}<span>{esc(k.get("short", ""))}</span></a></th>{cells}'
-                 f'<td class="tt"><span class="tn">{n(k)}</span><span class="tbar"><span style="width:{100 * n(k) / mx:.0f}%"></span></span></td></tr>')
+                 f'<td class="tt"><span class="tn">{n(k)}</span></td></tr>')
+    foot = ('<tr class="tot"><th scope="row" class="tr-c"><span class="tot-l">Sections per term</span></th>'
+            + ''.join(f'<td class="{tcls(t_)}">{sum(k["taught"].count(t_) for k in courses) or ""}</td>' for t_ in terms)
+            + '<td class="tt"></td></tr>')
     next_courses = sorted((k for k in courses if ahead(k)), key=lambda k: k['code'])
     def next_txt(k): return f'{esc(k["code"])} {esc(k.get("next", ""))}'.strip()
     next_p = ''
@@ -100,7 +103,7 @@ def page_teaching():
               + '<p class="sec-p">The table shows every course I have taught at Kansas, term by term. Each square is one section'
               + (f'; {nxt} ({term_code(nxt)}) is next term, already assigned' if nxt else '')
               + ', and the shaded column is the current term.</p>'
-              + f'<div class="rec-wrap"><table class="rec" id="rec"><thead>{head}</thead><tbody>{rows}</tbody></table></div>' + next_p)
+              + f'<div class="rec-wrap"><table class="rec" id="rec"><thead>{head}</thead><tbody>{rows}</tbody><tfoot>{foot}</tfoot></table></div>' + next_p)
 
     # ---------------------------------------------------------------- practicum schools (grouped by city, each with its website and a map link)
     def schools_html(k):
@@ -112,7 +115,7 @@ def page_teaching():
         cities = []
         for x in sch:
             if x['city'] not in cities: cities.append(x['city'])
-        out = (f'<div class="sch"><p class="sch-h">Practicum schools <span>{len(sch)} schools in {len(cities)} cities</span></p>')
+        out = (f'<details class="sch"><summary class="sch-h"><b>Practicum schools</b><span>{len(sch)} schools in {len(cities)} cities</span></summary>')
         for city in cities:
             items = ''
             for x in (x for x in sch if x['city'] == city):
@@ -121,7 +124,7 @@ def page_teaching():
                 items += (f'<li><a class="sch-n" href="{attr(x["site"])}" rel="noopener" target="_blank">{nm}<span class="sr"> website, opens in a new tab</span></a>'
                           f'<a class="sch-p" href="{attr(m)}" rel="noopener" target="_blank" title="Map">{pin}<span class="sr">Map of {nm}, opens in a new tab</span></a></li>')
             out += f'<div class="sch-g"><h5>{esc(city)}</h5><ul>{items}</ul></div>'
-        return out + '</div>'
+        return out + '</details>'
 
     # ---------------------------------------------------------------- Kansas: the courses, most taught first
     blocks = '<h3 class="grp">Courses, most taught first</h3>'
