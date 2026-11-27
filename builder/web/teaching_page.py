@@ -102,6 +102,27 @@ def page_teaching():
               + ', and the shaded column is the current term.</p>'
               + f'<div class="rec-wrap"><table class="rec" id="rec"><thead>{head}</thead><tbody>{rows}</tbody></table></div>' + next_p)
 
+    # ---------------------------------------------------------------- practicum schools (grouped by city, each with its website and a map link)
+    def schools_html(k):
+        sch = k.get('schools')
+        if not sch: return ''
+        from urllib.parse import quote_plus
+        pin = ('<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false"><path d="M8 1.5a4.5 4.5 0 0 0-4.5 4.5c0 3.2 4.5 8.5 4.5 8.5s4.5-5.3 4.5-8.5A4.5 4.5 0 0 0 8 1.5Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>'
+               '<circle cx="8" cy="6" r="1.6" fill="currentColor"/></svg>')
+        cities = []
+        for x in sch:
+            if x['city'] not in cities: cities.append(x['city'])
+        out = (f'<div class="sch"><p class="sch-h">Practicum schools <span>{len(sch)} schools in {len(cities)} cities</span></p>')
+        for city in cities:
+            items = ''
+            for x in (x for x in sch if x['city'] == city):
+                m = x.get('map') or 'https://www.google.com/maps/search/?api=1&query=' + quote_plus(f'{x["name"]} School, {x["city"]}, Kansas')
+                nm = esc(x['name'])
+                items += (f'<li><a class="sch-n" href="{attr(x["site"])}" rel="noopener" target="_blank">{nm}<span class="sr"> website, opens in a new tab</span></a>'
+                          f'<a class="sch-p" href="{attr(m)}" rel="noopener" target="_blank" title="Map">{pin}<span class="sr">Map of {nm}, opens in a new tab</span></a></li>')
+            out += f'<div class="sch-g"><h5>{esc(city)}</h5><ul>{items}</ul></div>'
+        return out + '</div>'
+
     # ---------------------------------------------------------------- Kansas: the courses, most taught first
     blocks = '<h3 class="grp">Courses, most taught first</h3>'
     for k in sorted(courses, key=lambda k: (-n(k), -done(k), min(term_key(t) for t in k['taught']))):
@@ -113,7 +134,8 @@ def page_teaching():
                    f'<div class="crs2-sq">{sq}</div></div><div class="crs2-body">'
                    f'<h4>{esc(k["title"]).replace("K-12", "K&#8209;12")}</h4>'
                    f'<p class="c-meta"><span>{k["level"]}</span><span>{when(k)}</span></p>{note}'
-                   f'<p>{esc(k.get("summary", "")).replace("K-12", "K&#8209;12")}</p></div></article>')
+                   f'<p>{esc(k.get("summary", "")).replace("K-12", "K&#8209;12")}</p>'
+                   + (f'<p class="c-prac">{esc(k["practicum"])}</p>' if k.get('practicum') else '') + schools_html(k) + '</div></article>')
 
     # ---------------------------------------------------------------- teaching in Iran
     iran = sorted((a for a in C['appointments'] if a.get('site_text') and 'Iran' in a.get('place', '')),

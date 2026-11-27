@@ -953,6 +953,8 @@ def cv_body(c, today):
             for k in g.get("courses", []):
                 terms = k.get("cv_terms") or cv_dates(k.get("terms", "")).replace(" · ", "; ").replace("\n", " ")
                 out.append(f'<div class="crs"><div class="n"><b>{esc(k["code"])} {esc(k.get("cv_title") or k["title"])}</b></div><div class="tm">{esc(terms)}</div></div>')
+                if k.get("cv_practicum"):
+                    out.append(f'<div class="crsn">{esc(k["cv_practicum"])}</div>')
     if c.get("presentations"):
         out.append("<h2>Selected Conference Presentations</h2>" + "".join(
             cv_entry(esc(x["title"]), esc(x.get("cv_date") or x["date"]), esc(x.get("cv_event") or x.get("site_venue", "")), esc(get(x, "place")))
@@ -1117,7 +1119,10 @@ def build_docx(c, today, path):
             for k in g.get("courses", []):
                 terms = k.get("cv_terms") or cv_dates(k.get("terms", "")).replace(" · ", "; ").replace("\n", " ")
                 rows.append(([([d.run(f'{k["code"]} {k.get("cv_title") or k["title"]}', b=True)], None),
-                              ([d.run(terms, color=GRAY)], "right")], 60))
+                              ([d.run(terms, color=GRAY)], "right")], 60 if not k.get("cv_practicum") else 10))
+                if k.get("cv_practicum"):
+                    d.table(rows, [7000, 3166], keep_next=True); rows = []
+                    d.para([d.run(k["cv_practicum"], color=GRAY, sz=9.5)], after=60)
             if rows:
                 d.table(rows, [7000, 3166])
     if c.get("presentations"):
