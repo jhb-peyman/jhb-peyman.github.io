@@ -904,25 +904,28 @@ def cv_body(c, today):
         out.append("<h2>Education</h2>" + "".join(
             cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(x.get("cv_dates") or cv_dates(x["dates"])), esc(get(x, "org")), esc(get(x, "place")),
                      inline(x.get("cv_text") or get(x, "text"))) for x in c["education"]))
-    if c.get("appointments"):
-        out.append("<h2>Academic Appointments</h2>" + "".join(
-            cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(x.get("cv_dates") or cv_dates(x["dates"])), esc(get(x, "org")), esc(get(x, "place")),
-                     inline(x.get("cv_text") or get(x, "text"))) for x in c["appointments"]))
+    def appt_html(xs):
+        return "".join(cv_entry(esc(plain(x.get("cv_title") or x["title"])), esc(x.get("cv_dates") or cv_dates(x["dates"])), esc(get(x, "org")),
+                                esc(get(x, "place")), inline(x.get("cv_text") or get(x, "text"))) for x in xs)
+    academic = [x for x in c.get("appointments", []) if not x.get("cv_section")]
+    if academic:
+        out.append("<h2>Academic Appointments</h2>" + appt_html(academic))
     groups = [("published", "Peer-Reviewed Publications &amp; Accepted Manuscripts"),
               ("review", "Manuscripts in Review / Editorial Processing"),
               ("preprint", "Preprints &amp; Reproducible Research")]
     pubs = sorted_pubs(c)
+    def pub_html(x):
+        it, tail, doi = cv_pub_parts(x)
+        line = f"<i>{esc(it)}</i>{esc(tail)}"
+        if doi:
+            line += f'. DOI: <a href="https://doi.org/{attr(doi)}">{esc(doi)}</a>'
+        return f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>'
     for st, head in groups:
-        items = [x for x in pubs if x["status"] == st]
+        items = [x for x in pubs if x["status"] == st and x.get("cv_section") != "other"]
         if not items:
             continue
         out.append(f"<h2>{head}</h2>")
-        for x in items:
-            it, tail, doi = cv_pub_parts(x)
-            line = f"<i>{esc(it)}</i>{esc(tail)}"
-            if doi:
-                line += f'. DOI: <a href="https://doi.org/{attr(doi)}">{esc(doi)}</a>'
-            out.append(f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>')
+        out.extend(pub_html(x) for x in items)
     if c.get("reports"):
         out.append("<h2>Reports &amp; White Papers</h2>")
         for x in c["reports"]:
@@ -930,6 +933,10 @@ def cv_body(c, today):
             if x.get("url"):
                 line += f'. <a href="{attr(x["url"])}">{esc(x["url"].replace("https://", ""))}</a>'
             out.append(f'<div class="pub"><div class="t">{esc(plain(x["title"]))}</div><div class="au">{cv_authors(x["authors"], own)}</div><div class="vn">{line}</div></div>')
+    others = [x for x in pubs if x.get("cv_section") == "other"]
+    if others:
+        out.append(f'<h2>{esc(cv.get("other_publications_heading", "Other Publications"))}</h2>')
+        out.extend(pub_html(x) for x in others)
     pr = c.get("peer_review")
     if pr:
         out.append("<h2>Peer Review Service</h2>" + cv_entry(esc(pr.get("cv_role") or pr["role"]), esc(cv_dates(pr["dates"])), "", "", esc(cv_review_text(pr)))
@@ -955,6 +962,9 @@ def cv_body(c, today):
                 out.append(f'<div class="crs"><div class="n"><b>{esc(k["code"])} {esc(k.get("cv_title") or k["title"])}</b></div><div class="tm">{esc(terms)}</div></div>')
                 if (k.get("cv_detail") or k.get("cv_practicum")):
                     out.append(f'<div class="crsn">{esc(k.get("cv_detail") or k["cv_practicum"])}</div>')
+    iran = [x for x in c.get("appointments", []) if x.get("cv_section") == "teaching_iran"]
+    if iran:
+        out.append(f'<h2>{esc(cv.get("iran_teaching_heading", "Teaching Experience (Iran)"))}</h2>' + appt_html(iran))
     if c.get("presentations"):
         out.append("<h2>Selected Conference Presentations</h2>" + "".join(
             cv_entry(esc(x["title"]), esc(x.get("cv_date") or x["date"]), esc(x.get("cv_event") or x.get("site_venue", "")), esc(get(x, "place")))
@@ -1062,28 +1072,35 @@ def build_docx(c, today, path):
     if cv.get("research_interests"):
         h2("Research Interests")
         d.para(rich(d, cv["research_interests"]), after=100)
-    for key, head in (("education", "Education"), ("appointments", "Academic Appointments")):
-        if c.get(key):
-            h2(head)
-            for x in c[key]:
-                entry(plain(x.get("cv_title") or x["title"]), x.get("cv_dates") or cv_dates(x["dates"]), get(x, "org"), get(x, "place"),
-                      x.get("cv_text") or get(x, "text"))
+    def appt_docx(xs):
+        for x in xs:
+            entry(plain(x.get("cv_title") or x["title"]), x.get("cv_dates") or cv_dates(x["dates"]), get(x, "org"), get(x, "place"),
+                  x.get("cv_text") or get(x, "text"))
+    if c.get("education"):
+        h2("Education")
+        appt_docx(c["education"])
+    academic = [x for x in c.get("appointments", []) if not x.get("cv_section")]
+    if academic:
+        h2("Academic Appointments")
+        appt_docx(academic)
     groups = [("published", "Peer-Reviewed Publications & Accepted Manuscripts"), ("review", "Manuscripts in Review / Editorial Processing"),
               ("preprint", "Preprints & Reproducible Research")]
     pubs = sorted_pubs(c)
+    def pub_docx(x):
+        d.para([d.run(plain(x["title"]), b=True, sz=10.5)], keep_next=True)
+        d.para(docx_author_runs(d, x["authors"], own), keep_next=True, before=20)
+        it, tail, doi = cv_pub_parts(x)
+        runs = [d.run(it, i=True, color=GRAY, sz=9.5), d.run(tail, color=GRAY, sz=9.5)]
+        if doi:
+            runs += [d.run(". DOI: ", color=GRAY, sz=9.5), d.run(doi, color=NAVY, sz=9.5, link=f"https://doi.org/{doi}")]
+        d.para(runs, before=20, after=100, keep_lines=True)
     for st, head in groups:
-        items = [x for x in pubs if x["status"] == st]
+        items = [x for x in pubs if x["status"] == st and x.get("cv_section") != "other"]
         if not items:
             continue
         h2(head)
         for x in items:
-            d.para([d.run(plain(x["title"]), b=True, sz=10.5)], keep_next=True)
-            d.para(docx_author_runs(d, x["authors"], own), keep_next=True, before=20)
-            it, tail, doi = cv_pub_parts(x)
-            runs = [d.run(it, i=True, color=GRAY, sz=9.5), d.run(tail, color=GRAY, sz=9.5)]
-            if doi:
-                runs += [d.run(". DOI: ", color=GRAY, sz=9.5), d.run(doi, color=NAVY, sz=9.5, link=f"https://doi.org/{doi}")]
-            d.para(runs, before=20, after=100, keep_lines=True)
+            pub_docx(x)
     if c.get("reports"):
         h2("Reports & White Papers")
         for x in c["reports"]:
@@ -1094,6 +1111,11 @@ def build_docx(c, today, path):
             if x.get("url"):
                 runs += [d.run(". ", color=GRAY, sz=9.5), d.run(x["url"].replace("https://", ""), color=NAVY, sz=9.5, link=x["url"])]
             d.para(runs, before=20, after=100, keep_lines=True)
+    others = [x for x in pubs if x.get("cv_section") == "other"]
+    if others:
+        h2(cv.get("other_publications_heading", "Other Publications"))
+        for x in others:
+            pub_docx(x)
     pr = c.get("peer_review")
     if pr:
         h2("Peer Review Service")
@@ -1125,6 +1147,10 @@ def build_docx(c, today, path):
                     d.para([d.run(k.get("cv_detail") or k["cv_practicum"], color=GRAY, sz=9.5)], after=60)
             if rows:
                 d.table(rows, [7000, 3166])
+    iran = [x for x in c.get("appointments", []) if x.get("cv_section") == "teaching_iran"]
+    if iran:
+        h2(cv.get("iran_teaching_heading", "Teaching Experience (Iran)"))
+        appt_docx(iran)
     if c.get("presentations"):
         h2("Selected Conference Presentations")
         for x in c["presentations"]:

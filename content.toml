@@ -63,16 +63,16 @@ methodological_training = [
 
 # ------------------------------------------------------------------ recent news (about five, newest first)
 [[news]]
-date = "Mar 2027"
-text = "Paper accepted at SITE 2027 (Society for Information Technology & Teacher Education) in Nashville, TN: *What Does an AI Score Justify?*, a peer-reviewed brief paper, to be presented in March 2027."
-
-[[news]]
-date = "Mar 2027"
-text = "Roundtable accepted at the TESOL 2027 International Convention & Expo in Houston, TX: *Algorithmic Suspicion: Raciolinguistic Gatekeeping of Middle Eastern Teaching Assistants*, in March 2027."
-
-[[news]]
 date = "Spring 2027"
 text = "Assigned to teach C&T 331, *Instructional Approaches for ESOL Learners in Secondary Schools*, as instructor of record, and C&T 821, *Assessment in Teaching English to Speakers of Other Languages*."
+
+[[news]]
+date = "Nov 2026"
+text = "Paper accepted at SITE 2027 (Society for Information Technology & Teacher Education) in Nashville, TN: *What Does an AI Score Justify?*, a peer-reviewed brief paper, to be presented March 2027."
+
+[[news]]
+date = "Nov 2026"
+text = "Roundtable accepted at the TESOL 2027 International Convention & Expo in Houston, TX: *Algorithmic Suspicion: Raciolinguistic Gatekeeping of Middle Eastern Teaching Assistants*, to be presented March 2027."
 
 [[news]]
 date = "Oct 2026"
@@ -235,6 +235,7 @@ dates    = "Aug 2021 to Nov 2022"
 title    = "ESL Teacher"
 cv_title = "English as a Second Language (ESL) Teacher, Contract"
 cv_dates = "August 2021-November 2022"
+cv_section = "teaching_iran"
 org      = "IranCanada Educational Center"
 place    = "Tehran Province, Iran"
 text     = "Taught IELTS test preparation courses on contract. Designed and validated the tests used in these courses. Also worked on evaluation and teacher training."
@@ -244,6 +245,7 @@ site_text = "ESL teacher on contract, Tehran Province. I taught IELTS test prepa
 dates    = "2020 to 2022"
 title    = "EFL Teacher"
 cv_title = "English as a Foreign Language (EFL) Teacher"
+cv_section = "teaching_iran"
 org      = "Vank School (Armen)"
 place    = "Isfahan, Iran"
 text     = "School classes: taught English as a foreign language to students in grades 6 to 8 whose first languages were Armenian and Persian (Farsi).\nEvening classes: taught English as a foreign language to adults, the staff of the Prelacy at Vank Cathedral and the head of the Prelacy."
@@ -258,6 +260,7 @@ parts = [
 dates    = "2019 to 2022"
 title    = "EFL Instructor"
 cv_title = "English as a Foreign Language (EFL) Instructor"
+cv_section = "teaching_iran"
 org      = "University of Isfahan"
 place    = "Isfahan, Iran"
 text     = "General English for undergraduate and graduate students; approximately 250 instructional hours."
@@ -272,6 +275,7 @@ cv_text  = "Taught general English to undergraduate and graduate students; appro
 dates    = "2014 to 2016"
 title    = "EFL Instructor"
 cv_title = "English as a Foreign Language (EFL) Instructor"
+cv_section = "teaching_iran"
 org      = "Farhangian School"
 place    = "Sabzevar, Iran"
 text     = "Taught English as a foreign language to students in grades 6 and 8. Designed and validated English language tests for grades 6 to 8."
@@ -381,6 +385,7 @@ bibkey     = "elizondo2026lltm"
 
 [[publications]]
 id         = "dyadic"
+cv_section = "other"     # CV: listed under "Other Publications" (special issue of an outside-field journal)
 date       = "2026-06-15"
 status     = "published"
 year       = 2026

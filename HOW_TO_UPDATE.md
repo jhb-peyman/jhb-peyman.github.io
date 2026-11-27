@@ -97,6 +97,11 @@ Copy a `[[projects]]` block and give it a new `id` (a short word, never reused) 
 ### Talks
 Each `[[presentations]]` block has an `id`. The Research page places talks by that id, so you can rename a talk freely; a new talk shows on the Publications page right away, and on the Research page once its id is added there (ask for help).
 
+### Choosing a CV section for an entry
+- A paper with `cv_section = "other"` goes under "Other Publications" in the CV instead of its usual group (used for the special-issue paper in an outside-field journal). The website lists it as usual.
+- An appointment with `cv_section = "teaching_iran"` goes under "Teaching Experience (Iran)" in the CV instead of "Academic Appointments".
+- The two headings can be renamed with `other_publications_heading` and `iran_teaching_heading` under `[cv]`.
+
 ### Different wording on the CV than on the website
 Many fields have a CV-only twin that starts with `cv_`: `cv_title`, `cv_text`, `cv_dates`, `cv_terms`, `cv_note`, and so on. When it is present, the CV uses it and the website uses the normal field. Details that appear only in the CV (Research Interests sentence, Methodological Training, header line) live under `[cv]`.
 
