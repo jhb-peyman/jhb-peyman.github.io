@@ -140,6 +140,21 @@ def page_teaching():
                    f'<p>{esc(k.get("summary", "")).replace("K-12", "K&#8209;12")}</p>'
                    + (f'<p class="c-prac">{esc(k["practicum"])}</p>' if k.get('practicum') else '') + schools_html(k) + '</div></article>')
 
+    # ---------------------------------------------------------------- Kansas: courses where I assist (no sections table, no counts)
+    ta = [k for g in C['teaching'] for k in g['courses'] if not k.get('taught') and k.get('role')]
+    if ta:
+        blocks += '<h3 class="grp">Teaching assistant</h3>'
+        for k in ta:
+            cid = k['code'].replace('&', '').replace(' ', '').lower()
+            blocks += (f'<article class="crs2" id="{cid}"><div class="crs2-code">{esc(k["code"])}'
+                       f'<div class="crs2-count">{esc(k.get("terms", ""))}</div></div><div class="crs2-body">'
+                       f'<h4>{esc(k["title"])}</h4><p class="c-meta"><span>{esc(k["role"])}</span></p>'
+                       f'<p>{esc(k.get("summary", ""))}</p></div></article>')
+        grp = next((g for g in C['teaching'] if g.get('partners')), None)
+        if grp:
+            imgs = ''.join(f'<li><img src="{attr(x["logo"])}" alt="{attr(x["name"])}" width="{x["width"]}" height="{x["height"]}" loading="lazy"></li>' for x in grp['partners'])
+            blocks += (f'<div class="partners"><p class="pt-l">{esc(grp.get("partners_label", "Partner universities"))}</p><ul>{imgs}</ul></div>')
+
     # ---------------------------------------------------------------- teaching in Iran
     iran = sorted((a for a in C['appointments'] if a.get('site_text') and 'Iran' in a.get('place', '')),
                   key=lambda a: (not a.get('courses'), -int(re.findall(r'\d{4}', a['dates'])[0])))

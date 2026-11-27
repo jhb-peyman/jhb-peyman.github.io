@@ -730,6 +730,40 @@ taught   = ["Fall 2023", "Fall 2023", "Spring 2024"]
 short    = "Diversity, equity and inclusion"
 summary  = "How culture, identity and community shape students’ experience of K-12 school, taught through discussion and shared problem solving."
 
+#  Courses where you assist rather than teach. They have no "taught" line, so they stay out of the sections table and
+#  counts, and they show in their own "Teaching assistant" part of the Teaching page and in the CV.
+[[teaching]]
+group = "Teaching Assistant"
+partners_label = "Kansas universities named on the course materials"
+#  Logos sit in assets/img/partners. width and height are the size shown on the page, in pixels.
+partners = [
+  { name = "Emporia State University", logo = "assets/img/partners/emporia-state.png", width = 104, height = 25 },
+  { name = "Fort Hays State University", logo = "assets/img/partners/fort-hays-state.png", width = 124, height = 36 },
+  { name = "Kansas State University, College of Education", logo = "assets/img/partners/kansas-state.png", width = 170, height = 28 },
+  { name = "University of Kansas", logo = "assets/img/partners/university-of-kansas.png", width = 94, height = 27 },
+  { name = "Pittsburg State University", logo = "assets/img/partners/pittsburg-state.png", width = 141, height = 36 },
+  { name = "Washburn University", logo = "assets/img/partners/washburn.png", width = 90, height = 24 },
+  { name = "Wichita State University", logo = "assets/img/partners/wichita-state.png", width = 118, height = 34 },
+]
+
+[[teaching.courses]]
+code      = "C&T 746"
+title     = "Foundations of the Science of Reading: Understanding and Applying Structured Literacy Principles I"
+terms     = "Fall 2026"
+cv_terms  = "Fall 2026"
+role      = "Teaching assistant"
+summary   = "A statewide course on the science of reading and structured literacy, offered through the Kansas Blueprint for Literacy. I support the instructor of record in a large class."
+cv_detail = "Teaching assistant to the instructor of record for a large, statewide course offered through the Kansas Blueprint for Literacy."
+
+[[teaching.courses]]
+code      = "C&T 747"
+title     = "Foundations of the Science of Reading: Understanding and Applying Structured Literacy Principles II"
+terms     = "Fall 2026"
+cv_terms  = "Fall 2026"
+role      = "Teaching assistant"
+summary   = "The second course in the same statewide sequence, offered through the Kansas Blueprint for Literacy. I support the instructor of record in a large class."
+cv_detail = "Teaching assistant to the instructor of record for the second course of the same statewide sequence."
+
 
 # ------------------------------------------------------------------ methods
 #  items: write "R | tidyverse, ggplot2, R Markdown/Quarto" to show a small second line.
