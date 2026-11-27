@@ -64,7 +64,6 @@ Each course is a `[[teaching.courses]]` block under its group (`[[teaching]]` wi
 | `taught` | **the website's teaching table**: one entry per section, such as `["Fall 2023", "Fall 2023", "Spring 2024"]` for two sections in Fall 2023 and one in Spring 2024. Write terms as `"Spring 2027"`, `"Summer 2026"`, `"Fall 2026"`. |
 | `short` | a few words for the table, such as `"Assessment in TESOL"` |
 | `summary` | one sentence for the course list |
-| `next` | optional: the role or time for next term, such as `"as instructor of record (Tuesdays and Thursdays, 2:00 to 3:15 pm)"` |
 | `note` | optional: one more sentence under the course |
 
 **Each new semester:** add the new term to `taught` (and to `terms`/`cv_terms` for the CV). Terms after the current one show as already assigned; when the term starts they count as taught by themselves. The section counts, the "most taught first" order, the opening paragraph of the Teaching page all update by themselves. Only the CV line `teaching_summary` (under `[cv]`) is typed by hand, so update its numbers yourself.
@@ -90,7 +89,7 @@ file  = "Peyman_Jahanbin_Research_Statement.pdf"
 Change `status` under `[person]`. That updates the line under your name and the share card. Then also update, by hand, the description under `[seo]`, `job_title`, the Education entry text, and any research text that mentions it.
 
 ### Rebuild at the start of every term
-The pages are fixed files, so sentences about time ("next term", the shaded current term on the Teaching page, "In Spring 2027 I will teach...") only update when you build. Double-click `Build.command` and publish once at the start of each term, even if nothing else changed. Also reword news items about upcoming talks once they have happened.
+The pages are fixed files, so sentences about time ("next term", the shaded current term on the Teaching page) only update when you build. Double-click `Build.command` and publish once at the start of each term, even if nothing else changed. Also reword news items about upcoming talks once they have happened.
 
 ### Add a research project
 Copy a `[[projects]]` block and give it a new `id` (a short word, never reused) and a `strand`: `"scoring"`, `"policy"` or `"ai"` puts it in that section of the Research page; anything else puts it under Other Work. `site_title` and `site_text` are the heading and paragraph on the Research page; without them the `title` and `text` are used. The order inside a section follows the file.

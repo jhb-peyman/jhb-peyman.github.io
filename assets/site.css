@@ -354,9 +354,6 @@ h2+.pj{margin-top:6px}
 .rec .tt{width:84px;text-align:right;padding-left:18px;white-space:nowrap}
 .rec .tn{font:600 15px/1 var(--sans);font-variant-numeric:tabular-nums;color:var(--ink)}
 .rec thead th.tt{text-align:right;padding-left:18px;font:500 11.5px/1.2 var(--mono);color:var(--mute)}
-.rec tfoot th,.rec tfoot td{border-top:1px solid var(--ink2);height:40px;font:500 12.5px/1 var(--mono);color:var(--mute);font-variant-numeric:tabular-nums}
-.rec tfoot .tot-l{font:500 13px/1.3 var(--sans);color:var(--mute)}
-.rec tfoot td.now{color:var(--ink)}
 .rec-next{margin-top:14px}
 h3.grp{margin:38px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--rule);font:600 15px/1.4 var(--mono);color:var(--ink);letter-spacing:-.01em}
 h3.grp+.course{border-top:0}
@@ -437,13 +434,33 @@ h3.grp+.crs2{border-top:0}
 .crs2:target{background:var(--soft)}
 .crs2.partners{padding:6px 0 18px;border-top:0}
 .partners ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 28px;max-width:620px}
-.partners a{display:flex;align-items:center;min-height:40px}
-.partners img{display:block;width:100%;max-width:140px;height:34px;object-fit:contain;object-position:left center;filter:grayscale(1) opacity(.6);transition:filter .3s ease}
-.partners a:hover img,.partners a:focus-visible img{filter:none}
+.partners a{display:flex;align-items:center;min-height:44px}
+.partners img{display:block;width:100%;max-width:140px;height:34px;object-fit:contain;object-position:left center;transition:filter .3s ease}
 .partners a:focus-visible{outline:2px solid var(--acc);outline-offset:4px}
-:root[data-theme="dark"] .partners img{filter:grayscale(1) invert(1) opacity(.6)}
-:root[data-theme="dark"] .partners a:hover img,:root[data-theme="dark"] .partners a:focus-visible img{filter:grayscale(1) invert(1) opacity(1)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .partners img{filter:grayscale(1) invert(1) opacity(.6)}:root:not([data-theme="light"]) .partners a:hover img,:root:not([data-theme="light"]) .partners a:focus-visible img{filter:grayscale(1) invert(1) opacity(1)}}
+/* Phones and tablets have no hover, so the logos show in full colour there. Only pointer devices get grey-then-colour. */
+@media (hover:hover) and (pointer:fine){
+  .partners img{filter:grayscale(1) opacity(.6)}
+  .partners a:hover img,.partners a:focus-visible img{filter:none}
+}
+/* Dark mode: the logos have dark lettering, so they are drawn light. */
+:root[data-theme="dark"] .partners img{filter:grayscale(1) invert(1) opacity(.85)}
+@media (hover:hover) and (pointer:fine){
+  :root[data-theme="dark"] .partners img{filter:grayscale(1) invert(1) opacity(.6)}
+  :root[data-theme="dark"] .partners a:hover img,:root[data-theme="dark"] .partners a:focus-visible img{filter:grayscale(1) invert(1) opacity(1)}
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .partners img{filter:grayscale(1) invert(1) opacity(.85)}
+}
+@media (prefers-color-scheme:dark) and (hover:hover) and (pointer:fine){
+  :root:not([data-theme="light"]) .partners img{filter:grayscale(1) invert(1) opacity(.6)}
+  :root:not([data-theme="light"]) .partners a:hover img,:root:not([data-theme="light"]) .partners a:focus-visible img{filter:grayscale(1) invert(1) opacity(1)}
+}
+/* Touch: bigger tap areas for the school names and map pins */
+@media (hover:none){
+  .sch li{padding:6px 0}
+  .sch .sch-p{padding:10px;margin:-10px -4px -10px -4px}
+  .sch-h{padding-top:12px;padding-bottom:12px}
+}
 @media(prefers-reduced-motion:reduce){.partners img{transition:none}}
 @media(max-width:640px){.partners ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}.crs2.partners{padding-top:0}}
 @media (max-width:640px){

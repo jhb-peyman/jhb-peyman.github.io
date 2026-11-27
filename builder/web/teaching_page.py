@@ -88,22 +88,12 @@ def page_teaching():
         cid = k['code'].replace('&', '').replace(' ', '').lower()
         rows += (f'<tr><th scope="row" class="tr-c"><a href="#{cid}">{esc(k["code"])}<span>{esc(k.get("short", ""))}</span></a></th>{cells}'
                  f'<td class="tt"><span class="tn">{n(k)}</span></td></tr>')
-    foot = ('<tr class="tot"><th scope="row" class="tr-c"><span class="tot-l">Sections per term</span></th>'
-            + ''.join(f'<td class="{tcls(t_)}">{sum(k["taught"].count(t_) for k in courses) or ""}</td>' for t_ in terms)
-            + '<td class="tt"></td></tr>')
-    next_courses = sorted((k for k in courses if ahead(k)), key=lambda k: k['code'])
-    def next_txt(k): return f'{esc(k["code"])} {esc(k.get("next", ""))}'.strip()
-    next_p = ''
-    if nxt and next_courses:
-        items = [next_txt(k) for k in next_courses]
-        next_p = (f'<p class="rec-next">In {nxt} I will teach '
-                  + (items[0] if len(items) == 1 else ', '.join(items[:-1]) + ' and ' + items[-1]) + '.</p>')
     record = (h2('University of Kansas')
               + (f'<p class="sec-role">Instructor of record and graduate teaching assistant, {esc(ku["org"].replace(", University of Kansas", ""))}, {esc(ku["dates"]).replace("Present", "present")}.</p>' if ku else '')
               + '<p class="sec-p">The table shows every course I have taught at Kansas, term by term. Each square is one section'
               + (f'; {nxt} ({term_code(nxt)}) is next term, already assigned' if nxt else '')
               + ', and the shaded column is the current term.</p>'
-              + f'<div class="rec-wrap"><table class="rec" id="rec"><thead>{head}</thead><tbody>{rows}</tbody><tfoot>{foot}</tfoot></table></div>' + next_p)
+              + f'<div class="rec-wrap"><table class="rec" id="rec"><thead>{head}</thead><tbody>{rows}</tbody></table></div>')
 
     # ---------------------------------------------------------------- practicum schools (grouped by city, each with its website and a map link)
     def schools_html(k):
@@ -127,7 +117,7 @@ def page_teaching():
         return out + '</details>'
 
     # ---------------------------------------------------------------- Kansas: the courses, most taught first
-    blocks = '<h3 class="grp">Courses, most taught first</h3>'
+    blocks = '<h3 class="grp">Instructor of record</h3>'
     for k in sorted(courses, key=lambda k: (-n(k), -done(k), min(term_key(t) for t in k['taught']))):
         cid = k['code'].replace('&', '').replace(' ', '').lower()
         sq = '<i class="sq"></i>' * n(k)
@@ -149,7 +139,7 @@ def page_teaching():
             blocks += (f'<article class="crs2" id="{cid}"><div class="crs2-code">{esc(k["code"])}'
                        f'<div class="crs2-count">{esc(k.get("terms", ""))}</div></div><div class="crs2-body">'
                        f'<h4>{esc(k["title"])}</h4>'
-                       f'<p>{esc(k.get("summary", ""))}</p></div></article>')
+                       + (f'<p>{esc(k["summary"])}</p>' if k.get('summary') else '') + '</div></article>')
         grp = next((g for g in C['teaching'] if g.get('partners')), None)
         if grp:
             imgs = ''.join(f'<li><a href="{attr(x["url"])}" rel="noopener" target="_blank">'
