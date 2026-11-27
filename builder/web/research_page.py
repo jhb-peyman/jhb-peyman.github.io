@@ -191,13 +191,13 @@ def software_section():
     icons = {'r': _icon('r').replace('class="logo"', 'class="ti"'), 'py': _icon('python').replace('class="logo"', 'class="ti"')}
     code = ('<figure class="snip-wrap"><div class="snip" id="codeP">'
             '<div class="snip-bar"><div class="snip-tabs" role="tablist" aria-label="Code sketches"></div>'
-            '<div class="snip-tools"><span class="snip-stat" id="codeS" aria-live="off"></span>'
-            '<button type="button" class="snip-btn" id="codeRun" aria-label="Run again"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Run</span></button>'
+            '<div class="snip-tools">'
+            '<button type="button" class="snip-btn" id="codeRun" aria-label="Run this file"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Run</span></button>'
             '<button type="button" class="snip-btn" id="codeCopy" aria-label="Copy code"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h11v13H8zM5 3h11v3H7v11H5z"/></svg><span>Copy</span></button></div></div>'
-            '<div class="snip-ed"><pre class="snip-gut" id="codeG" aria-hidden="true"></pre><pre class="snip-code"><code id="codeT"></code></pre></div>'
+            '<div class="snip-ed" id="codeEd" role="tabpanel"><div class="snip-lines" id="codeL"></div></div>'
             '<div class="snip-run"><div class="snip-con"><div class="snip-lab">Console</div><pre id="codeO"></pre></div>'
             '<div class="snip-chart"><div class="snip-lab" id="codeH"></div><svg id="codeV" role="img" aria-label="Chart of the reported results"></svg><div class="snip-tip" id="codeTip"></div></div></div>'
-            '<div class="snip-foot"><span id="codeEnv"></span><span id="codeRef"></span></div>'
+            '<div class="snip-foot"><span class="snip-env"><i class="snip-dot" id="codeDot" aria-hidden="true"></i><span id="codeEnv"></span></span><span id="codeRef"></span></div>'
             '</div><figcaption id="codeC"></figcaption></figure>')
     return ('<h2 id="software">Software</h2>' + '<p class="sec-p">What I analyze with. Below, the core model of four studies is written out as a short sketch, '
             'run, and shown with the results the paper reports.</p>'
