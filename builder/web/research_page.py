@@ -1,3 +1,4 @@
+import re
 # Research page. Run by pages.py (uses its helpers: C, P, BYID, esc, md, plain, attr, h2, title, shell, apa_authors, initials, venue).
 # Projects come from content.toml by their strand; papers and talks are placed below by their id.
 # Every claim about a paper below was checked against the paper's own text.
@@ -30,7 +31,8 @@ def page_research():
         note = ''
         if p['status'] == 'preprint' and p.get('kind') != 'artifact':
             lab = p.get('label', '')
-            note = 'Preprint' + (', under review at <i>' + esc(lab.split('under review at ')[1]) + '</i>' if 'under review at' in lab else '') + '.'
+            m = re.search(r'under review at ([^(]*?)(\s*\(.*\))?$', lab)
+            note = 'Preprint' + (', under review at <i>' + esc(m.group(1)) + '</i>' + esc(m.group(2) or '') if m else '') + '.'
         elif p['status'] == 'review':
             note = esc(p.get('label', 'In review')).rstrip('.') + '.'
         note = f' <span class="rstat">{note}</span>' if note else ''
@@ -104,8 +106,9 @@ def page_research():
             'judge the use of generative AI in their coursework, and presented work at AERA on whether campus climate or individual '
             'factors better predict academic AI integrity. A manuscript with Hyesun Cho, revised and back under review, looks at '
             'raciolinguistic gatekeeping and algorithmic suspicion of Middle Eastern graduate teaching assistants, and I will lead a '
-            'roundtable on the same topic at TESOL 2027.</p>'
-          + refs([ref('ethics'), ref('accent'), talk('tesol27'), talk('aera')]))
+            'roundtable on the same topic at TESOL 2027. A second manuscript with her, on anticipatory identity negotiation among '
+            'Middle Eastern graduate students, is under review.</p>'
+          + refs([ref('ethics'), ref('accent'), ref('eggshells'), talk('tesol27'), talk('aera')]))
 
     other_proj = ''.join(proj(x) for x in PROJ if x.get('strand') not in ('scoring', 'policy', 'ai'))
     s4 = ('<h2 id="other">Other Work</h2>' + other_proj

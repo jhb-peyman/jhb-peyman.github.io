@@ -914,6 +914,158 @@ def org_place(x):
     return ", ".join(esc(v) for v in (get(x, "org"), get(x, "place")) if v)
 
 
+# ----------------------------------------------------------------------------- APA 7 references for the CV
+def seg(t, i=False, b=False, u=None):
+    return {"t": t, "i": i, "b": b, "u": u}
+
+
+def seg_md(t):
+    """Pieces for text with *italic* markers."""
+    return [seg(part, i=bool(k % 2)) for k, part in enumerate(re.split(r"\*(.+?)\*", t)) if part]
+
+
+def curly(t):
+    """Straight double quotes to curly ones."""
+    out, open_q = [], True
+    for ch in t:
+        if ch == '"':
+            out.append("“" if open_q else "”")
+            open_q = not open_q
+        else:
+            out.append(ch)
+    return "".join(out).replace("'", "’")
+
+
+def apa_initials(given):
+    return " ".join("-".join(x[0].upper() + "." for x in t.split("-") if x) for t in given.split() if "/" not in t)
+
+
+def apa_author_segs(authors, c):
+    fam0, giv0 = c["person"]["last_name"], c["person"]["first_name"]
+    names = []
+    for a in authors:
+        _, fam, giv = split_author(a)
+        names.append(seg(f"{fam}, {apa_initials(giv)}", b=(fam == fam0 and giv.startswith(giv0))))
+    out = []
+    for k, n in enumerate(names):
+        if k:
+            out.append(seg(", & " if k == len(names) - 1 else ", "))
+        out.append(n)
+    return out
+
+
+def apa_title_stop(t):
+    return t if t.rstrip("”’\"'").endswith(("?", "!", ".")) else t + "."
+
+
+def apa_doi(doi):
+    return [seg(" "), seg("https://doi.org/" + doi, u="https://doi.org/" + doi)]
+
+
+def apa_pub(x, c):
+    """One publication as an APA 7 reference (journal article, submitted manuscript, preprint or software)."""
+    out = apa_author_segs(x["authors"], c) + [seg(f' ({x["year"]}). ')]
+    title = curly(x.get("apa_title") or x.get("cite_title") or plain(x["title"]))
+    grp = x.get("cv_group") or x["status"]
+    if grp == "published":
+        out.append(seg(apa_title_stop(title) + " "))
+        out.append(seg(x.get("venue") or x.get("venue_text"), i=True))
+        if x.get("volume"):
+            out += [seg(", "), seg(x["volume"], i=True)] + ([seg(f'({x["issue"]})')] if x.get("issue") else [])
+        if x.get("pages"):
+            out.append(seg(", " + x["pages"].replace("-", "–")))
+        elif x.get("article"):
+            out.append(seg(", Article " + x["article"]))
+        out.append(seg("."))
+        if x.get("online") and not x.get("volume"):
+            out.append(seg(" Advance online publication."))
+    elif grp == "review":
+        out += [seg(title, i=True), seg(" [Manuscript submitted for publication]. ")]
+        out += seg_md(x.get("cv_apa") or f'Under review at *{x.get("venue") or x.get("venue_text")}*')
+        if not out[-1]["t"].endswith((".", ":")):
+            out.append(seg("."))
+    elif x.get("kind") == "artifact":
+        out += [seg(title, i=True), seg(" [Computer software]. Zenodo.")]
+    else:
+        lab = x.get("label", "")
+        m = re.search(r"under review at (.+)$", lab)
+        out += [seg(title, i=True), seg(" [Preprint")]
+        if m:
+            out += [seg("; under review at "), seg(m.group(1), i=True)]
+        out.append(seg(f'].  {x["venue"]}.'.replace("].  ", "]. ")))
+    if x.get("doi"):
+        out += apa_doi(x["doi"])
+    if x.get("osf"):
+        out += [seg(" (method registration: "), seg("https://doi.org/" + x["osf"], u="https://doi.org/" + x["osf"]), seg(")")]
+    return out
+
+
+def apa_report(x, c):
+    out = apa_author_segs(x["authors"], c) + [seg(f' ({x["year"]}). ')]
+    out += [seg(curly(x.get("cite_title") or x["title"]), i=True), seg(f' [{x.get("kind", "Report")}]. {x["publisher"]}.')]
+    if x.get("url"):
+        out += [seg(" "), seg(x["url"], u=x["url"])]
+    return out
+
+
+def apa_talk(x, c):
+    """A conference presentation in APA 7: authors (year, month day). Title [format]. Conference, City, ST, United States."""
+    if x.get("cite_authors"):
+        authors = x["cite_authors"]
+    else:
+        authors = [own_name(c)] + [n.strip() for n in re.split(r",\s*|\s+and\s+", x.get("coauthors", "")) if n.strip()]
+    if x.get("cite_date") and x.get("cite_year"):
+        when = f'{x["cite_year"]}, {x["cite_date"]}'
+    else:
+        m = re.match(r"(\w+)(?: ([\d-]+))?,? (\d{4})$", x.get("cv_date") or "")
+        when = f'{m.group(3)}, {m.group(1)}' + (f' {m.group(2).replace("-", "–")}' if m.group(2) else "") if m else str(x.get("date", ""))
+    title = curly(x.get("apa_title") or x.get("cite_title") or x["title"])
+    event = x.get("event") or (x.get("cv_event") or x.get("site_venue", "")).partition(". ")[0]
+    place = x.get("place", "")
+    if re.search(r", [A-Z]{2}$", place):
+        place += ", United States"
+    out = apa_author_segs(authors, c) + [seg(f" ({when}). "), seg(title, i=True),
+                                          seg(f' [{x.get("apa_format") or x.get("cite_format") or "Conference presentation"}]. {event}' + (f", {place}" if place else "") + ".")]
+    if x.get("doi") and x.get("cite_title"):
+        out += apa_doi(x["doi"])
+    return out
+
+
+def segs_html(segs):
+    out = []
+    for g in segs:
+        t = esc(g["t"])
+        if g["i"]:
+            t = f"<i>{t}</i>"
+        if g["b"]:
+            t = f"<b>{t}</b>"
+        if g["u"]:
+            t = f'<a href="{attr(g["u"])}">{t}</a>'
+        out.append(t)
+    return "".join(out)
+
+
+def segs_docx(d, segs, sz=10):
+    return [d.run(g["t"], i=g["i"], b=g["b"], sz=sz, color=NAVY if g["u"] else None, link=g["u"]) for g in segs]
+
+
+def cv_pub_groups(c):
+    """The CV's publication groups, in order: (heading, list of pieces per reference)."""
+    pubs = sorted_pubs(c)
+    groups = []
+    for st, head in (("published", "Peer-Reviewed Journal Articles"), ("review", "Manuscripts in Review"),
+                     ("preprint", "Preprints and Research Artifacts")):
+        items = [x for x in pubs if (x.get("cv_group") or x["status"]) == st and x.get("cv_section") != "other"]
+        if items:
+            groups.append((head, [apa_pub(x, c) for x in items]))
+    if c.get("reports"):
+        groups.append(("Reports and White Papers", [apa_report(x, c) for x in c["reports"]]))
+    others = [x for x in pubs if x.get("cv_section") == "other"]
+    if others:
+        groups.append((c.get("cv", {}).get("other_publications_heading", "Other Publications"), [apa_pub(x, c) for x in others]))
+    return groups
+
+
 def cv_body(c, today):
     p, cv = c["person"], c.get("cv", {})
     own = own_name(c)
@@ -953,69 +1105,14 @@ def cv_body(c, today):
     if academic:
         out.append("<h2>Academic Appointments</h2>" + "".join(appt(x) for x in academic))
 
-    # ---- publications: one section, grouped
-    pubs = sorted_pubs(c)
-    def ref(x):
-        au = cv_authors(x["authors"], own)
-        t = esc(plain(x["title"]))
-        st = x["status"]
-        if st == "published":
-            v = f'<i>{esc(x.get("venue") or x.get("venue_text"))}'
-            if x.get("volume"):
-                v += f', {esc(x["volume"])}</i>' + (f'({esc(x["issue"])})' if x.get("issue") else "")
-            else:
-                v += "</i>"
-            if x.get("pages"):
-                v += ", " + esc(x["pages"])
-            elif x.get("article"):
-                v += ", Article " + esc(x["article"])
-            if x.get("online") and not x.get("volume"):
-                v += ". Advance online publication"
-            gut = str(x["year"])
-        elif st == "review":
-            v = f'<i>{esc(x.get("venue") or x.get("venue_text"))}</i>. <span class="st">{esc(x.get("cv_status") or x.get("label") or "Under review")}</span>'
-            gut = "In review"
-        else:
-            if x.get("venue_text"):
-                v = esc(x["venue_text"])
-            else:
-                v = f'<i>{esc(x["venue"])}</i>. <span class="st">{esc(x.get("cv_note") or "Preprint")}</span>'
-            gut = str(x["year"])
-        line = f"{au}. {stop(t)} {v}."
-        if x.get("doi"):
-            line += f' <a href="https://doi.org/{attr(x["doi"])}">https://doi.org/{esc(x["doi"])}</a>'
-        return cv_row(gut, "", "", line, "ref")
-    groups = [("published", "Peer-Reviewed Journal Articles"), ("review", "Manuscripts in Review"),
-              ("preprint", "Preprints and Research Artifacts")]
-    others = [x for x in pubs if x.get("cv_section") == "other"]
-    if pubs or c.get("reports"):
+    # ---- publications and presentations, in APA 7
+    groups = cv_pub_groups(c)
+    if groups:
         out.append("<h2>Publications</h2>")
-    for st, head in groups:
-        items = [x for x in pubs if x["status"] == st and x.get("cv_section") != "other"]
-        if items:
-            out.append(f"<h3>{head}</h3>" + "".join(ref(x) for x in items))
-    if c.get("reports"):
-        out.append("<h3>Reports and White Papers</h3>")
-        for x in c["reports"]:
-            line = f'{cv_authors(x["authors"], own)}. {esc(plain(x["title"]))} [{esc(x.get("kind", "Report"))}]. {esc(x["publisher"])}.'
-            if x.get("url"):
-                line += f' <a href="{attr(x["url"])}">{esc(x["url"].replace("https://", ""))}</a>'
-            out.append(cv_row(gutter_date(x.get("cv_date") or x["date"]), "", "", line, "ref"))
-    if others:
-        out.append(f'<h3>{esc(cv.get("other_publications_heading", "Other Publications"))}</h3>' + "".join(ref(x) for x in others))
-
+    for head, refs in groups:
+        out.append(f"<h3>{esc(head)}</h3>" + "".join(f'<p class="apa">{segs_html(r)}</p>' for r in refs))
     if c.get("presentations"):
-        rows = []
-        for x in c["presentations"]:
-            ev = x.get("cv_event") or x.get("site_venue", "")
-            evi, _, rest = ev.partition(". ")
-            line = f'{stop(esc(x["title"]))} <i>{esc(evi)}</i>' + (f', {esc(x["place"])}' if x.get("place") else "") + "."
-            if rest:
-                line += f' {esc(rest[:1].upper() + rest[1:])}.'
-            if x.get("coauthors"):
-                line += f' With {esc(x["coauthors"])}.'
-            rows.append(cv_row(gutter_date(x.get("date", "")), "", "", line, "ref"))
-        out.append("<h2>Conference Presentations</h2>" + "".join(rows))
+        out.append("<h2>Conference Presentations</h2>" + "".join(f'<p class="apa">{segs_html(apa_talk(x, c))}</p>' for x in c["presentations"]))
 
     if c.get("projects"):
         out.append("<h2>Research Projects</h2>" + "".join(
@@ -1195,72 +1292,20 @@ def build_docx(c, today, path):
         for x in academic:
             appt(x)
 
-    # ---- publications
-    pubs = sorted_pubs(c)
-    def ref(x):
-        runs = docx_author_runs(d, x["authors"], own) + [d.run(". " + stop(plain(x["title"])) + " ")]
-        st = x["status"]
-        if st == "published":
-            if x.get("volume"):
-                runs.append(d.run(f'{x.get("venue") or x.get("venue_text")}, {x["volume"]}', i=True))
-                if x.get("issue"):
-                    runs.append(d.run(f'({x["issue"]})'))
-            else:
-                runs.append(d.run(x.get("venue") or x.get("venue_text"), i=True))
-            tail = (", " + x["pages"]) if x.get("pages") else ((", Article " + x["article"]) if x.get("article") else "")
-            if x.get("online") and not x.get("volume"):
-                tail += ". Advance online publication"
-            runs.append(d.run(tail + "."))
-            gut = str(x["year"])
-        elif st == "review":
-            runs += [d.run(x.get("venue") or x.get("venue_text"), i=True), d.run(". "),
-                     d.run((x.get("cv_status") or x.get("label") or "Under review") + ".", color=GRAY)]
-            gut = "In review"
-        else:
-            if x.get("venue_text"):
-                runs.append(d.run(x["venue_text"] + "."))
-            else:
-                runs += [d.run(x["venue"], i=True), d.run(". "), d.run((x.get("cv_note") or "Preprint") + ".", color=GRAY)]
-            gut = str(x["year"])
-        if x.get("doi"):
-            runs += [d.run(" "), d.run("https://doi.org/" + x["doi"], color=NAVY, link="https://doi.org/" + x["doi"])]
-        row(gut, runs=runs, after=60)
-    groups = [("published", "Peer-Reviewed Journal Articles"), ("review", "Manuscripts in Review"),
-              ("preprint", "Preprints and Research Artifacts")]
-    others = [x for x in pubs if x.get("cv_section") == "other"]
-    if pubs or c.get("reports"):
+    # ---- publications and presentations, in APA 7
+    def apa_para(segs):
+        d.para(segs_docx(d, segs), left=GUT + 360, hanging=360, after=80, keep_lines=True)
+    groups = cv_pub_groups(c)
+    if groups:
         h2("Publications")
-    first = True
-    for st, head in groups:
-        items = [x for x in pubs if x["status"] == st and x.get("cv_section") != "other"]
-        if items:
-            h3(head, before=20 if first else 150)
-            first = False
-            for x in items:
-                ref(x)
-    if c.get("reports"):
-        h3("Reports and White Papers")
-        for x in c["reports"]:
-            runs = docx_author_runs(d, x["authors"], own) + [d.run(f'. {plain(x["title"])} [{x.get("kind", "Report")}]. {x["publisher"]}.')]
-            if x.get("url"):
-                runs += [d.run(" "), d.run(x["url"].replace("https://", ""), color=NAVY, link=x["url"])]
-            row(gutter_text(x.get("cv_date") or x["date"]), runs=runs, after=60)
-    if others:
-        h3(cv.get("other_publications_heading", "Other Publications"))
-        for x in others:
-            ref(x)
-
+    for k, (head, refs) in enumerate(groups):
+        h3(head, before=20 if k == 0 else 150)
+        for r in refs:
+            apa_para(r)
     if c.get("presentations"):
         h2("Conference Presentations")
         for x in c["presentations"]:
-            ev = x.get("cv_event") or x.get("site_venue", "")
-            evi, _, rest = ev.partition(". ")
-            runs = [d.run(stop(x["title"]) + " "), d.run(evi, i=True), d.run((f', {x["place"]}' if x.get("place") else "") + ".")]
-            if rest:
-                runs.append(d.run(f" {rest[:1].upper() + rest[1:]}."))
-            if x.get("coauthors"):
-                runs.append(d.run(f' With {x["coauthors"]}.'))
-            row(gutter_text(x.get("date", "")), runs=runs, after=60)
+            apa_para(apa_talk(x, c))
 
     if c.get("projects"):
         h2("Research Projects")

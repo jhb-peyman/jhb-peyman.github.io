@@ -347,12 +347,14 @@ topics     = ["speech"]
 title      = "Acoustic Gap Placement in Second-Language Read Speech Production"
 cite_title = "Acoustic gap placement in second-language read speech production"
 authors    = ["Peyman Jahanbin"]
-label      = "Preprint, under review at PLOS ONE"
+label      = "Preprint, under review at PLOS ONE (minor revisions)"
 venue      = "arXiv"
+cv_group   = "review"       # CV: listed under Manuscripts in Review (the arXiv DOI is given as the preprint)
+cv_apa     = "Under review at *PLOS ONE* (minor revisions). Preprint:"
 doi        = "10.48550/arXiv.2610.02582"
 eprint     = "2610.02582"
 bibkey     = "jahanbin2026gap"
-cv_note    = "Preprint; under review at PLOS ONE"
+cv_note    = "Preprint; under review at PLOS ONE (minor revisions)"
 
 [[publications]]
 id         = "beyond"
@@ -479,7 +481,22 @@ cite_title = '"The accent hides the knowledge": Raciolinguistic gatekeeping and 
 authors    = ["Peyman Jahanbin", "Hyesun Cho"]
 venue      = "Journal of Language, Identity & Education"
 cv_status  = "Revised (minor revisions) after peer review; currently out for review"
+cv_apa     = "Revised after peer review (minor revisions); under review at *Journal of Language, Identity & Education*"
 bibkey     = "jahanbin2026accent"
+
+[[publications]]
+id         = "eggshells"
+date       = "2026"
+status     = "review"
+year       = 2026
+topics     = ["policy", "classroom"]
+label      = "Under review"
+title      = "“Walking on Eggshells”: Anticipatory Identity Negotiation Among Middle Eastern Graduate Students in U.S. Higher Education"
+cite_title = '"Walking on eggshells": Anticipatory identity negotiation among Middle Eastern graduate students in U.S. higher education'
+authors    = ["Peyman Jahanbin", "Hyesun Cho"]
+venue      = "Language, Culture and Curriculum"
+cv_status  = "Under review"
+bibkey     = "jahanbin2026eggshells"
 
 [[publications]]
 id         = "toofew"
@@ -493,6 +510,7 @@ authors    = ["Peyman Jahanbin", "Adam M. Brazil"]
 venue      = "Bilingual Research Journal"
 label      = "Submitted November 2026"
 cv_status  = "Under review (submitted November 2026)"
+cv_apa     = "Under review at *Bilingual Research Journal* (submitted November 2026)"
 
 [[publications]]
 id         = "arxiv"
@@ -533,6 +551,7 @@ cite       = false
 year       = 2025
 topics     = ["speech", "ai"]
 title      = "A Reproducible MFCC-Based Pipeline for L1 Classification in L2 English Pronunciation Using Python"
+apa_title  = "A reproducible MFCC-based pipeline for L1 classification in L2 English pronunciation using Python"   # CV (APA 7)
 authors    = ["Peyman Jahanbin"]
 label      = "Artifact"
 venue_text = "Reproducible research artifact. Method registration: OSF, April 13, 2025, DOI 10.17605/OSF.IO/4UXGM. Code: Zenodo, April 10, 2025"
@@ -548,6 +567,7 @@ date      = "Aug 2026"
 cv_date   = "August 2026"
 year      = 2026
 title     = "Too Few to Count: How a Uniform Reporting Threshold Renders Rural English Learners Invisible in Kansas"
+cite_title = "Too few to count: How a uniform reporting threshold renders rural English learners invisible in Kansas"
 authors   = ["Peyman Jahanbin", "Mike Klein-Thibodeau", "Adam M. Brazil"]
 kind      = "White paper"
 publisher = "Center for Educational Opportunity Programs, University of Kansas"
@@ -561,6 +581,8 @@ url       = "https://ceop.ku.edu/publications"
 #  Add doi and the cite_* fields to give a presentation its own cite buttons (see the AERA one).
 [[presentations]]
 id          = "site27"
+apa_title   = "What does an AI score justify?"     # CV (APA 7): sentence-case title
+apa_format  = "Brief paper presentation"
 format      = "Brief paper, peer-reviewed, accepted"
 event       = "Society for Information Technology & Teacher Education (SITE 2027)"
 date        = "Mar 2027"
@@ -572,6 +594,8 @@ place       = "Nashville, TN"
 
 [[presentations]]
 id          = "tesol27"
+apa_title   = "Algorithmic suspicion: Raciolinguistic gatekeeping of Middle Eastern teaching assistants"     # CV (APA 7): sentence-case title
+apa_format  = "Roundtable presentation"
 format      = "Roundtable"
 event       = "TESOL 2027 International Convention & Expo"
 date        = "Mar 2027"
@@ -583,6 +607,8 @@ place       = "Houston, TX"
 
 [[presentations]]
 id          = "midtesol26"
+apa_title   = "Beyond symbolic recognition: Examining access, fidelity, and student outcomes in the Seal of Biliteracy"     # CV (APA 7): sentence-case title
+apa_format  = "Conference presentation"
 date        = "Oct 2026"
 cv_date     = "October 30-31, 2026"
 title       = "Beyond Symbolic Recognition: Examining Access, Fidelity, and Student Outcomes in the Seal of Biliteracy"
@@ -594,6 +620,8 @@ doi         = "10.1002/tesq.70236"
 
 [[presentations]]
 id          = "ncic26"
+apa_title   = "Correlation isn’t enough: Agreement and decision risk for automated speaking scores in a Cambridge dataset"     # CV (APA 7): sentence-case title
+apa_format  = "Conference presentation"
 date        = "Apr 2026"
 cv_date     = "April 11, 2026"
 title       = "Correlation Isn’t Enough: Agreement and Decision Risk for Automated Speaking Scores in a Cambridge Dataset"
@@ -626,6 +654,8 @@ cite_month  = "apr"
 
 [[presentations]]
 id          = "scipie25"
+apa_title   = "Machine learning in the service of second language learning"     # CV (APA 7): sentence-case title
+apa_format  = "Conference presentation"
 date        = "Oct 2025"
 cv_date     = "October 2025"
 title       = "Machine Learning in the Service of Second Language Learning"
@@ -635,6 +665,8 @@ place       = "Norman, OK"
 
 [[presentations]]
 id          = "midtesol24"
+apa_title   = "EFL learners excel: Incidental grammar learning through audio-assisted reading"     # CV (APA 7): sentence-case title
+apa_format  = "Conference presentation"
 date        = "Oct 2024"
 cv_date     = "October 2024"
 title       = "EFL Learners Excel: Incidental Grammar Learning through Audio-Assisted Reading"

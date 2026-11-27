@@ -93,7 +93,7 @@ def kind(p):
     if p['status'] == 'review': return ['Manuscript', esc(p.get('label', 'In review'))]
     k = ['Preprint']
     if p.get('label') and 'under review' in p['label']:
-        k.append(re.sub(r'.*?under review at (.*)', lambda m: 'Under review at <i>' + m.group(1) + '</i>', esc(p['label'])))
+        k.append(re.sub(r'.*?under review at ([^(]*?)(\s*\(.*\))?$', lambda m: 'Under review at <i>' + m.group(1) + '</i>' + (m.group(2) or ''), esc(p['label'])))
     return k
 
 # Live sketches of each paper's method (anims.js). Papers without a drawable method stay text only.
