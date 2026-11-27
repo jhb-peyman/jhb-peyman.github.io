@@ -148,12 +148,14 @@ def page_teaching():
             cid = k['code'].replace('&', '').replace(' ', '').lower()
             blocks += (f'<article class="crs2" id="{cid}"><div class="crs2-code">{esc(k["code"])}'
                        f'<div class="crs2-count">{esc(k.get("terms", ""))}</div></div><div class="crs2-body">'
-                       f'<h4>{esc(k["title"])}</h4><p class="c-meta"><span>{esc(k["role"])}</span></p>'
+                       f'<h4>{esc(k["title"])}</h4>'
                        f'<p>{esc(k.get("summary", ""))}</p></div></article>')
         grp = next((g for g in C['teaching'] if g.get('partners')), None)
         if grp:
-            imgs = ''.join(f'<li><img src="{attr(x["logo"])}" alt="{attr(x["name"])}" width="{x["width"]}" height="{x["height"]}" loading="lazy"></li>' for x in grp['partners'])
-            blocks += (f'<div class="partners"><p class="pt-l">{esc(grp.get("partners_label", "Partner universities"))}</p><ul>{imgs}</ul></div>')
+            imgs = ''.join(f'<li><a href="{attr(x["url"])}" rel="noopener" target="_blank">'
+                           f'<img src="{attr(x["logo"])}" alt="" width="140" height="34" loading="lazy">'
+                           f'<span class="sr">{esc(x["name"])}, opens in a new tab</span></a></li>' for x in grp['partners'])
+            blocks += f'<div class="crs2 partners"><div class="crs2-code"></div><div class="crs2-body"><ul>{imgs}</ul></div></div>'
 
     # ---------------------------------------------------------------- teaching in Iran
     iran = sorted((a for a in C['appointments'] if a.get('site_text') and 'Iran' in a.get('place', '')),

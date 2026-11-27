@@ -435,12 +435,17 @@ h3.grp+.crs2{border-top:0}
 @media(max-width:640px){.sch-g{grid-template-columns:1fr;gap:0}.sch ul{grid-template-columns:1fr}}
 .crs2 p{max-width:620px}
 .crs2:target{background:var(--soft)}
-.partners{margin:6px 0 4px;max-width:760px}
-.pt-l{font:500 13px/1.4 var(--sans);color:var(--mute);margin-bottom:8px}
-.partners ul{list-style:none;margin:0;padding:10px 12px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;justify-items:center;gap:0;background:#fff;border:1px solid var(--rule)}
-.partners li{display:flex;align-items:center;justify-content:center;width:100%;min-height:62px;padding:8px 10px}
-.partners img{display:block;max-width:100%;height:auto}
-@media(max-width:640px){.partners ul{grid-template-columns:repeat(2,minmax(0,1fr));padding:6px}.partners li{min-height:56px}}
+.crs2.partners{padding:6px 0 18px;border-top:0}
+.partners ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 28px;max-width:620px}
+.partners a{display:flex;align-items:center;min-height:40px}
+.partners img{display:block;width:100%;max-width:140px;height:34px;object-fit:contain;object-position:left center;filter:grayscale(1) opacity(.6);transition:filter .3s ease}
+.partners a:hover img,.partners a:focus-visible img{filter:none}
+.partners a:focus-visible{outline:2px solid var(--acc);outline-offset:4px}
+:root[data-theme="dark"] .partners img{filter:grayscale(1) invert(1) opacity(.6)}
+:root[data-theme="dark"] .partners a:hover img,:root[data-theme="dark"] .partners a:focus-visible img{filter:grayscale(1) invert(1) opacity(1)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .partners img{filter:grayscale(1) invert(1) opacity(.6)}:root:not([data-theme="light"]) .partners a:hover img,:root:not([data-theme="light"]) .partners a:focus-visible img{filter:grayscale(1) invert(1) opacity(1)}}
+@media(prefers-reduced-motion:reduce){.partners img{transition:none}}
+@media(max-width:640px){.partners ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}.crs2.partners{padding-top:0}}
 @media (max-width:640px){
   .crs2{grid-template-columns:1fr}
   .crs2-code{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}

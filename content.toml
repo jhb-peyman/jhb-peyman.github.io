@@ -734,16 +734,15 @@ summary  = "How culture, identity and community shape students’ experience of 
 #  counts, and they show in their own "Teaching assistant" part of the Teaching page and in the CV.
 [[teaching]]
 group = "Teaching Assistant"
-partners_label = "Kansas universities named on the course materials"
-#  Logos sit in assets/img/partners. width and height are the size shown on the page, in pixels.
+#  Logos (vector files from Wikimedia Commons) sit in assets/img/partners. url = the university's home page.
 partners = [
-  { name = "Emporia State University", logo = "assets/img/partners/emporia-state.png", width = 104, height = 25 },
-  { name = "Fort Hays State University", logo = "assets/img/partners/fort-hays-state.png", width = 124, height = 36 },
-  { name = "Kansas State University, College of Education", logo = "assets/img/partners/kansas-state.png", width = 170, height = 28 },
-  { name = "University of Kansas", logo = "assets/img/partners/university-of-kansas.png", width = 94, height = 27 },
-  { name = "Pittsburg State University", logo = "assets/img/partners/pittsburg-state.png", width = 141, height = 36 },
-  { name = "Washburn University", logo = "assets/img/partners/washburn.png", width = 90, height = 24 },
-  { name = "Wichita State University", logo = "assets/img/partners/wichita-state.png", width = 118, height = 34 },
+  { name = "Emporia State University", logo = "assets/img/partners/emporia-state.svg", url = "https://www.emporia.edu/" },
+  { name = "Fort Hays State University", logo = "assets/img/partners/fort-hays-state.svg", url = "https://www.fhsu.edu/" },
+  { name = "Kansas State University", logo = "assets/img/partners/kansas-state.svg", url = "https://www.k-state.edu/" },
+  { name = "University of Kansas", logo = "assets/img/partners/university-of-kansas.svg", url = "https://ku.edu/" },
+  { name = "Pittsburg State University", logo = "assets/img/partners/pittsburg-state.svg", url = "https://www.pittstate.edu/" },
+  { name = "Washburn University", logo = "assets/img/partners/washburn.svg", url = "https://www.washburn.edu/" },
+  { name = "Wichita State University", logo = "assets/img/partners/wichita-state.svg", url = "https://www.wichita.edu/" },
 ]
 
 [[teaching.courses]]
