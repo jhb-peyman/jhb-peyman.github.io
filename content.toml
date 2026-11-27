@@ -53,8 +53,10 @@ subtitle     = "Curriculum & Instruction (TESOL)  |  Language Assessment  |  AI 
 headline     = "Ph.D. Candidate, Curriculum & Instruction (TESOL), University of Kansas"   # CV: the line under the name
 contact_line = ["Peyman@KU.edu", "Lawrence, Kansas", "jhb-peyman.github.io", "LinkedIn/JPeyman", "Google Scholar", "ORCID"]
 research_interests = "Language assessment; automated speaking assessment; validity and fairness; responsible AI in education; explainable machine learning; L2 pronunciation; multilingual education and policy; Seal of Biliteracy; quantitative and mixed-methods educational research."
-teaching_header  = "University of Kansas, Department of Curriculum & Teaching"
-teaching_summary = "Instructor of Record (primary instructor) for seven distinct KU courses across 16 course sections, 2023-2026; two more assigned for Spring 2027."
+teaching_header  = "University of Kansas"
+# CV teaching: the courses in every group except "Teaching Assistant" sit under the instructor-of-record line
+teaching_ior = { title = "Instructor of Record (primary instructor)", dates = "2023 to Present", org = "Department of Curriculum & Teaching", text = "Sole instructor of each course below, responsible for teaching and grading." }
+teaching_ta  = { title = "Graduate Teaching Assistant", dates = "Fall 2026", org = "Department of Curriculum & Teaching", text = "Assist the instructor of record in two statewide courses offered through the Kansas Blueprint for Literacy." }
 methodological_training = [
   { label = "Quantitative",  text = "EPSY 710 Introductory Statistical Analysis; EPSY 905 Fundamentals of Multivariate Modeling; SW 981 Advanced Quantitative Research Methods I; SW 983 Advanced Quantitative Research Methods II." },
   { label = "Qualitative",   text = "C&T 808 Qualitative Research: Curriculum Inquiry." },
@@ -150,7 +152,7 @@ site_title = "What a first language leaves in L2 speech"
 site_text = "Before a scorer can be judged, it helps to know what in the signal carries a speaker’s first language. Using Speech Accent Archive recordings of Mandarin and English first-language speakers, I describe their English with MFCCs, test which coefficients separate the two groups, and show that a random forest built on that small set classifies better than one built on all thirteen. A companion study uses forced alignment to locate pauses in the same read passage: both groups pause at punctuation about equally, but the Mandarin group pauses far more often where the text gives no punctuation cue."
 cv_title = "Explainable Machine Learning for L2 Pronunciation"
 text     = "Interpretable MFCC-based models of how a first language shapes L2 pronunciation, plus reproducible workflows for feedback."
-cv_text  = "Develops interpretable MFCC-based models of L1 influence in L2 pronunciation and reproducible workflows for feedback."
+cv_text  = "Interpretable MFCC-based models of first-language influence on L2 pronunciation, with reproducible code for feedback."
 
 [[projects]]
 id       = "seal"
@@ -162,7 +164,7 @@ site_text = "How the Seal of Biliteracy is implemented, who can earn it, how stu
 site_note = "I worked on the review in summer 2025 as a graduate research assistant on Project SEMILLA (Supporting Educators, Math Instructors, and Language Learners for Advancement), a $2.44 million project funded by the U.S. Department of Education, Office of English Language Acquisition, at the Center for Educational Opportunity Programs, University of Kansas."
 cv_title = "Seal of Biliteracy Policy, Equity, and Recognition"
 text     = "How the Seal of Biliteracy is implemented, who can earn it, how students qualify, and whether colleges and employers recognize it. With CEOP colleagues I am also studying Seal attainment by English learner status and district locale across all 50 states and DC; data collection began in 2026."
-cv_text  = "Examines implementation, equitable access, assessment pathways, postsecondary recognition, and real-world value of the Seal of Biliteracy. A national access study with CEOP colleagues examines Seal attainment by English learner status and district locale across all 50 states and DC (data collection began in 2026)."
+cv_text  = "How the Seal of Biliteracy is put into practice, who earns it, and what it is worth after high school. A national study with CEOP colleagues compares Seal attainment by English learner status and district locale in all 50 states and DC (data collection began in 2026)."
 
 [[projects]]
 id       = "kansas"
@@ -173,7 +175,7 @@ site_title = "English learners in Kansas public reporting"
 site_text = "How districts report English learner results, which student groups become invisible, and how small cohort sizes create gaps in public data. I conceived and led the study at CEOP in summer 2026. Kansas withholds a subgroup result when fewer than ten students are tested. In our white paper, districts that publish English learner reading results enroll about 98% of the state’s English learners, yet only about 41% of the districts that serve them report: every city district, but only about a quarter of rural ones. Once enrollment is taken into account, the rural gap is no longer statistically significant: small numbers under a uniform threshold, rather than rurality as such, decide who goes unseen. The Kansas analysis is complete (white paper, August 2026; journal version under review), and the study is now extending to about ten more states with CEOP colleagues."
 cv_title = "English Learner Visibility in Kansas Public Reporting"
 text     = "How districts report English learner results, which student groups become invisible, and how small cohort sizes create gaps in public data. The Kansas analysis is complete (white paper, August 2026; journal version under review), and the study is now extending to about ten more states with CEOP colleagues."
-cv_text  = "Examines district-level English learner result reporting, subgroup visibility, and how cohort size shapes public reporting gaps. The Kansas analysis is complete (white paper, August 2026; journal version under review); the study is now extending to about ten more states with CEOP colleagues."
+cv_text  = "How minimum group sizes keep English learner results out of district public reports. The Kansas analysis is done (white paper, August 2026; journal version under review), and the study is now expanding to about ten more states with CEOP colleagues."
 
 
 # ------------------------------------------------------------------ education
@@ -185,7 +187,7 @@ cv_dates = "August 2023-Present"
 org      = "University of Kansas"
 place    = "Lawrence, KS"
 text     = "Coursework completed; advanced to doctoral candidacy on October 23, 2026 (written and oral comprehensive examinations). Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
-cv_text  = "Coursework completed; advanced to doctoral candidacy on October 23, 2026 (written and oral comprehensive examinations). Dissertation focus: validity and fairness in automated speaking assessment. Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
+cv_text  = "Advanced to candidacy October 23, 2026, after written and oral comprehensive examinations. Dissertation: validity and fairness in automated speaking assessment. Advisors: Dr. Imogen R. Herrick and Dr. Heidi L. Hallman."
 
 [[education]]
 dates    = "May 2026"
@@ -216,10 +218,12 @@ place    = "Isfahan, Iran"
 [[appointments]]
 dates    = "2023 to Present"
 title    = "Instructor of Record & Graduate Teaching Assistant"
+cv_title = "Instructor of Record (Graduate Teaching Assistant appointment)"
 org      = "Department of Curriculum & Teaching, University of Kansas"
 place    = "Lawrence, KS"
 site_who = "Department of Curriculum & Teaching, University of Kansas"     # site_who: what the website shows instead of "org · place"
 text     = "Instructor of record for undergraduate and graduate courses in TESOL methods, language assessment, practicum, multilingual learner instruction, and teacher education."
+cv_text  = "Teach undergraduate and graduate courses in TESOL methods, language assessment, multilingual learner instruction, and teacher education, and supervise practicum."
 
 [[appointments]]
 dates    = "Summers 2025 and 2026"
@@ -229,7 +233,7 @@ org      = "Center for Educational Opportunity Programs (CEOP), University of Ka
 place    = "Lawrence, KS"
 site_who = "Center for Educational Opportunity Programs (CEOP), University of Kansas"
 text     = "Summer 2025: Project SEMILLA (Supporting Educators, Math Instructors, and Language Learners for Advancement), funded by the U.S. Department of Education, Office of English Language Acquisition ($2.44 million). Research synthesis and policy analysis on the Seal of Biliteracy, which became the *TESOL Quarterly* review. Summer 2026: conceived and led *Too Few to Count*, a study of English learner reporting in Kansas, and contributed the literature review and needs section to a U.S. Department of Labor grant proposal submitted in July 2026."
-cv_text  = "Summer 2025: Project SEMILLA (Supporting Educators, Math Instructors, and Language Learners for Advancement), funded by the U.S. Department of Education, Office of English Language Acquisition ($2.44 million). Conducted research synthesis and policy analysis on the Seal of Biliteracy, which became the *TESOL Quarterly* review.\nSummer 2026: Conceived and led *Too Few to Count*, a study of English learner reporting in Kansas. Contributed to a U.S. Department of Labor grant proposal (literature review and needs section), submitted July 2026."
+cv_text  = "Summer 2025: Project SEMILLA (Supporting Educators, Math Instructors, and Language Learners for Advancement), funded by the U.S. Department of Education, Office of English Language Acquisition ($2.44 million). Research synthesis and policy analysis on the Seal of Biliteracy, later published in *TESOL Quarterly*.\nSummer 2026: Conceived and led *Too Few to Count*, a study of English learner reporting in Kansas. Wrote the literature review and needs section of a U.S. Department of Labor grant proposal, submitted July 2026."
 
 [[appointments]]
 dates    = "Aug 2021 to Nov 2022"
@@ -240,6 +244,7 @@ cv_section = "teaching_iran"
 org      = "IranCanada Educational Center"
 place    = "Tehran Province, Iran"
 text     = "Taught IELTS test preparation courses on contract. Designed and validated the tests used in these courses. Also worked on evaluation and teacher training."
+cv_text  = "Taught IELTS preparation courses, designed and validated the course tests, and worked on evaluation and teacher training."
 site_text = "ESL teacher on contract, Tehran Province. I taught IELTS test preparation courses and designed and validated the tests used in them. I also worked on evaluation and teacher training."
 
 [[appointments]]
@@ -270,7 +275,7 @@ courses  = [
   { code = "1716405", title = "English as a Foreign Language II", level = "undergraduate", dates = "2019" },
   { code = "E8012", title = "English as an Academic Language", level = "graduate", dates = "2020 to 2022" },
 ]
-cv_text  = "Taught general English to undergraduate and graduate students; approximately 250 instructional hours."
+cv_text  = "Taught general English to undergraduate and graduate students (about 250 teaching hours)."
 
 [[appointments]]
 dates    = "2014 to 2016"
@@ -337,6 +342,9 @@ venue      = "Research Square"
 doi        = "10.21203/rs.3.rs-11286301/v1"
 bibkey     = "jahanbin2026ethical"
 cv_note    = "Preprint (Version 1); under review at International Journal for Educational Integrity"
+cv_group   = "review"       # CV: listed under Manuscripts in Review (the Research Square DOI is given as the preprint)
+cv_first   = true           # CV: first in its group
+cv_apa     = "Under review at *International Journal for Educational Integrity*. Preprint:"
 
 [[publications]]
 id         = "acoustic"
@@ -742,7 +750,7 @@ schools = [
   { name = "Eudora Elementary", city = "Eudora", site = "https://ees.eudoraschools.org/" },
   { name = "Starside Elementary", city = "De Soto", site = "https://se.usd232.org/" },
 ]
-cv_practicum = "Also supervised practicum placements in elementary schools in Lawrence, Topeka, Eudora and De Soto, Kansas."
+cv_practicum = "Supervised practicum placements in elementary schools in Lawrence, Topeka, Eudora, and De Soto, Kansas."
 
 [[teaching.courses]]
 code     = "C&T 331"
@@ -797,7 +805,6 @@ terms     = "Fall 2026"
 cv_terms  = "Fall 2026"
 role      = "Teaching assistant"
 summary   = "A statewide course on the science of reading and structured literacy, offered through the Kansas Blueprint for Literacy."
-cv_detail = "Teaching assistant to the instructor of record for a large, statewide course offered through the Kansas Blueprint for Literacy."
 
 [[teaching.courses]]
 code      = "C&T 747"
@@ -805,7 +812,6 @@ title     = "Foundations of the Science of Reading: Understanding and Applying S
 terms     = "Fall 2026"
 cv_terms  = "Fall 2026"
 role      = "Teaching assistant"
-cv_detail = "Teaching assistant to the instructor of record for the second course of the same statewide sequence."
 
 
 # ------------------------------------------------------------------ methods
@@ -815,6 +821,7 @@ cv_detail = "Teaching assistant to the instructor of record for the second cours
 [[methods]]
 title = "Quantitative & psychometric methods"
 cv_title = "Quantitative and psychometric methods"
+cv_short = "Quantitative"
 featured = true
 lead = "Applied measurement and statistical modeling, with a focus on how well automated and human scores agree and what that means for decisions."
 items = ["Regression and generalized linear models", "Multivariate and multilevel modeling", "Item response theory and Rasch-family models (LLTM)", "Scoring agreement and error analysis", "Cut-score and decision-risk analysis", "Bootstrap confidence intervals", "Predictive modeling and classification"]
@@ -822,14 +829,17 @@ items = ["Regression and generalized linear models", "Multivariate and multileve
 [[methods]]
 title = "Programming & analysis"
 cv_title = "Programming and analysis"
+cv_short = "Programming"
 items = ["R | tidyverse, ggplot2, R Markdown/Quarto", "Python", "IBM SPSS"]
 
 [[methods]]
 title = "Computational language research"
+cv_short = "Computational"
 items = ["Automated scoring evaluation", "MFCC analysis", "Explainable machine learning", "Reproducible workflows", "Corpus analysis"]
 
 [[methods]]
 title = "Qualitative research"
+cv_short = "Qualitative"
 items = ["Interview inquiry", "Thematic analysis", "Integrative review", "Policy and document analysis"]
 
 
@@ -874,24 +884,24 @@ org    = "University of Isfahan"
 site_who = "Faculty of Foreign Languages, University of Isfahan"
 cv_role = "President, Students Scientific Association, Faculty of Foreign Languages"
 place  = "Isfahan, Iran"
-text   = "Planned and organized conferences, workshops, and classes, including national and international events."
+text   = "Organized national and international conferences, workshops, and classes."
 
 
 # ------------------------------------------------------------------ languages
 [[languages]]
 name  = "Farsi"
 level = "Native"
-cv_level = "native"
+cv_level = "Native"
 
 [[languages]]
 name  = "Qashqai-Turkish"
 level = "Heritage / native-level"
-cv_level = "heritage/native-level"
+cv_level = "Native-level (heritage language)"
 
 [[languages]]
 name  = "English"
 level = "C2 · Full professional proficiency"
-cv_level = "C2 / full professional proficiency"
+cv_level = "Full professional proficiency (C2)"
 
 
 # ------------------------------------------------------------------ honors

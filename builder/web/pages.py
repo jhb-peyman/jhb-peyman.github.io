@@ -180,14 +180,10 @@ def reports_html():
     return h2('Reports') + f'<ul class="pubs">{out}</ul>'
 
 def page_pubs():
-    st = [('all', 'All'), ('published', 'Published'), ('review', 'In review'), ('preprint', 'Preprints')]
-    tp = [('all', 'All')] + [(t['key'], t['label']) for t in C['topics']]
-    btn = lambda k, v, on: f'<button type="button" data-v="{k}" aria-pressed="{"true" if on else "false"}">{esc(v)}</button>'
-    filt = (f'<div class="filters"><div class="frow" data-f="status" role="group" aria-label="Filter by status"><span class="k">Status</span>{"".join(btn(k, v, k == "all") for k, v in st)}</div>'
-            f'<div class="frow" data-f="topic" role="group" aria-label="Filter by topic"><span class="k">Topic</span>{"".join(btn(k, v, k == "all") for k, v in tp)}</div><p class="count" id="count" aria-live="polite"></p><button class="anim-ctrl" id="animPause" type="button" aria-pressed="false">Pause the figures</button></div>')
+    filt = '<div class="anim-bar"><button class="anim-ctrl" id="animPause" type="button" aria-pressed="false">Pause the figures</button></div>'
     years = {}
     for p in PUBS: years.setdefault(p['year'], []).append(p)
-    ys = ''.join(f'<section class="yr"><div class="y">{y}</div><ul class="pubs">{"".join(pub_li(p) for p in ps)}</ul></section>' for y, ps in sorted(years.items(), reverse=True))
+    ys = ''.join(f'<section class="yr"><div class="y">{y}</div><ul class="pubs">{"".join(pub_li(p, False) for p in ps)}</ul></section>' for y, ps in sorted(years.items(), reverse=True))
     talks = []
     for t in C['presentations']:
         acts = f'<a href="https://doi.org/{attr(t["doi"])}">{"DOI" if t.get("cite_title") else "Related paper"}</a>' if t.get('doi') else ''

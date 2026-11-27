@@ -387,6 +387,7 @@ h3.grp+.course{border-top:0}
 /* sections: each part of the page reads as its own block */
 .page h2{margin:64px 0 16px;padding-top:28px;border-top:2px solid var(--ink);font-size:22px}
 .page h2+.filters{margin-top:4px}
+.anim-bar{margin:-4px 0 6px}
 /* teaching award, shown in the heading row of its entry (Teaching in Iran) */
 .p-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 24px}
 .aw{--aw:#9a6a14;display:inline-flex;align-items:center;gap:7px;font:600 14.5px/1.4 var(--sans);color:var(--aw)}

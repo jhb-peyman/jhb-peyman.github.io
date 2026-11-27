@@ -1049,6 +1049,25 @@ def segs_docx(d, segs, sz=10):
     return [d.run(g["t"], i=g["i"], b=g["b"], sz=sz, color=NAVY if g["u"] else None, link=g["u"]) for g in segs]
 
 
+def honor_parts(h):
+    """(name, giver, year) for one honor; the year comes off the end of the note."""
+    note = (h.get("cv_note") or h.get("note") or "").replace("  |  ", ", ").replace(" · ", ", ")
+    m = re.search(r",?\s*\b((?:19|20)\d\d)\s*$", note)
+    return h["name"], (note[:m.start()] if m else note).strip(), (m.group(1) if m else "")
+
+
+def method_items(m):
+    items = []
+    for it in m.get("items", []):
+        if "|" in it:
+            a, b = it.split("|", 1)
+            items.append(f"{a.strip()} ({b.strip()})")
+        else:
+            items.append(lowfirst(it))
+    out = human_join(items)
+    return out[:1].upper() + out[1:]
+
+
 def cv_pub_groups(c):
     """The CV's publication groups, in order: (heading, list of pieces per reference)."""
     pubs = sorted_pubs(c)
@@ -1056,6 +1075,7 @@ def cv_pub_groups(c):
     for st, head in (("published", "Peer-Reviewed Journal Articles"), ("review", "Manuscripts in Review"),
                      ("preprint", "Preprints and Research Artifacts")):
         items = [x for x in pubs if (x.get("cv_group") or x["status"]) == st and x.get("cv_section") != "other"]
+        items.sort(key=lambda x: not x.get("cv_first"))        # stable: cv_first entries move to the top
         if items:
             groups.append((head, [apa_pub(x, c) for x in items]))
     if c.get("reports"):
@@ -1126,10 +1146,15 @@ def cv_body(c, today):
     if c.get("teaching"):
         if cv.get("teaching_header"):
             out.append(f'<h3>{esc(cv["teaching_header"])}</h3>')
-        if cv.get("teaching_summary"):
-            out.append(f'<p class="lede note">{esc(cv["teaching_summary"])}</p>')
+        role_shown = set()
         for g in c["teaching"]:
-            out.append(f'<h4>{esc(g["group"])} courses</h4>' if g["group"] in ("Graduate", "Undergraduate") else f'<h4>{esc(g["group"])}</h4>')
+            ta = g["group"] == "Teaching Assistant"
+            role = cv.get("teaching_ta" if ta else "teaching_ior")
+            if role and id(role) not in role_shown:
+                role_shown.add(id(role))
+                out.append(cv_row(gutter_date(role.get("dates", "")), esc(role["title"]), esc(role.get("org", "")), inline(role.get("text", "")), "role"))
+            if not (ta and role):
+                out.append(f'<h4>{esc(g["group"])} courses</h4>' if g["group"] in ("Graduate", "Undergraduate") else f'<h4>{esc(g["group"])}</h4>')
             for k in g.get("courses", []):
                 terms = k.get("cv_terms") or cv_dates(k.get("terms", "")).replace(" · ", "; ").replace("\n", " ")
                 note = k.get("cv_detail") or k.get("cv_practicum")
@@ -1157,28 +1182,19 @@ def cv_body(c, today):
                    esc(get(x, "text")))
             for x in c["leadership"]))
 
+    # ---- undated sections: a short label on the left instead of a date
+    def lab_row(label, body):
+        return f'<div class="row lab"><div class="g">{label}</div><div class="b">{body}</div></div>'
     if c.get("honors"):
         rows = []
         for h in c["honors"]:
-            note = (h.get("cv_note") or h.get("note") or "").replace("  |  ", ", ").replace(" · ", ", ")
-            m = re.search(r",?\s*\b((?:19|20)\d\d)\s*$", note)
-            yr = m.group(1) if m else ""
-            note = note[:m.start()] if m else note
-            rows.append(f'<div class="hn"><span><b>{esc(h["name"])}</b>{", " + esc(note) if note else ""}</span><span class="tm">{yr}</span></div>')
+            name, org, yr = honor_parts(h)
+            rows.append(f'<div class="hn"><span><b>{esc(name)}</b>{", " + esc(org) if org else ""}</span><span class="tm">{yr}</span></div>')
         out.append('<h2>Awards and Honors</h2><div class="hon">' + "".join(rows) + "</div>")
-
     if c.get("methods") or cv.get("methodological_training"):
         out.append("<h2>Research Methods and Training</h2>")
-    if c.get("methods"):
-        for m in c["methods"]:
-            items = []
-            for it in m.get("items", []):
-                if "|" in it:
-                    a, b = it.split("|", 1)
-                    items.append(f"{a.strip()} ({b.strip()})")
-                else:
-                    items.append(lowfirst(it))
-            out.append(f'<p class="plain"><b>{esc(m.get("cv_title") or m["title"])}:</b> {esc(human_join(items))}.</p>')
+    for m in c.get("methods", []):
+        out.append(f'<p class="plain"><b>{esc(m.get("cv_title") or m["title"])}:</b> {esc(lowfirst(method_items(m)))}.</p>')
     if cv.get("methodological_training"):
         out.append("<h3>Graduate Methods Coursework</h3>" + "".join(
             f'<p class="plain"><b>{esc(m["label"])}:</b> {esc(m["text"])}</p>' for m in cv["methodological_training"]))
@@ -1188,8 +1204,7 @@ def cv_body(c, today):
             continue
         out.append(f"<h2>{esc(e.get('cv_title') or e['title'])}</h2>" + "".join(appt(x) for x in e["items"]))
     if c.get("languages"):
-        out.append('<h2>Languages</h2><p class="lede langs">' + '<span class="sep">|</span>'.join(
-            f'<b>{esc(l["name"])}</b> ({esc(l.get("cv_level") or l["level"])})' for l in c["languages"]) + "</p>")
+        out.append("<h2>Languages</h2>" + "".join(lab_row(esc(l["name"]), esc(l.get("cv_level") or l["level"])) for l in c["languages"]))
     return "\n".join(out)
 
 NAVY, GRAY = "1F4E79", "5C6975"
@@ -1233,7 +1248,7 @@ def build_docx(c, today, path):
     def lines(body, runs):
         return body + ([d.br()] if body else []) + runs
 
-    def row(gut, title="", org="", text="", runs=None, after=80):
+    def row(gut, title="", org="", text="", runs=None, after=80, keep=False):
         body = []
         if title:
             body = [d.run(title, b=True)]
@@ -1243,7 +1258,7 @@ def build_docx(c, today, path):
             body = lines(body, rich(d, t))
         if runs:
             body = lines(body, runs)
-        d.table([([([d.run(gut, color=GRAY, sz=9.5)], None), (body, None)], after)], [GUT, BODY])
+        d.table([([([d.run(gut, color=GRAY, sz=9.5)], None), (body, None)], after)], [GUT, BODY], keep_next=keep)
 
     def place(x):
         return ", ".join(v for v in (get(x, "org"), get(x, "place")) if v)
@@ -1319,10 +1334,17 @@ def build_docx(c, today, path):
     if c.get("teaching"):
         if cv.get("teaching_header"):
             h3(cv["teaching_header"], before=20)
-        if cv.get("teaching_summary"):
-            d.para([d.run(cv["teaching_summary"], i=True, color=GRAY, sz=9.5)], left=GUT, after=40, keep_next=True)
+        role_shown = set()
         for g in c["teaching"]:
-            h4(f'{g["group"]} courses' if g["group"] in ("Graduate", "Undergraduate") else g["group"])
+            ta = g["group"] == "Teaching Assistant"
+            role = cv.get("teaching_ta" if ta else "teaching_ior")
+            if role and id(role) not in role_shown:
+                role_shown.add(id(role))
+                if ta:
+                    d.para([d.run("", sz=4)], after=80)
+                row(gutter_text(role.get("dates", "")), role["title"], role.get("org", ""), role.get("text", ""), after=40 if not ta else 80, keep=True)
+            if not (ta and role):
+                h4(f'{g["group"]} courses' if g["group"] in ("Graduate", "Undergraduate") else g["group"])
             for k in g.get("courses", []):
                 terms = k.get("cv_terms") or cv_dates(k.get("terms", "")).replace(" · ", "; ").replace("\n", " ")
                 note = k.get("cv_detail") or k.get("cv_practicum")
@@ -1356,21 +1378,19 @@ def build_docx(c, today, path):
             row(gutter_text(x["dates"]), x.get("cv_role") or x["role"],
                 ", ".join(v for v in (x.get("cv_org") or x.get("org", ""), get(x, "place")) if v), get(x, "text"))
 
+    # ---- undated sections: a short label on the left instead of a date
+    def lab_row(label, runs, after=60):
+        d.table([([([d.run(label, b=True, color="3C4650", sz=9.5)], None), (runs, None)], after)], [GUT, BODY])
     if c.get("honors"):
         h2("Awards and Honors")
         for h in c["honors"]:
-            note = (h.get("cv_note") or h.get("note") or "").replace("  |  ", ", ").replace(" · ", ", ")
-            m = re.search(r",?\s*\b((?:19|20)\d\d)\s*$", note)
-            yr = m.group(1) if m else ""
-            note = note[:m.start()] if m else note
-            d.table([([([], None), ([d.run(h["name"], b=True)] + ([d.run(", " + note)] if note else []), None),
+            name, org, yr = honor_parts(h)
+            d.table([([([], None), ([d.run(name, b=True)] + ([d.run(", " + org)] if org else []), None),
                        ([d.run(yr, color=GRAY, sz=9.5)], "right")], 30)], [GUT, BODY - 900, 900])
-
     if c.get("methods") or cv.get("methodological_training"):
         h2("Research Methods and Training")
     for m in c.get("methods", []):
-        items = [f"{a.strip()} ({b.strip()})" if "|" in it else lowfirst(it) for it in m.get("items", []) for a, b in [it.split("|", 1) if "|" in it else (it, "")]]
-        d.para([d.run((m.get("cv_title") or m["title"]) + ":", b=True), d.run(" " + human_join(items) + ".")], left=GUT, after=60, keep_lines=True)
+        d.para([d.run((m.get("cv_title") or m["title"]) + ":", b=True), d.run(" " + lowfirst(method_items(m)) + ".")], left=GUT, after=60, keep_lines=True)
     if cv.get("methodological_training"):
         h3("Graduate Methods Coursework")
         for m in cv["methodological_training"]:
@@ -1384,12 +1404,9 @@ def build_docx(c, today, path):
             appt(x)
     if c.get("languages"):
         h2("Languages")
-        runs = []
-        for k, l in enumerate(c["languages"]):
-            if k:
-                runs.append(d.run("  |  ", color=GRAY))
-            runs += [d.run(l["name"], b=True), d.run(f' ({l.get("cv_level") or l["level"]})')]
-        d.para(runs, left=GUT)
+        for l in c["languages"]:
+            lab_row(l["name"], [d.run(l.get("cv_level") or l["level"])], after=30)
+        d.para([d.run("", sz=1)], line=24)              # Word needs a paragraph after a final table; keep it tiny so it never starts a page
     foot = f"{own} | Academic Curriculum Vitae | Updated {month_year(today)} | Page "
     return d.save(path, f"{own}, Curriculum Vitae", own, d.run(foot, color=GRAY, sz=9))
 
