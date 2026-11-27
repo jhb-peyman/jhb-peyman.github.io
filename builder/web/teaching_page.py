@@ -160,8 +160,11 @@ def page_teaching():
                       '<path d="M8.5 13.5 6.5 21l5.5-3 5.5 3-2-7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
                       '<circle cx="12" cy="9" r="6" fill="currentColor"/></svg>'
                       f'<span><span class="sr">Award: </span>{esc(h["name"])}, {m.group(1)}</span></span>')
+        parts = ''
+        if a.get('parts'):
+            parts = '<dl class="parts">' + ''.join(f'<div><dt>{esc(x["label"])}</dt><dd>{md(x["text"])}</dd></div>' for x in a['parts']) + '</dl>'
         return (f'<div class="place"><div class="p-head"><h3>{esc(a["org"])} <span class="p-when">{esc(a["dates"])}</span></h3>{aw}</div>'
-                f'<p>{md(a["site_text"])}</p>'
+                f'<p>{md(a["site_text"])}</p>' + parts
                 + (f'<ul class="old">{lis}</ul>' if lis else '') + '</div>')
     iran_html = (h2('Teaching in Iran') + ''.join(place(a) for a in iran)) if iran else ''
 

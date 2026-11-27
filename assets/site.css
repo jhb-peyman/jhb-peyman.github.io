@@ -370,6 +370,11 @@ h3.grp+.course{border-top:0}
 .p-when{font-weight:400;font-size:14.5px;color:var(--mute);margin-left:6px;white-space:nowrap}
 .place p{margin-top:3px}
 .old{list-style:none;margin-top:8px;font-size:15px}
+.parts{margin:8px 0 2px;max-width:640px}
+.parts>div{display:grid;grid-template-columns:168px minmax(0,1fr);gap:0 18px;padding:8px 0;border-top:1px solid var(--rule)}
+.parts dt{font:500 14px/1.6 var(--sans);color:var(--acc)}
+.parts dd{margin:0;font-size:15.5px;line-height:1.6;color:var(--ink2)}
+@media (max-width:640px){.parts>div{grid-template-columns:1fr;gap:1px;padding:9px 0}}
 .old li{padding:3px 0}
 @media (max-width:640px){
   .rec .tr-c a span{display:none}

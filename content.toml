@@ -237,8 +237,8 @@ cv_title = "English as a Second Language (ESL) Teacher, Contract"
 cv_dates = "August 2021-November 2022"
 org      = "IranCanada Educational Center"
 place    = "Tehran Province, Iran"
-text     = "Taught English as a second language on contract. Also worked on test design, evaluation and teacher training."
-site_text = "English as a second language teacher, on contract, Tehran Province. I also worked on test design, evaluation and teacher training."
+text     = "Taught IELTS test preparation courses on contract. Designed and validated the tests used in these courses. Also worked on evaluation and teacher training."
+site_text = "ESL teacher on contract, Tehran Province. I taught IELTS test preparation courses and designed and validated the tests used in them. I also worked on evaluation and teacher training."
 
 [[appointments]]
 dates    = "2020 to 2022"
@@ -246,8 +246,13 @@ title    = "EFL Teacher"
 cv_title = "English as a Foreign Language (EFL) Teacher"
 org      = "Vank School (Armen)"
 place    = "Isfahan, Iran"
-text     = "Taught English as a foreign language to students in grades 6 to 8 whose first languages were Armenian and Persian (Farsi)."
-site_text = "EFL teacher in Isfahan, teaching English as a foreign language to students in grades 6 to 8 whose first languages were Armenian and Persian (Farsi)."
+text     = "School classes: taught English as a foreign language to students in grades 6 to 8 whose first languages were Armenian and Persian (Farsi).\nEvening classes: taught English as a foreign language to adults, the staff of the Prelacy at Vank Cathedral and the head of the Prelacy."
+site_text = "EFL teacher in Isfahan, in two settings."
+#  parts = a short list under the entry on the Teaching page: label = the setting, text = what I taught there.
+parts = [
+  { label = "School classes", text = "English as a foreign language to students in grades 6 to 8, whose first languages were Armenian and Persian (Farsi)." },
+  { label = "Evening classes for adults", text = "English as a foreign language to the staff of the Prelacy at Vank Cathedral and to the head of the Prelacy." },
+]
 
 [[appointments]]
 dates    = "2019 to 2022"
