@@ -145,54 +145,18 @@ def page_teaching():
                   key=lambda a: (not a.get('courses'), -int(re.findall(r'\d{4}', a['dates'])[0])))
     def place(a):
         lis = ''.join(f'<li><span class="c-code">{esc(x["code"])}</span> {esc(x["title"])}, {esc(x["level"])}, {esc(x["dates"])}</li>' for x in a.get('courses', []))
-        return (f'<div class="place"><h3>{esc(a["org"])} <span class="p-when">{esc(a["dates"])}</span></h3><p>{md(a["site_text"])}</p>'
-                + (f'<ul class="old">{lis}</ul>' if lis else '') + '</div>')
-    iran_html = (h2('Teaching in Iran') + ''.join(place(a) for a in iran)) if iran else ''
-
-    # ---------------------------------------------------------------- timeline, at the end
-    MON = {m: i for i, m in enumerate(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])}
-    def ydate(s, end):
-        s = s.strip()
-        if s.lower() == 'present':
-            last = sorted({t for k in courses for t in k['taught']}, key=term_key)[-1] if courses else None
-            if last:
-                y, se = term_key(last)
-                return y + (0.37, 0.58, 0.95)[se]
-            return TODAY.year + TODAY.month / 12
-        parts = s.split()
-        if len(parts) == 2 and parts[0][:3] in MON:
-            return int(parts[1]) + (MON[parts[0][:3]] + (1 if end else 0)) / 12
-        return int(parts[-1]) + (0.9 if end else 0)
-    lanes = []
-    for a in ([ku] if ku else []) + [a for a in C['appointments'] if a.get('site_text')]:
-        a0, a1 = (x for x in a['dates'].split(' to '))
-        aw = None
+        aw = ''
         for h in C.get('honors', []):
             m = re.search(r'(\d{4})', h.get('note', ''))
             if m and a['org'] in h.get('note', ''):
-                aw = (int(m.group(1)) + 0.5, f'{h["name"]}, {a["org"]}, {m.group(1)}')
-        city = 'Lawrence' if a is ku else a.get('place', '').split(',')[0]
-        name = 'University of Kansas' if a is ku else a['org']
-        lanes.append((name, city, ydate(a0, False), ydate(a1, True), aw))
-    timeline = ''
-    if lanes:
-        Y0 = int(min(l[2] for l in lanes)); Y1 = max(l[3] for l in lanes) + 0.15
-        def pct(y): return f'{100 * (y - Y0) / (Y1 - Y0):.2f}%'
-        today_y = TODAY.year + (TODAY.month - 0.5) / 12
-        step = 2 if Y1 - Y0 > 8 else 1
-        yrs = ''.join(f'<span style="left:{pct(y)}">{y}</span>' for y in range(Y0, int(Y1) + 1, step))
-        grid = ''.join(f'<i style="left:{pct(y)}"></i>' for y in range(Y0, int(Y1) + 1))
-        lane_html = ''.join(
-            f'<li><span class="tl-n">{esc(nm)}<em>{esc(pl)}</em></span><span class="tl-tr">{grid}'
-            f'<b class="tl-b{" ku" if i == 0 and ku else ""}" style="left:{pct(a)};width:calc({pct(b)} - {pct(a)})"></b>'
-            + (f'<s class="tl-a" style="left:{pct(aw[0])}" title="{attr(aw[1])}"></s>' if aw else '')
-            + f'<u class="tl-now" style="left:{pct(today_y)}"></u></span></li>'
-            for i, (nm, pl, a, b, aw) in enumerate(lanes))
-        awards = [l[4][1] for l in lanes if l[4]]
-        timeline = (h2('Timeline') + f'<p class="sec-p">Where I have taught since {Y0}. The dashed line is today.</p>'
-                    + f'<div class="ttl" role="img" aria-label="Teaching timeline, {Y0} to {int(Y1)}, at {len(lanes)} institutions">'
-                    + f'<div class="tl-yrs"><span class="tl-n"></span><span class="tl-tr">{yrs}</span></div><ul>{lane_html}</ul></div>'
-                    + ''.join(f'<p class="tl-foot"><s class="tl-a"></s> {esc(w)}</p>' for w in awards))
+                aw = ('<span class="aw"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">'
+                      '<path d="M8.5 13.5 6.5 21l5.5-3 5.5 3-2-7.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
+                      '<circle cx="12" cy="9" r="6" fill="currentColor"/></svg>'
+                      f'<span><span class="sr">Award: </span>{esc(h["name"])}, {m.group(1)}</span></span>')
+        return (f'<div class="place"><div class="p-head"><h3>{esc(a["org"])} <span class="p-when">{esc(a["dates"])}</span></h3>{aw}</div>'
+                f'<p>{md(a["site_text"])}</p>'
+                + (f'<ul class="old">{lis}</ul>' if lis else '') + '</div>')
+    iran_html = (h2('Teaching in Iran') + ''.join(place(a) for a in iran)) if iran else ''
 
-    body = title('Teaching') + lead + record + blocks + iran_html + timeline
+    body = title('Teaching') + lead + record + blocks + iran_html
     return shell('teaching.html', 'Teaching', body)

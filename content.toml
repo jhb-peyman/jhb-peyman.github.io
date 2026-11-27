@@ -250,15 +250,15 @@ text     = "Taught English as a foreign language to students in grades 6 to 8 wh
 site_text = "EFL teacher in Isfahan, teaching English as a foreign language to students in grades 6 to 8 whose first languages were Armenian and Persian (Farsi)."
 
 [[appointments]]
-dates    = "2018 to 2022"
+dates    = "2019 to 2022"
 title    = "EFL Instructor"
 cv_title = "English as a Foreign Language (EFL) Instructor"
 org      = "University of Isfahan"
 place    = "Isfahan, Iran"
 text     = "General English for undergraduate and graduate students; approximately 250 instructional hours."
-site_text = "EFL instructor for undergraduate and graduate students, about 250 instructional hours. In 2019 I received the university’s Distinguished EFL Instructor award."
+site_text = "EFL instructor for undergraduate and graduate students, about 250 instructional hours."
 courses  = [
-  { code = "1716405", title = "English as a Foreign Language II", level = "undergraduate", dates = "2018 to 2022" },
+  { code = "1716405", title = "English as a Foreign Language II", level = "undergraduate", dates = "2019" },
   { code = "E8012", title = "English as an Academic Language", level = "graduate", dates = "2020 to 2022" },
 ]
 cv_text  = "Taught general English to undergraduate and graduate students; approximately 250 instructional hours."
@@ -840,7 +840,7 @@ name = "William S. Lashier Jr. Scholarship in Education"
 note = "University of Kansas"
 
 [[honors]]
-name = "Distinguished EFL Instructor"
+name = "Chancellor’s Distinguished Teaching Award"
 note = "University of Isfahan · 2019"
 cv_note = "University of Isfahan  |  2019"
 

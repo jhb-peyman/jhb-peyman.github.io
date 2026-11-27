@@ -67,10 +67,10 @@ Each course is a `[[teaching.courses]]` block under its group (`[[teaching]]` wi
 | `next` | optional: the role or time for next term, such as `"as instructor of record (Tuesdays and Thursdays, 2:00 to 3:15 pm)"` |
 | `note` | optional: one more sentence under the course |
 
-**Each new semester:** add the new term to `taught` (and to `terms`/`cv_terms` for the CV). Terms after the current one show as already assigned; when the term starts they count as taught by themselves. The section counts, the "most taught first" order, the opening paragraph of the Teaching page and the timeline all update by themselves. Only the CV line `teaching_summary` (under `[cv]`) is typed by hand, so update its numbers yourself.
+**Each new semester:** add the new term to `taught` (and to `terms`/`cv_terms` for the CV). Terms after the current one show as already assigned; when the term starts they count as taught by themselves. The section counts, the "most taught first" order, the opening paragraph of the Teaching page all update by themselves. Only the CV line `teaching_summary` (under `[cv]`) is typed by hand, so update its numbers yourself.
 
-### Earlier teaching (Iran) and the timeline
-An appointment with a `site_text` line appears under "Teaching in Iran" on the Teaching page and in the timeline. The University of Isfahan entry also lists its `courses`. A teaching award shows on the timeline when its `note` under `[[honors]]` names the same institution and a year.
+### Earlier teaching (Iran)
+An appointment with a `site_text` line appears under "Teaching in Iran" on the Teaching page. The University of Isfahan entry also lists its `courses`. A teaching award shows as a highlighted box under that entry when its `note` under `[[honors]]` names the same institution and a year (for example `"University of Isfahan · 2019"`).
 
 ### Peer review journals
 Each journal under `[peer_review]` has a `count` and an `about` line (publisher and scope) shown under it on the Service page. The total updates by itself.
